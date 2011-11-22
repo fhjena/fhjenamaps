@@ -1,0 +1,10 @@
+Einstellungen zur Nutzung von Git im VPN der FHJ:
+
+Rechtsklick auf euer lokales Repository:
+TortoiseGit -> Settings
+Network -> Haken setzen bei Enable Proxy Server
+Server address: www-cache.fh-jena.de
+Port: 8080
+Die anderen beiden Felder bleiben frei.
+
+Ich denke mal wenn man zu Hause ist, dann muss man den Haken bei Enable Proxy Server wieder deaktivieren.
