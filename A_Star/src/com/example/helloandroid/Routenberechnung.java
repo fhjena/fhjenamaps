@@ -16,7 +16,7 @@ public class Routenberechnung {
 	/* ------------- A*-Algorithmus ------------- */
 	public int Start_ID, Ziel_ID;	
 	
-    private Knoten SK, ZK, akt_K, angr_K;							// Startknoten, Zielknoten, aktueller Knoten, angrenzender Knoten
+    private Knoten SK, ZK, akt_K, angr_K;							// Startknoten, Zielknoten, aktueller Knoten, angrenzender KNOTEN
     
     private TreeSet<Knoten> open_L = new TreeSet<Knoten>(); 		// TreeSet, da immer geordnet und immer kleinstes Element durchsucht wird
     private LinkedList<Knoten> closed_L = new LinkedList<Knoten>(); // LinkedList, da nach diskreten Elementen gesucht werden muss
