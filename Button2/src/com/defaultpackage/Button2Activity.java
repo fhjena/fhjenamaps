@@ -19,6 +19,10 @@ public class Button2Activity extends Activity {
 	private int stat = 1;
 	private int display_width;
 	private int display_height;
+	
+	TextView show5_1;
+	TextView show5_2;
+	Routenberechnung Route;
 
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
@@ -34,6 +38,9 @@ public class Button2Activity extends Activity {
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		display_width = metrics.widthPixels;
 		display_height = metrics.heightPixels;
+		
+		show5_1 = new TextView(this);
+		show5_2 = new TextView(this);
 		
 		user_interface.add(initiateUI1());
 		user_interface.add(initiateUI2());
@@ -123,8 +130,8 @@ public class Button2Activity extends Activity {
 	}
 	
 	private TableLayout initiateUI4() {
-		EditText et1 = new EditText(this);
-		EditText et2 = new EditText(this);
+		final EditText et1 = new EditText(this);
+		final EditText et2 = new EditText(this);
 		Button testbutton = new Button(this);
 		TableLayout tl = new TableLayout(this);
 		
@@ -132,6 +139,12 @@ public class Button2Activity extends Activity {
 		testbutton.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
+				Route = new Routenberechnung();
+				show5_1.setText("" + Integer.parseInt(et1.getText().toString()));
+//				show5_2.setText(Integer.parseInt(et2.getText().toString()));
+				Route.Berechne_Weg(Integer.parseInt(et1.getText().toString()), Integer.parseInt(et2.getText().toString()));
+				show5_2.setText(Route.Route.toString());
+				
 				stat = 5;
 				refreshUI();
 			}
@@ -145,8 +158,10 @@ public class Button2Activity extends Activity {
 	}
 	
 	private TableLayout initiateUI5() {
-		// TODO
-		return new TableLayout(this);
+		TableLayout tl = new TableLayout(this);
+		tl.addView(show5_1);
+		tl.addView(show5_2);
+		return tl;
 	}
 	
 	private TableLayout initiateUI6() {
