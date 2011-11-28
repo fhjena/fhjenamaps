@@ -16,11 +16,11 @@ public class Routenberechnung {
 	/* ------------- A*-Algorithmus ------------- */
 	public int Start_ID, Ziel_ID;	
 	
-    private Knoten SK, ZK, akt_K, angr_K;
+    private Knoten SK, ZK, akt_K, angr_K;							// Startknoten, Zielknoten, aktueller Knoten, angrenzender Knoten
     
     private TreeSet<Knoten> open_L = new TreeSet<Knoten>(); 		// TreeSet, da immer geordnet und immer kleinstes Element durchsucht wird
     private LinkedList<Knoten> closed_L = new LinkedList<Knoten>(); // LinkedList, da nach diskreten Elementen gesucht werden muss
-    private LinkedList<Knoten> Gesamtliste = new LinkedList<Knoten>();
+    private LinkedList<Knoten> Gesamtliste = new LinkedList<Knoten>();	// Gesamtliste aller Knoten
     public ArrayList<Integer> Route = new ArrayList<Integer>(); 	// enthält nach Routenberechnung die IDs der Wegknoten
     public float h_faktor= (float) 1; 								// um Heuristik weniger oder stärker in die Wegfindung einzubeziehen
     
