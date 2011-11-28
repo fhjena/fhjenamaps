@@ -2,6 +2,8 @@ package com.defaultpackage;
 
 import java.util.Comparator;
 
+import android.graphics.Point;
+
 public  class Knoten implements Comparable<Knoten>{
 	public int ID;
 	public int F;
@@ -12,6 +14,8 @@ public  class Knoten implements Comparable<Knoten>{
 	public int x;	// x-,y- & z-Koordinaten
 	public int y;
 	public int z;
+	private Point BildKoords;
+	
 	
 	
 	public Knoten(int ID, int F, int G, int H){
@@ -30,6 +34,9 @@ public  class Knoten implements Comparable<Knoten>{
 //		this.AnzahlAngrenzderKnoten = Anzahl;
 	}
 		
+	public Point getBildKoords(){
+		return BildKoords;
+	}
 	/* compare-Funktions damit Tree Set geornet werden kann */
 		public int compareTo(Knoten another) {
 		if (this.F< another.F)

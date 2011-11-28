@@ -143,7 +143,7 @@ public class Button2Activity extends Activity {
 				show5_1.setText("" + Integer.parseInt(et1.getText().toString()));
 //				show5_2.setText(Integer.parseInt(et2.getText().toString()));
 				Route.Berechne_Weg(Integer.parseInt(et1.getText().toString()), Integer.parseInt(et2.getText().toString()));
-				show5_2.setText(Route.Route.toString());
+				show5_2.setText(Route.getWeg().toString());
 				
 				stat = 5;
 				refreshUI();

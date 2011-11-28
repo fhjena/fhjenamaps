@@ -21,8 +21,10 @@ public class Routenberechnung {
     private TreeSet<Knoten> open_L = new TreeSet<Knoten>(); 		// TreeSet, da immer geordnet und immer kleinstes Element durchsucht wird
     private LinkedList<Knoten> closed_L = new LinkedList<Knoten>(); // LinkedList, da nach diskreten Elementen gesucht werden muss
     private LinkedList<Knoten> Gesamtliste = new LinkedList<Knoten>();	// Gesamtliste aller Knoten
-    public ArrayList<Integer> Route = new ArrayList<Integer>(); 	// enthält nach Routenberechnung die IDs der Wegknoten
-    public float h_faktor= (float) 1; 								// um Heuristik weniger oder stärker in die Wegfindung einzubeziehen
+//    public ArrayList<Integer> Route = new ArrayList<Integer>(); 	// enthält nach Routenberechnung die IDs der Wegknoten
+    private ArrayList<Knoten> Route = new ArrayList<Knoten>(); 	// enthält nach Routenberechnung die Wegknoten
+    public double h_faktor=  1.0; 								// um Heuristik weniger oder stärker in die Wegfindung einzubeziehen
+    private int Wegstrecke = 0;
     
     public Routenberechnung(){
     	//Knoten Ebene0
@@ -99,19 +101,46 @@ public class Routenberechnung {
 	 		   }
 	 	   }
 	    }
-	    if(!open_L.isEmpty()){									// Wenn Zielknoten gefunden
-		    Knoten Knoten1 = ZK;
-		    int IDcount=-1;
-		    while(IDcount!=SK.ID){								// "Gehe Weg Rückwärts" und speicher die zu begehenden Knoten
-		    	IDcount = Knoten1.ID;
-		    	this.Route.add(0, IDcount);
-		    	Knoten1 = Knoten1.Vorg;
-		    	
-		    }
-		    this.Route.add(this.Route.size(),ZK.G); 			// fügt am Ende der Liste die Größe G (entspricht der Länge des Weges) ein
+//	    // speichert IDs in Array
+//	    if(!open_L.isEmpty()){									// Wenn Zielknoten gefunden
+//		    Knoten Knoten1 = ZK;
+//		    int IDcount=-1;
+//		    while(IDcount!=SK.ID){								// "Gehe Weg Rückwärts" und speicher die zu begehenden Knoten
+//		    	IDcount = Knoten1.ID;
+//		    	this.Route.add(0, IDcount);
+//		    	Knoten1 = Knoten1.Vorg;
+//		    	
+//		    }
+//		    this.Route.add(this.Route.size(),ZK.G); 			// fügt am Ende der Liste die Größe G (entspricht der Länge des Weges) ein
+//	    }
+//	    else //ansonsten
+//	    	this.Route.clear(); 								// Liste leeren  
+//	}
+	
+	 
+	//Wegstrecke speichern
+	 Wegstrecke = ZK.G;
+	// speichert Knoten in Array
+    if(!open_L.isEmpty()){									// Wenn Zielknoten gefunden
+	    Knoten Knoten1 = ZK;
+	    while(Knoten1!=SK){								// "Gehe Weg Rückwärts" und speicher die zu begehenden Knoten
+	    	this.Route.add(0, Knoten1);
+	    	Knoten1 = Knoten1.Vorg;
 	    }
-	    else //ansonsten
-	    	this.Route.clear(); 								// Liste leeren  
+	    this.Route.add(0, SK);
+    }
+    else //ansonsten
+    	this.Route.clear(); 								// Liste leeren  
+    
+     
+}
+	
+	public int getWegstrecke(){
+		return Wegstrecke;
+	}
+	
+	public ArrayList<Knoten> getWeg(){
+		return Route;
 	}
 	
 // dient dem extrahieren von Knoten aus der Gesamtliste... wird später durch DB anfrage ersetzt.
