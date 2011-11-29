@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.hardware.*;
 import android.view.View;
 
 public class Gui extends View {
@@ -21,14 +20,13 @@ public class Gui extends View {
 	private int ziel_raum	= -1;
 	private boolean gui_status = false;
 	private float degree_float=0;
-    private SensorManager mSensorManager;
+//    private SensorManager mSensorManager;
 
 
 		
 	// Konstruktor
 	public Gui(Context c_text) {
 		super(c_text);
-		mSensorManager = (SensorManager) c_text.getSystemService(Context.SENSOR_SERVICE);
 		var_paint = new Paint();
 	}
 	
@@ -191,36 +189,40 @@ public class Gui extends View {
 
 	}
 
-	private class CompassListener implements SensorEventListener { // innere Klasse
+	public void set_degree(float f) {
+		degree_float = f;
+	}
 
-
-        private Sensor mSensor;
-
-        public CompassListener() { // Konstruktor
-            mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
-    	}
-
-
-        protected void onResume() {
-            mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_GAME);
-        }
-
-        protected void onStop() {
-            mSensorManager.unregisterListener(this);
-        }
-
-        public void onSensorChanged(SensorEvent event) {
-        	float f = -event.values[0]; // Sensor auslesen
-        	if ( (f%5) > 2.5 ) // Sensor auf 5° Schritte auf bzw. abrunden
-        		f += 5;
-        	f = f - (f%5);
-        	degree_float = f; // Winkel an äußere Klasse übergeben
-            invalidate(); // Bild neu zeichnen
-        }
-
-        public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        }
-    }
+//	private class CompassListener implements SensorEventListener { // innere Klasse
+//
+//
+//        private Sensor mSensor;
+//
+//        public CompassListener() { // Konstruktor
+//            mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
+//    	}
+//
+//
+//        protected void onResume() {
+//            mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_GAME);
+//        }
+//
+//        protected void onStop() {
+//            mSensorManager.unregisterListener(this);
+//        }
+//
+//        public void onSensorChanged(SensorEvent event) {
+//        	float f = -event.values[0]; // Sensor auslesen
+//        	if ( (f%5) > 2.5 ) // Sensor auf 5° Schritte auf bzw. abrunden
+//        		f += 5;
+//        	f = f - (f%5);
+//        	degree_float = f; // Winkel an äußere Klasse übergeben
+//            invalidate(); // Bild neu zeichnen
+//        }
+//
+//        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+//        }
+//    }
 }
 
 
