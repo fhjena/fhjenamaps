@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, Startseite!</string>
+    <string name="app_name">Dashboard</string>
+ 	<string name="sf_ShowPosition">Show Position</string>
+ 	<string name="sf_Routing">Routing</string>
+ 	<string name="sf_Campus">Campus</string>
+ 	<string name="tx_unteractivity">Sie sind in der Unteractivity</string>
+ 	
+</resources>
