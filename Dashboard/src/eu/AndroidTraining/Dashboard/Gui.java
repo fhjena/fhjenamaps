@@ -23,7 +23,7 @@ public class GUI<Ziel, Start> extends Activity {
 	private TextView textoutput_destination;
 	private Routenberechnung RB;
 	private ArrayList<Knoten> Route;
-	private GraphicalOutput go;
+	private Graphical_Output go;
 	private CompassListener cl;
 
 	/** Called when the activity is first created. */
@@ -59,7 +59,7 @@ public class GUI<Ziel, Start> extends Activity {
 		RB.Berechne_Weg(start, destination);
 		Route = RB.getWeg();
 
-		go = new GraphicalOutput(this, Route);
+		go = new Graphical_Output(this, Route);
 		cl.onResume();
 
 		DisplayMetrics metrics = new DisplayMetrics();
