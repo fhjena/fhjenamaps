@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.*;
 
-public class Gui<Ziel, Start> extends Activity {
+public class GUI<Ziel, Start> extends Activity {
 
 	private int state;
 	private int start;
@@ -24,13 +24,13 @@ public class Gui<Ziel, Start> extends Activity {
 	private Pathfinding RB;
 	private ArrayList<Node> Route;
 	private GraphicalOutput go;
-	private CompassListener cl;
+	private CompassListener cl; // beinhaltet Lagesensor
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		cl = new CompassListener();
+		cl = new CompassListener(); // neue Instanz zur Initialisierung des Sensors
 		setContentView(R.layout.state_0);
 
 	}
@@ -60,7 +60,7 @@ public class Gui<Ziel, Start> extends Activity {
 		Route = RB.getPath();
 
 		go = new GraphicalOutput(this, Route);
-		cl.onResume();
+		cl.onResume(); // enable Lagesensor
 
 		DisplayMetrics metrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -107,42 +107,37 @@ public class Gui<Ziel, Start> extends Activity {
 	// }
 	// }
 
-	private class CompassListener implements SensorEventListener { // innere
-																	// Klasse
+	private class CompassListener implements SensorEventListener { // innere Klasse
 
-		private SensorManager mSensorManager;
-		private Sensor mSensor;
-		private float f_alt = 0;
+		private SensorManager mSensorManager; // beinhaltet alle Sensoren
+		private Sensor Magnetsensor; // nur Lagesensor
+		private float f_alt = 0; // Winkel merken
 
 		public CompassListener() { // Konstruktor
-			mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-			mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
+			mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE); // SensorManager holen
+			Magnetsensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION); // Lagesensor auswählen
 		}
 
-		protected void onResume() {
-			mSensorManager.registerListener(this, mSensor,
-					SensorManager.SENSOR_DELAY_GAME);
+		protected void onResume() { // enable Lagesensor
+			mSensorManager.registerListener(this, Magnetsensor, SensorManager.SENSOR_DELAY_GAME);
 		}
 
-		protected void onStop() {
+		protected void onStop() { // disable Lagesensor
 			mSensorManager.unregisterListener(this);
 		}
 
 		public void onSensorChanged(SensorEvent event) {
 			float f_neu = -event.values[0]; // Sensor auslesen
-			if (Math.abs(f_neu - f_alt) > 3.5) { // Schmitt-Trigger, damit Bild
-													// an der Schaltschwelle
-													// nicht hin- und herdreht
-				if ((f_neu % 5) > 2.5) // Sensor auf 5° Schritte auf bzw.
-										// abrunden
+			if (Math.abs(f_neu - f_alt) > 3.5) { // Hysterese, damit Bild an der Schaltschwelle nicht hin- und herdreht
+				if ((f_neu % 5) > 2.5) // Sensor auf 5° Schritte auf bzw. abrunden
 					f_neu += 5;
-				f_alt = f_neu - (f_neu % 5);
+				f_alt = f_neu - (f_neu % 5); // neuen Winkel merken
 				go.set_degree(f_alt); // neuen Winkel an Ausgabe übergeben
 				go.invalidate(); // Bild neu zeichnen
 			}
 		}
 
-		public void onAccuracyChanged(Sensor sensor, int accuracy) {
+		public void onAccuracyChanged(Sensor sensor, int accuracy) { // not used
 		}
 	}
 	/*
