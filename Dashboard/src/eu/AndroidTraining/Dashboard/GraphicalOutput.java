@@ -19,12 +19,12 @@ public class GraphicalOutput extends View {
 	private int ziel_raum = -1;
 	private boolean GraphicalOutput_status = false;
 	private float degree_float = 0;
-	private ArrayList<Knoten> Weg;
+	private ArrayList<Node> Weg;
 	private int x_ref = 150;
 	private int y_ref = -160;
 
 	// Konstruktor
-	public GraphicalOutput(Context c_text, ArrayList<Knoten> Route) {
+	public GraphicalOutput(Context c_text, ArrayList<Node> Route) {
 		super(c_text);
 		var_paint = new Paint();
 		Weg = Route;
@@ -170,7 +170,7 @@ public class GraphicalOutput extends View {
 	// ArrayList<Point> TempArr = new ArrayList<Point>();
 
 	private void zeichne_punkt_zu_punkt(Canvas canvas) {
-		ArrayList<Knoten> TempArr = new ArrayList<Knoten>();
+		ArrayList<Node> TempArr = new ArrayList<Node>();
 		TempArr = Weg;
 		var_paint.setColor(Color.BLUE);
 		for (int i = 0; i < TempArr.size() - 1; i++) {

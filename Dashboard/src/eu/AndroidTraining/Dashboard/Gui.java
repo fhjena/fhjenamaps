@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.*;
 
-public class GUI<Ziel, Start> extends Activity {
+public class Gui<Ziel, Start> extends Activity {
 
 	private int state;
 	private int start;
@@ -21,8 +21,8 @@ public class GUI<Ziel, Start> extends Activity {
 	private EditText destination_view;
 	private TextView textoutput_start;
 	private TextView textoutput_destination;
-	private Routenberechnung RB;
-	private ArrayList<Knoten> Route;
+	private Pathfinding RB;
+	private ArrayList<Node> Route;
 	private GraphicalOutput go;
 	private CompassListener cl;
 
@@ -55,9 +55,9 @@ public class GUI<Ziel, Start> extends Activity {
 		textoutput_destination.setText(String.valueOf(destination));
 
 		// muss evtl. alles in OnCreate in State3
-		RB = new Routenberechnung();
+		RB = new Pathfinding();
 		RB.Berechne_Weg(start, destination);
-		Route = RB.getWeg();
+		Route = RB.getPath();
 
 		go = new GraphicalOutput(this, Route);
 		cl.onResume();
@@ -69,7 +69,7 @@ public class GUI<Ziel, Start> extends Activity {
 
 		TextView tv = new TextView(this);
 		for (int i = 0; i < Route.size(); i++) {
-			tv.setText(tv.getText() + (Route.get(i).ID + "\t\t\t"));
+			tv.setText(tv.getText() + (Route.get(i).getID() + "\t\t\t"));
 		}
 
 		// TableLayout tl = new TableLayout(this);
