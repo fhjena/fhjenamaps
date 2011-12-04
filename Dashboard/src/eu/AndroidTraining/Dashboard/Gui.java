@@ -35,11 +35,15 @@ public class GUI<Ziel, Start> extends Activity {
 
 	}
 
+	//bei Buttonklick "Routing" wird state1.xml aufgerufen
+	
 	public void state0_Routing(final View view) {
 		setContentView(R.layout.state_1);
 
 	}
 
+	//bei Buttonklick "GO" Start-u Zielpunkte aus Edittext einlesen
+	
 	public void state1_go(final View view) {
 
 		start_view = (EditText) findViewById(R.id.tx_start);
@@ -47,7 +51,9 @@ public class GUI<Ziel, Start> extends Activity {
 
 		destination_view = (EditText) findViewById(R.id.tx_destination);
 		destination = Integer.parseInt(destination_view.getText().toString());
-
+	
+	//Start- u. Zielpunkt zum Test nochmal in TextView ausgeben
+		
 		textoutput_start = (TextView) findViewById(R.id.Text1);
 		textoutput_start.setText(String.valueOf(start));
 

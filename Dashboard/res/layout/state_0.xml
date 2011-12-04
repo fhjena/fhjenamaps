@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:padding="10dip" 
- 
-    
-    >
+    android:padding="10dip" >
+
 <Button 
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-   	android:id="@+id/sf_ShowPosition"
-    android:text="@string/sf_ShowPosition"
+   	android:id="@+id/but_ShowPosition"
+    android:text="@string/but_ShowPosition"
     android:enabled="false"
        
     />
@@ -19,8 +17,8 @@
 <Button 
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-   	android:id="@+id/sf_Routing"
-    android:text="@string/sf_Routing"
+   	android:id="@+id/but_Routing"
+    android:text="@string/but_Routing"
     android:onClick="state0_Routing"
        
     />
@@ -28,8 +26,8 @@
 <Button 
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-   	android:id="@+id/sf_Campus"
-    android:text="@string/sf_Campus"
+   	android:id="@+id/but_Campus"
+    android:text="@string/but_Campus"
     android:onClick="wechsleActivity"
     android:enabled="false"
        

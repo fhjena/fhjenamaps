@@ -16,10 +16,10 @@ public final class R {
     public static final class id {
         public static final int Text1=0x7f050006;
         public static final int Text2=0x7f050007;
+        public static final int but_Campus=0x7f050002;
+        public static final int but_Routing=0x7f050001;
+        public static final int but_ShowPosition=0x7f050000;
         public static final int button1=0x7f050005;
-        public static final int sf_Campus=0x7f050002;
-        public static final int sf_Routing=0x7f050001;
-        public static final int sf_ShowPosition=0x7f050000;
         public static final int tx_destination=0x7f050004;
         public static final int tx_start=0x7f050003;
     }
@@ -29,10 +29,10 @@ public final class R {
     }
     public static final class string {
         public static final int app_name=0x7f040001;
+        public static final int but_Campus=0x7f040004;
+        public static final int but_Routing=0x7f040003;
+        public static final int but_ShowPosition=0x7f040002;
         public static final int hello=0x7f040000;
-        public static final int sf_Campus=0x7f040004;
-        public static final int sf_Routing=0x7f040003;
-        public static final int sf_ShowPosition=0x7f040002;
         public static final int tx_unteractivity=0x7f040005;
     }
 }
