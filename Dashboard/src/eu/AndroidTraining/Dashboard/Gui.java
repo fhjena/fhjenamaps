@@ -62,13 +62,13 @@ public class GUI<Ziel, Start> extends Activity {
 		go = new GraphicalOutput(this, Route);
 		cl.onResume(); // enable Lagesensor
 
-		DisplayMetrics metrics = new DisplayMetrics();
-		getWindowManager().getDefaultDisplay().getMetrics(metrics);
+		DisplayMetrics metrics = new DisplayMetrics(); // get Display
+		getWindowManager().getDefaultDisplay().getMetrics(metrics); // get Dimensions of Display
 		int display_width = metrics.widthPixels;
 		int display_height = metrics.heightPixels;
 
 		TextView tv = new TextView(this);
-		for (int i = 0; i < Route.size(); i++) {
+		for (int i = 0; i < Route.size(); i++) { // print all Node IDs
 			tv.setText(tv.getText() + (Route.get(i).getID() + "\t\t\t"));
 		}
 
@@ -76,11 +76,11 @@ public class GUI<Ziel, Start> extends Activity {
 		// tl.addView(tv);
 		// tl.addView(go);
 
-		TableLayout tl = new TableLayout(this);
-		tl.addView(go, new LayoutParams(display_width, display_height - 150));
-		tl.addView(tv);
+		TableLayout tl = new TableLayout(this); // Layout contain Graphic and Text
+		tl.addView(go, new LayoutParams(display_width, display_height - 150)); // add Graphic 
+		tl.addView(tv); // add Text
 
-		setContentView(tl);
+		setContentView(tl); // show new Content
 
 		// getContentView(R.layout.);
 
@@ -111,7 +111,7 @@ public class GUI<Ziel, Start> extends Activity {
 
 		private SensorManager mSensorManager; // beinhaltet alle Sensoren
 		private Sensor Magnetsensor; // nur Lagesensor
-		private float f_alt = 0; // Winkel merken
+		private float f_old = 0; // Winkel merken
 
 		public CompassListener() { // Konstruktor
 			mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE); // SensorManager holen
@@ -127,12 +127,12 @@ public class GUI<Ziel, Start> extends Activity {
 		}
 
 		public void onSensorChanged(SensorEvent event) {
-			float f_neu = -event.values[0]; // Sensor auslesen
-			if (Math.abs(f_neu - f_alt) > 3.5) { // Hysterese, damit Bild an der Schaltschwelle nicht hin- und herdreht
-				if ((f_neu % 5) > 2.5) // Sensor auf 5° Schritte auf bzw. abrunden
-					f_neu += 5;
-				f_alt = f_neu - (f_neu % 5); // neuen Winkel merken
-				go.set_degree(f_alt); // neuen Winkel an Ausgabe übergeben
+			float f_new = -event.values[0]; // Sensor auslesen
+			if (Math.abs(f_new - f_old) > 3.5) { // Hysterese, damit Bild an der Schaltschwelle nicht hin- und herdreht
+				if ((f_new % 5) > 2.5) // Sensor auf 5° Schritte auf bzw. abrunden
+					f_new += 5;
+				f_old = f_new - (f_new % 5); // neuen Winkel merken
+				go.set_degree(f_old); // neuen Winkel an Ausgabe übergeben
 				go.invalidate(); // Bild neu zeichnen
 			}
 		}
