@@ -3,88 +3,79 @@ package eu.AndroidTraining.Dashboard;
 import android.graphics.Point;
 
 public class Node implements Comparable<Node> {
-	private int ID;
-	private int F;
-	private int G;
-	private int H;
-	private Node Parent; // Vorgängerknoten
-	private int[] Neighbour_ID; // Nachbarknoten
-	private int x; // x-,y- & z-Koordinaten(real)
+	private int ID;					// Knoten-ID
+	private int F;					// F-Wert
+	private int G;					// G-Wert (Distanz zwischen zwei Knoten)
+	private int H;					// Wert fü Distanz zwischen Knoten und Zielknoten
+	private Node Parent; 			// Vorgängerknoten
+	private int[] Neighbour_ID; 	// Nachbarknoten
+	private int x; 					// x-,y- & z-Koordinaten(real)
 	private int y;
 	private int z;
 	private Point PictureCoords; // x- & y- Koordinaten (Bild)
 
-	public Node(int ID, int F, int G, int H) {
-		this.ID = ID;
-		this.F = F;
-		this.G = G;
-		this.H = H;
-	}
-
-	public Node(int ID, int X, int Y, int Z, Point p, int[] angrenzend) { //
+	public Node(int ID, int X, int Y, int Z, Point p, int[] angrenzend) { // Konstruktor zum Initialisieren
 		this.ID = ID;
 		this.x = X;
 		this.y = Y;
 		this.z = Z;
 		this.Neighbour_ID = angrenzend;
 		this.PictureCoords = p;
-
-		// this.AnzahlAngrenzderKnoten = Anzahl;
 	}
 	
-	public Node getParent(){
+	public Node getParent(){				// gibt Vorgänergknoten zurück
 		return Parent;
 	}
 	
-	public int[] getNeigbour_ID(){
+	public int[] getNeigbour_ID(){			// gibt Nachbarknoten-IDs zurück
 		return Neighbour_ID;
 	}
 
-	public Point getBildKoords() {
+	public Point getBildKoords() {			// gibt Bildkoordinaten zurück
 		return PictureCoords;
 	}
 	
-	public int getID() {
+	public int getID() {					// gibt Knoten-ID zurück
 		return ID;
 	}
 	
-	public int getF() {
+	public int getF() {						// gibt F-Wert zurück
 		return F;
 	}
 	
-	public int getG() {
+	public int getG() {						// gibt G-Wert zurück
 		return G;
 	}
 	
-	public int getH() {
+	public int getH() {						// gibt H-Wert zurück
 		return H;
 	}
 	
-	public int getX() {
+	public int getX() {						// gibt x-Wert des Knotens zurück
 		return x;
 	}
 	
-	public int getY() {
+	public int getY() {						// gibt y-Wert des Knotens zurück
 		return y;
 	}
 	
-	public int getZ() {
+	public int getZ() {						// gibt z-Wert des Knotens zurück
 		return z;
 	}
 	
-	public void setG(int g){
+	public void setG(int g){				// setzt G-Wert
 		G=g;
 	}
 	
-	public void setH(int h){
+	public void setH(int h){				// setzt H-Wert
 		H=h;
 	}
 	
-	public void setF(int f){
+	public void setF(int f){				// setzt F-Wert
 		F=f;
 	}
 	
-	public void setParent(Node P){
+	public void setParent(Node P){			// setzt Vorgängerknoten
 		Parent = P;
 	}
 	/* compare-Funktions damit Tree Set geornet werden kann */

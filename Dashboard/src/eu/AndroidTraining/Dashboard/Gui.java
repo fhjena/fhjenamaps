@@ -62,7 +62,7 @@ public class GUI<Ziel, Start> extends Activity {
 
 		// muss evtl. alles in OnCreate in State3
 		RB = new Pathfinding();
-		RB.Berechne_Weg(start, destination);
+		RB.compute_Path(start, destination);
 		Route = RB.getPath();
 
 		go = new GraphicalOutput(this, Route);

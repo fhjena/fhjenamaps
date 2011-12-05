@@ -21,8 +21,8 @@ public class Pathfinding {
 
 	public Pathfinding() {
 		// Knoten Ebene0
-		int[] list0 = { 1 };
-		TotalList.add(new Node(0, 0, 0, 0, new Point(300, 220), list0));
+		int[] list0 = { 1 };												// Liste mit angrenzenden Knoten
+		TotalList.add(new Node(0, 0, 0, 0, new Point(300, 220), list0));	// neuen Knoten mit Eigenschaften erstellen
 		int[] list1 = { 0, 2, 3 };
 		TotalList.add(new Node(1, 3, 0, 0, new Point(300, 280), list1));
 		int[] list2 = { 1, 5 };
@@ -39,38 +39,38 @@ public class Pathfinding {
 		TotalList.add(new Node(7, 17, 13, 0, new Point(55, 485), list7));
 	}
 
-	public int calculate_G(int x1, int y1, int z1, int x2, int y2, int z2) { // Berechnung der Strecke zwischen zwei Knoten
+	public int calculate_G(int x1, int y1, int z1, int x2, int y2, int z2) { 		// Berechnung der Strecke zwischen zwei Knoten
 		int i = (int) Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2)+ Math.pow(z1 - z2, 2));
 		return i;
 	}
 
-	public int calculate_H(int x1, int y1, int z1) { // Berechnung der Luftlinie zu Zielknoten
+	public int calculate_H(int x1, int y1, int z1) { 								// Berechnung der Luftlinie zu Zielknoten
 		int i = (int) Math.sqrt(Math.pow(x1 - DN.getX(), 2) + Math.pow(y1 - DN.getY(), 2)+ Math.pow(z1 - DN.getZ(), 2));
 		return i;
 	}
 
-	public void Berechne_Weg(int Start_ID, int Ziel_ID) {
+	public void compute_Path(int Start_ID, int Ziel_ID) {			// berechnet den Weg von Start zu Zielknoten
 		SN = TotalList.get(GetIndexOfElement(TotalList, Start_ID)); // Startknoten aus Gesamtliste holen; hier später: Datenbankabfrage + Erstellung eines neuen Knotens
-		SN.setG(0); // G auf 0 setzen
-		SN.setF(0); // F auf 0 setzen
-		DN = TotalList.get(GetIndexOfElement(TotalList, Ziel_ID)); // Zielknoten aus Gesamtliste holen; hier später: Datenbankabfrage + Erstellung eines neuen Knotens
-		open_L.add(SN);
+		SN.setG(0); 												// G auf 0 setzen
+		SN.setF(0); 												// F auf 0 setzen
+		DN = TotalList.get(GetIndexOfElement(TotalList, Ziel_ID));	// Zielknoten aus Gesamtliste holen; hier später: Datenbankabfrage + Erstellung eines neuen Knotens
+		open_L.add(SN);												// Startknoten zu offener Liste hinzufügen
 
 		while ((!closed_L.contains(DN)) && (!open_L.isEmpty()) ) {
-			Current_N = open_L.pollFirst(); // aktueller Knoten = Knoten mit niedrigstem f-Wert
-			closed_L.add(Current_N); // aktueller Knoten in geschlossene Liste hinzugefügt
+			Current_N = open_L.pollFirst(); 						// aktueller Knoten = Knoten mit niedrigstem f-Wert
+			closed_L.add(Current_N); 								// aktueller Knoten in geschlossene Liste hinzugefügt
 			for (int i = 0; i <= Current_N.getNeigbour_ID().length - 1; i++) { // Für alle angrenzenden Knoten
 				Parent_N = TotalList.get(GetIndexOfElement(TotalList,
-						Current_N.getNeigbour_ID()[i])); // hier später: Datenbankabfrage, Erstellung einer neuen Instanz vom Knoten
-				if (closed_L.contains(Parent_N)) {/* nichts */} // wenn schon in geschlossener Liste, dann zue nichts
-				else { // ansonsten (wenn nicht in geschlossener Liste)
-					if (open_L.contains(Parent_N)) { // wenn schon in offener Liste
+						Current_N.getNeigbour_ID()[i])); 			// hier später: Datenbankabfrage, Erstellung einer neuen Instanz vom Knoten
+				if (closed_L.contains(Parent_N)) {/* nichts */} 	// wenn schon in geschlossener Liste, dann zue nichts
+				else { 												// ansonsten (wenn nicht in geschlossener Liste)
+					if (open_L.contains(Parent_N)) { 				// wenn schon in offener Liste
 						if (calculate_G(Current_N.getX(), Current_N.getY(), Current_N.getZ(), Parent_N.getX(), Parent_N.getY(), Parent_N.getZ()) < calculate_G(Parent_N.getParent().getX(), Parent_N.getParent().getY(), Parent_N.getParent().getZ(),Parent_N.getX(), Parent_N.getY(), Parent_N.getZ())) {
 							Parent_N.setParent(Current_N);
 						}
 					}
 
-					else { // wenn noch nicht in offener Liste
+					else { 	// wenn noch nicht in offener Liste
 
 						Parent_N.setParent(Current_N); // aktuellen Knoten als Vorgänger von angrenzenden Knoten eintragen
 						Parent_N.setG(Parent_N.getParent().getG()+calculate_G(Parent_N.getX(), Parent_N.getY(), Parent_N.getZ(),Parent_N.getParent().getX(), Parent_N.getParent().getY(),Parent_N.getParent().getZ()));
@@ -97,11 +97,11 @@ public class Pathfinding {
 
 	}
 
-	public int getWegstrecke() {
+	public int getDistance() { // Gibt die Länge des Gesamtweges zurück (erst nach Durchführung einer Wegberechnung mit nützlichem Wert gefüllt)
 		return distance;
 	}
 
-	public ArrayList<Node> getPath() {
+	public ArrayList<Node> getPath() {		// Gibt den gefundenen Weg als Liste zurück
 		return Path;
 	}
 
