@@ -14,7 +14,8 @@ import android.widget.*;
 
 public class GUI<Ziel, Start> extends Activity {
 
-	private int state;
+	// TODO Kommentare hinzufügen
+	private int state;							
 	private int start;
 	private int destination;
 	private EditText start_view;
@@ -23,7 +24,7 @@ public class GUI<Ziel, Start> extends Activity {
 	private TextView textoutput_destination;
 	private Pathfinding RB;
 	private ArrayList<Node> Route;
-	private GraphicalOutput go;
+	private GraphicalOutput go;			// beinhaltet grafische Darstellung der Testumgebung
 	private CompassListener cl; // beinhaltet Lagesensor
 
 	/** Called when the activity is first created. */
@@ -45,7 +46,7 @@ public class GUI<Ziel, Start> extends Activity {
 	//bei Buttonklick "GO" Start-u Zielpunkte aus Edittext einlesen
 	
 	public void state1_go(final View view) {
-
+//TODO Kommentare einfügen
 		start_view = (EditText) findViewById(R.id.tx_start);
 		start = Integer.parseInt(start_view.getText().toString());
 
@@ -53,14 +54,14 @@ public class GUI<Ziel, Start> extends Activity {
 		destination = Integer.parseInt(destination_view.getText().toString());
 	
 	//Start- u. Zielpunkt zum Test nochmal in TextView ausgeben
-		
+		// TODO brauchen wir das noch?
 		textoutput_start = (TextView) findViewById(R.id.Text1);
 		textoutput_start.setText(String.valueOf(start));
 
 		textoutput_destination = (TextView) findViewById(R.id.Text2);
 		textoutput_destination.setText(String.valueOf(destination));
 
-		// muss evtl. alles in OnCreate in State3
+		// TODO muss evtl. alles in OnCreate in State3
 		RB = new Pathfinding();
 		RB.compute_Path(start, destination);
 		Route = RB.getPath();
@@ -78,40 +79,13 @@ public class GUI<Ziel, Start> extends Activity {
 			tv.setText(tv.getText() + (Route.get(i).getID() + "\t\t\t"));
 		}
 
-		// TableLayout tl = new TableLayout(this);
-		// tl.addView(tv);
-		// tl.addView(go);
-
 		TableLayout tl = new TableLayout(this); // Layout contain Graphic and Text
 		tl.addView(go, new LayoutParams(display_width, display_height - 150)); // add Graphic 
 		tl.addView(tv); // add Text
 
 		setContentView(tl); // show new Content
 
-		// getContentView(R.layout.);
-
-		// setContentView(R.layout.state_3);
-
 	}
-
-	// @Override
-	// protected void onResume()
-	// {
-	//
-	// if (cl != null) {
-	// super.onResume();
-	// cl.onResume();
-	// }
-	// }
-	//
-	// @Override
-	// protected void onStop()
-	// {
-	// if (cl != null) {
-	// cl.onStop();
-	// super.onStop();
-	// }
-	// }
 
 	private class CompassListener implements SensorEventListener { // innere Klasse
 
@@ -146,10 +120,6 @@ public class GUI<Ziel, Start> extends Activity {
 		public void onAccuracyChanged(Sensor sensor, int accuracy) { // not used
 		}
 	}
-	/*
-	 * public void wechsleActivity(final View view) { startActivity(new
-	 * Intent(this, Unteractivity.class));
-	 * //setContentView(R.layout.unteractivity); }
-	 */
+	
 
 }

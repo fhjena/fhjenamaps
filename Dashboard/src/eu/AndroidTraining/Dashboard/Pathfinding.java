@@ -10,14 +10,14 @@ import android.graphics.Point;
 public class Pathfinding {
 
 	/* ------------- A*-Algorithmus ------------- */
-	private int Start_ID = 0, Dest_ID = 0; // Start- und ZielID
+	private int Start_ID = 0, Dest_ID = 0; 	// Start- und ZielID
 	private Node SN, DN, Current_N, Parent_N; // Startknoten, Zielknoten, aktueller Knoten, angrenzender Knoten
 	private TreeSet<Node> open_L = new TreeSet<Node>(); // TreeSet, da immer geordnet und immer kleinstes Element gesucht wird
 	private LinkedList<Node> closed_L = new LinkedList<Node>(); // LinkedList, da nach diskreten Elementen gesucht werden muss
 	private LinkedList<Node> TotalList = new LinkedList<Node>(); // Gesamtliste aller Knoten
 	private ArrayList<Node> Path = new ArrayList<Node>(); // enthält nach Routenberechnung die Wegknoten
 	private double h_factor = 1.0; // um Heuristik weniger oder stärker in die Wegfindung einzubeziehen
-	private int distance = 0;
+	private int distance = 0; // Distanz der ermittelten Route
 
 	public Pathfinding() {
 		// Knoten Ebene0
@@ -66,13 +66,13 @@ public class Pathfinding {
 				else { 												// ansonsten (wenn nicht in geschlossener Liste)
 					if (open_L.contains(Parent_N)) { 				// wenn schon in offener Liste
 						if (calculate_G(Current_N.getX(), Current_N.getY(), Current_N.getZ(), Parent_N.getX(), Parent_N.getY(), Parent_N.getZ()) < calculate_G(Parent_N.getParent().getX(), Parent_N.getParent().getY(), Parent_N.getParent().getZ(),Parent_N.getX(), Parent_N.getY(), Parent_N.getZ())) {
-							Parent_N.setParent(Current_N);
+							Parent_N.setParent(Current_N); // setze aktuellen Knoten als Vorgängerknoten, wenn G zwischen diesen kleiner als G von Vorgänger zu dessen Vorgänger
 						}
 					}
 
 					else { 	// wenn noch nicht in offener Liste
 
-						Parent_N.setParent(Current_N); // aktuellen Knoten als Vorgänger von angrenzenden Knoten eintragen
+						Parent_N.setParent(Current_N); // aktuellen Knoten als Vorgänger von angrenzenden Knoten eintragen + Werte aktualisieren
 						Parent_N.setG(Parent_N.getParent().getG()+calculate_G(Parent_N.getX(), Parent_N.getY(), Parent_N.getZ(),Parent_N.getParent().getX(), Parent_N.getParent().getY(),Parent_N.getParent().getZ()));
 						Parent_N.setF((int)(Parent_N.getG() + calculate_H(Parent_N.getX(), Parent_N.getY(), Parent_N.getZ()) * h_factor));
 						open_L.add(Parent_N); // zu offener Liste hinzufügen
@@ -85,8 +85,7 @@ public class Pathfinding {
 		// speichert Knoten in Array
 		if (!open_L.isEmpty()) { // Wenn Zielknoten gefunden
 			Node Node1 = DN;
-			while (Node1 != SN) { // "Gehe Weg Rückwärts" und speicher die zu
-									// begehenden Knoten
+			while (Node1 != SN) { // "Gehe Weg Rückwärts" und speicher die zu begehenden Knoten
 				this.Path.add(0, Node1);
 				Node1 = Node1.getParent();
 			}
@@ -105,8 +104,7 @@ public class Pathfinding {
 		return Path;
 	}
 
-	// dient dem extrahieren von Knoten aus der Gesamtliste... wird später durch
-	// DB anfrage ersetzt.
+	// dient dem extrahieren von Knoten aus der Gesamtliste... wird später durch DB anfrage ersetzt.
 	public int GetIndexOfElement(LinkedList<Node> Liste, int ID) {
 		ListIterator<Node> it = Liste.listIterator();
 		while (it.hasNext()) {
