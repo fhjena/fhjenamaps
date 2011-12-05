@@ -1,125 +1,184 @@
+
 package eu.AndroidTraining.Dashboard;
 
 import java.util.ArrayList;
 
-import android.app.Activity;
-
 import android.content.Context;
-import android.hardware.*;
-import android.os.Bundle;
-import android.util.DisplayMetrics;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.view.View;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.*;
 
-public class GUI<Ziel, Start> extends Activity {
+public class Gui extends View {
+	// Canvas von 0/0 bis 500/500
+	Paint var_paint;
+	private int start_x = 50;
+	private int start_y = 30;
+	private int end_x	= 150;
+	private int end_y 	= 30;
+	private int start_raum	= -1;
+	private int ziel_raum	= -1;
+	private boolean gui_status = false;
+	private float degree_float=0;
+	private ArrayList<Knoten> Weg;
+	 
 
-	// TODO Kommentare hinzufügen
-	private int state;							
-	private int start;
-	private int destination;
-	private EditText start_view;
-	private EditText destination_view;
-	private TextView textoutput_start;
-	private TextView textoutput_destination;
-	private Pathfinding RB;
-	private ArrayList<Node> Route;
-	private GraphicalOutput go;			// beinhaltet grafische Darstellung der Testumgebung
-	private CompassListener cl; // beinhaltet Lagesensor
-
-	/** Called when the activity is first created. */
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		cl = new CompassListener(); // neue Instanz zur Initialisierung des Sensors
-		setContentView(R.layout.state_0);
-
-	}
-
-	//bei Buttonklick "Routing" wird state1.xml aufgerufen
 	
-	public void state0_Routing(final View view) {
-		setContentView(R.layout.state_1);
-
-	}
-
-	//bei Buttonklick "GO" Start-u Zielpunkte aus Edittext einlesen
-	
-	public void state1_go(final View view) {
-//TODO Kommentare einfügen
-		start_view = (EditText) findViewById(R.id.tx_start);
-		start = Integer.parseInt(start_view.getText().toString());
-
-		destination_view = (EditText) findViewById(R.id.tx_destination);
-		destination = Integer.parseInt(destination_view.getText().toString());
-	
-	//Start- u. Zielpunkt zum Test nochmal in TextView ausgeben
-		// TODO brauchen wir das noch?
-		textoutput_start = (TextView) findViewById(R.id.Text1);
-		textoutput_start.setText(String.valueOf(start));
-
-		textoutput_destination = (TextView) findViewById(R.id.Text2);
-		textoutput_destination.setText(String.valueOf(destination));
-
-		// TODO muss evtl. alles in OnCreate in State3
-		RB = new Pathfinding();
-		RB.compute_Path(start, destination);
-		Route = RB.getPath();
-
-		go = new GraphicalOutput(this, Route);
-		cl.onResume(); // enable Lagesensor
-
-		DisplayMetrics metrics = new DisplayMetrics(); // get Display
-		getWindowManager().getDefaultDisplay().getMetrics(metrics); // get Dimensions of Display
-		int display_width = metrics.widthPixels;
-		int display_height = metrics.heightPixels;
-
-		TextView tv = new TextView(this);
-		for (int i = 0; i < Route.size(); i++) { // print all Node IDs
-			tv.setText(tv.getText() + (Route.get(i).getID() + "\t\t\t"));
-		}
-
-		TableLayout tl = new TableLayout(this); // Layout contain Graphic and Text
-		tl.addView(go, new LayoutParams(display_width, display_height - 150)); // add Graphic 
-		tl.addView(tv); // add Text
-
-		setContentView(tl); // show new Content
-
-	}
-
-	private class CompassListener implements SensorEventListener { // innere Klasse
-
-		private SensorManager mSensorManager; // beinhaltet alle Sensoren
-		private Sensor Magnetsensor; // nur Lagesensor
-		private float f_old = 0; // Winkel merken
-
-		public CompassListener() { // Konstruktor
-			mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE); // SensorManager holen
-			Magnetsensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION); // Lagesensor auswählen
-		}
-
-		protected void onResume() { // enable Lagesensor
-			mSensorManager.registerListener(this, Magnetsensor, SensorManager.SENSOR_DELAY_GAME);
-		}
-
-		protected void onStop() { // disable Lagesensor
-			mSensorManager.unregisterListener(this);
-		}
-
-		public void onSensorChanged(SensorEvent event) {
-			float f_new = -event.values[0]; // Sensor auslesen
-			if (Math.abs(f_new - f_old) > 3.5) { // Hysterese, damit Bild an der Schaltschwelle nicht hin- und herdreht
-				if ((f_new % 5) > 2.5) // Sensor auf 5° Schritte auf bzw. abrunden
-					f_new += 5;
-				f_old = f_new - (f_new % 5); // neuen Winkel merken
-				go.set_degree(f_old); // neuen Winkel an Ausgabe übergeben
-				go.invalidate(); // Bild neu zeichnen
-			}
-		}
-
-		public void onAccuracyChanged(Sensor sensor, int accuracy) { // not used
-		}
+	// Konstruktor
+	public Gui(Context c_text, ArrayList<Knoten> Route) {
+		super(c_text);
+		var_paint = new Paint();
+		Weg = Route;
+		
 	}
 	
+	// Getter und Setter zur Verwaltung der Start - und Zielraeume
+	public void set_start_ziel(int start_raum_,int ziel_raum_){
+		start_raum = start_raum_;
+		start_raum = ziel_raum_;
+	}
+	
+	public int get_start_raum(){
+		return start_raum;
+	}
+	
+	public int get_ziel_raum(){
+		return ziel_raum;
+	}
+		
+	// Getter und Setter zur Verwaltung der Koordinaten
+	// ------------------------------------------------
+	// Getter und Setter zur Verwaltung der Koordinaten
+	public void set_x_koordnaten(int von,int bis){
+		start_x = von;
+		end_x 	= bis;
+	}
+	
+	public void set_y_koordinaten(int von,int bis){
+		start_y = von;
+		end_y = bis;
+	}
+	
+	public int get_start_x(){
+		return start_x;
+	}
+	
+	public int get_start_y(){
+		return start_y;
+	}
+	
+	public int get_end_x(){
+		return end_x;
+	}
+	
+	public int get_end_y(){
+		return end_y;
+	}
+	
+	// Getter und Setter zur Statusverwaltung der GUI
+	public void set_gui(boolean status_der_gui){
+		gui_status = status_der_gui;
+	}
+	
+	public boolean get_gui(){
+		return gui_status;
+	}
+	
+	// Gradzahl des Sensors
+	public void set_degree(float f) {
+		degree_float = f;
+	}
+
+	
+	// Testumgebung zeichnen
+	
+	private void zeichne_hintergrund(Canvas canvas){
+		var_paint.setColor(Color.WHITE);
+		canvas.drawPaint(var_paint);
+	}
+	
+	private void zeichne_rotierung(Canvas canvas){
+		canvas.rotate(degree_float,250F, 250F);
+		canvas.drawPaint(var_paint);
+	}
+	
+	private void zeichne_testhaus(Canvas canvas){
+		// Farbe = schwarz
+		var_paint.setColor(Color.BLACK);
+		// Syle = STROKE = Umrandung
+		var_paint.setStyle(Paint.Style.STROKE);
+		//Haus_1
+		canvas.drawRect(180, 400, 260, 320, var_paint);
+		canvas.drawRect(340, 180, 410, 260, var_paint);		
+		canvas.drawRect(260, 180, 340, 100, var_paint);
+		canvas.drawRect(260, 180, 340, 400, var_paint);
+		//Haus_2
+		canvas.drawRect(20, 450, 160, 520, var_paint);
+		canvas.drawRect(20, 520, 90, 590, var_paint);
+		canvas.drawRect(90, 520, 160, 590, var_paint);
+		// Tueren
+		var_paint.setColor(Color.GRAY);
+		var_paint.setStyle(Paint.Style.FILL);
+		// horizontal
+		canvas.drawRect(290, 178, 310, 182, var_paint);
+		canvas.drawRect(290, 398, 310, 402, var_paint);
+		canvas.drawRect(115, 518, 135, 522, var_paint);
+		canvas.drawRect(45, 518, 65, 522, var_paint);
+		// vertikal
+		canvas.drawRect(158, 475, 162, 495, var_paint);
+		canvas.drawRect(258, 350, 262, 370, var_paint);
+		canvas.drawRect(258, 270, 262, 290, var_paint);
+		canvas.drawRect(338, 210, 342, 230, var_paint);
+	}
+	
+	private void zeichne_testknoten(Canvas canvas){
+		var_paint.setStyle(Paint.Style.FILL);
+		var_paint.setColor(Color.RED);
+		// Knoten_1 (x=300/y=220)
+		canvas.drawCircle(300, 220, 3.0f, var_paint);
+		// Knoten_2 (x=300/y=280)
+		canvas.drawCircle(300, 280, 3.0f, var_paint);
+		// Knoten_3 (x=300/y=360)
+		canvas.drawCircle(300, 360, 3.0f, var_paint);
+		// Knoten_4 (x=300/y=485)
+		canvas.drawCircle(300, 485, 3.0f, var_paint);
+		// Knoten_5 (x=220/y=280)
+		canvas.drawCircle(220, 280, 3.0f, var_paint);
+		// Knoten_6 (x=170/y=485)
+		canvas.drawCircle(170, 485, 3.0f, var_paint);
+		// Knoten_7 (x=125/y=485)
+		canvas.drawCircle(125, 485, 3.0f, var_paint);
+		// Knoten_8 (x=55/y=485)
+		canvas.drawCircle(55, 485, 3.0f, var_paint);
+	}
+	
+    	
+//	ArrayList<Point> TempArr = new ArrayList<Point>();
+
+	
+	private void zeichne_punkt_zu_punkt(Canvas canvas){
+		ArrayList<Knoten> TempArr = new ArrayList<Knoten>();
+		TempArr = Weg;
+		var_paint.setColor(Color.BLUE);
+		for(int i=0;i<TempArr.size()-1;i++){
+//		for(int i=0;i<=10;i++){		
+//			SYNTAX	canvas.drawLine(startX, startY, stopX, stopY, paint)
+			canvas.drawLine(TempArr.get(i).getBildKoords().x, TempArr.get(i).getBildKoords().y, TempArr.get(i+1).getBildKoords().x, TempArr.get(i+1).getBildKoords().y, var_paint);
+//			canvas.drawLine(300, 220, 300, 280, var_paint);
+//			canvas.drawLine(300, 280, 300, 360, var_paint);
+			
+		}
+	}
+	
+	protected void onDraw(Canvas canvas){
+		zeichne_hintergrund(canvas);
+		zeichne_rotierung(canvas);
+		zeichne_testhaus(canvas);
+		zeichne_testknoten(canvas);
+		
+		zeichne_punkt_zu_punkt(canvas);
+	}
 
 }
+
+
