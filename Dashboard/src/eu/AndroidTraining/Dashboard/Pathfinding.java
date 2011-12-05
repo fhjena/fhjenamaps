@@ -10,7 +10,7 @@ import android.graphics.Point;
 public class Pathfinding {
 
 	/* ------------- A*-Algorithmus ------------- */
-	private int Start_ID = 0, Dest_ID = 0; 	// Start- und ZielID
+//	private int Start_ID = 0, Dest_ID = 0; 	// Start- und ZielID
 	private Node SN, DN, Current_N, Parent_N; // Startknoten, Zielknoten, aktueller Knoten, angrenzender Knoten
 	private TreeSet<Node> open_L = new TreeSet<Node>(); // TreeSet, da immer geordnet und immer kleinstes Element gesucht wird
 	private LinkedList<Node> closed_L = new LinkedList<Node>(); // LinkedList, da nach diskreten Elementen gesucht werden muss
@@ -105,7 +105,7 @@ public class Pathfinding {
 	}
 
 	// dient dem extrahieren von Knoten aus der Gesamtliste... wird später durch DB anfrage ersetzt.
-	public int GetIndexOfElement(LinkedList<Node> Liste, int ID) {
+	private int GetIndexOfElement(LinkedList<Node> Liste, int ID) {
 		ListIterator<Node> it = Liste.listIterator();
 		while (it.hasNext()) {
 			if (it.next().getID() == ID) {

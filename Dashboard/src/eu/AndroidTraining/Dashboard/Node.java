@@ -31,7 +31,7 @@ public class Node implements Comparable<Node> {
 		return Neighbour_ID;
 	}
 
-	public Point getBildKoords() {			// gibt Bildkoordinaten zurück
+	public Point getPictureCoords() {			// gibt Bildkoordinaten zurück
 		return PictureCoords;
 	}
 	

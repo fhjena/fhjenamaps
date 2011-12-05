@@ -176,10 +176,10 @@ public class GraphicalOutput extends View {
 		for (int i = 0; i < TempArr.size() - 1; i++) {
 			// for(int i=0;i<=10;i++){
 			// SYNTAX canvas.drawLine(startX, startY, stopX, stopY, paint)
-			canvas.drawLine(TempArr.get(i).getBildKoords().x + x_ref, TempArr
-					.get(i).getBildKoords().y + y_ref, TempArr.get(i + 1)
-					.getBildKoords().x + x_ref, TempArr.get(i + 1)
-					.getBildKoords().y + y_ref, var_paint);
+			canvas.drawLine(TempArr.get(i).getPictureCoords().x + x_ref, TempArr
+					.get(i).getPictureCoords().y + y_ref, TempArr.get(i + 1)
+					.getPictureCoords().x + x_ref, TempArr.get(i + 1)
+					.getPictureCoords().y + y_ref, var_paint);
 			// canvas.drawLine(300, 220, 300, 280, var_paint);
 			// canvas.drawLine(300, 280, 300, 360, var_paint);
 
