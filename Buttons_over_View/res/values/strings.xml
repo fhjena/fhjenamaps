@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, Startseite!</string>
+    <string name="app_name">Dashboard</string>
+ 	<string name="but_ShowPosition">Show Position</string>
+ 	<string name="but_Routing">Routing</string>
+ 	<string name="but_Campus">Campus</string>
+ 	<string name="tx_unteractivity">Sie sind in der Unteractivity</string>
+ 
+</resources>
