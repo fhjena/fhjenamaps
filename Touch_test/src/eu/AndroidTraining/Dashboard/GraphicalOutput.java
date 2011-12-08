@@ -15,8 +15,8 @@ public class GraphicalOutput extends View {
 	private float degree 					= -1;
 	private int x_ref 						= 150;
 	private int y_ref 						= -160;
-	public int x=100;
-	public int y=100;
+	public double x=0;
+	public double y=0;
 
 	// Konstruktor
 	public GraphicalOutput(Context c_txt, ArrayList<Node> route) {
@@ -123,7 +123,7 @@ public class GraphicalOutput extends View {
 
 	// onDraw wird von der Klasse View überschrieben,zeichnet im Endeffekt aus das Canvas
 	protected void onDraw(Canvas canvas) {
-		canvas.translate(x, y);
+		canvas.translate((int)x, (int)y);
 		
 		draw_background(canvas);
 		draw_rotate(canvas);

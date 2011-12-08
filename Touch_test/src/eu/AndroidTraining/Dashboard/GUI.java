@@ -33,6 +33,8 @@ public class GUI<Ziel, Start> extends Activity {
 	
 	private static int x=0;
 	private static int y=0;
+	private static double xn =0, xa=0;
+	private static double yn =0, ya=0;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -73,23 +75,53 @@ public class GUI<Ziel, Start> extends Activity {
 		RB = new Pathfinding();
 		RB.compute_Path(start, destination);
 		Route = RB.getPath();
-
+		
 		go = new GraphicalOutput(this, Route);
 		cl.onResume(); // enable Lagesensor
 		go.setOnTouchListener(new View.OnTouchListener() {
 			public boolean onTouch(View v, MotionEvent event) {
 				
-				
-				
-				if((event.getAction()&MotionEvent.ACTION_MASK) == MotionEvent.ACTION_DOWN){
-					x = (int)event.getX();
-					y = (int)event.getY();
-				}
-				if((event.getAction()&MotionEvent.ACTION_MASK) == MotionEvent.ACTION_MOVE){
-					go.x = (int)event.getRawX()-x;
-					go.y = (int)event.getRawY()-y;
+				double dx = 0;
+				double dy = 0;
+				switch((event.getAction()&MotionEvent.ACTION_MASK)){
+				case MotionEvent.ACTION_DOWN:
+					xa = event.getX();
+					ya = event.getY();
+					break;
+				case MotionEvent.ACTION_MOVE:
+					xn = event.getX();
+					yn = event.getY();
+					
+					dx=(xn-xa);
+					dy=(yn-ya);
+					go.x = dx;					
+					go.y = dy;
 					go.invalidate();
+					System.out.println("dx: "+ event.getX() +" dy: " + event.getRawX() +"\n");
+					
+					xa=xn;
+					ya=yn;
+					break;
 				}
+//				if((event.getAction()&MotionEvent.ACTION_MASK) == MotionEvent.ACTION_DOWN){
+//					xa = event.getX();
+//					ya = event.getY();
+//				}
+//				if((event.getAction()&MotionEvent.ACTION_MASK) == MotionEvent.ACTION_MOVE){
+//					xn = event.getX();
+//					yn = event.getY();
+//					
+//					dx=(xn-xa);
+//					dy=(yn-ya);
+//					go.x = dx;					
+//					go.y = dy;
+//					go.invalidate();
+//					System.out.println("dx: "+ event.getX() +" dy: " + event.getRawX() +"\n");
+//					
+//					xa=xn;
+//					ya=yn;
+//				}
+				go.invalidate();
 				 return true;
 			}
         });
