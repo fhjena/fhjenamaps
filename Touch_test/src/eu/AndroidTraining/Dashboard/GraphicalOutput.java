@@ -15,8 +15,8 @@ public class GraphicalOutput extends View {
 	private float degree 					= -1;
 	private int x_ref 						= 150;
 	private int y_ref 						= -160;
-	public double x=0;
-	public double y=0;
+	private int x=0;
+	private int y=0;
 
 	// Konstruktor
 	public GraphicalOutput(Context c_txt, ArrayList<Node> route) {
@@ -52,7 +52,9 @@ public class GraphicalOutput extends View {
 
 	// Um wieviel Grad rotiert das Canvas ?
 	private void draw_rotate(Canvas canvas) {
-		canvas.rotate(degree, 250 + x_ref, 350 + y_ref);
+		// TODO beides soll funktionieren
+//		canvas.rotate(degree, 250 + 150, 350 - 160); // rotation des canvas um Bildschrimmittelpunkt (finger schiebt in falsche richtung)
+		canvas.rotate(degree, 250 + x_ref, 350 + y_ref); // korrektes verschieben des canvas wie fingerbewegung (rotation des canvas immer noch um gebäudemittelpunkt)
 		canvas.drawPaint(var_paint);
 	}
 
@@ -123,7 +125,7 @@ public class GraphicalOutput extends View {
 
 	// onDraw wird von der Klasse View überschrieben,zeichnet im Endeffekt aus das Canvas
 	protected void onDraw(Canvas canvas) {
-		canvas.translate((int)x, (int)y);
+		canvas.translate(x, y); // TODO tut momentan nichts, da x und y 0 sind und 0 bleiben
 		
 		draw_background(canvas);
 		draw_rotate(canvas);
@@ -132,4 +134,11 @@ public class GraphicalOutput extends View {
 		draw_p2p(canvas);
 	}
 
+	public void moveX(int movedX) {
+		x_ref += movedX;
+	}
+
+	public void moveY(int movedY) {
+		y_ref += movedY;
+	}
 }

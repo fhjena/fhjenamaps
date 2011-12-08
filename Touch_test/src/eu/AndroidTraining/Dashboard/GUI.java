@@ -33,8 +33,8 @@ public class GUI<Ziel, Start> extends Activity {
 	
 	private static int x=0;
 	private static int y=0;
-	private static double xn =0, xa=0;
-	private static double yn =0, ya=0;
+	private static int xn =0, xa=0;
+	private static int yn =0, ya=0;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -81,21 +81,21 @@ public class GUI<Ziel, Start> extends Activity {
 		go.setOnTouchListener(new View.OnTouchListener() {
 			public boolean onTouch(View v, MotionEvent event) {
 				
-				double dx = 0;
-				double dy = 0;
+				int dx = 0;
+				int dy = 0;
 				switch((event.getAction()&MotionEvent.ACTION_MASK)){
 				case MotionEvent.ACTION_DOWN:
-					xa = event.getX();
-					ya = event.getY();
+					xa = (int) event.getX();
+					ya = (int) event.getY();
 					break;
 				case MotionEvent.ACTION_MOVE:
-					xn = event.getX();
-					yn = event.getY();
+					xn = (int) event.getX();
+					yn = (int) event.getY();
 					
 					dx=(xn-xa);
 					dy=(yn-ya);
-					go.x = dx;					
-					go.y = dy;
+					go.moveX(dx);					
+					go.moveY(dy);
 					go.invalidate();
 					System.out.println("dx: "+ event.getX() +" dy: " + event.getRawX() +"\n");
 					
