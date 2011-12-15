@@ -5,9 +5,9 @@ import android.graphics.Point;
 
 public class Node implements Comparable<Node> {
 	private int ID;					// Knoten-ID
-	private int F;					// F-Wert
-	private int G;					// G-Wert (Distanz zwischen zwei Knoten)
-	private int H;					// Wert fü Distanz zwischen Knoten und Zielknoten
+	private float F;					// F-Wert
+	private float G;					// G-Wert (Distanz zwischen zwei Knoten)
+	private float H;					// Wert fü Distanz zwischen Knoten und Zielknoten
 	private Node Parent; 			// Vorgängerknoten
 	private int[] Neighbour_ID; 	// Nachbarknoten
 	private int x; 					// x-,y- & z-Koordinaten(real)
@@ -40,15 +40,15 @@ public class Node implements Comparable<Node> {
 		return ID;
 	}
 	
-	public int getF() {						// gibt F-Wert zurück
+	public float getF() {						// gibt F-Wert zurück
 		return F;
 	}
 	
-	public int getG() {						// gibt G-Wert zurück
+	public float getG() {						// gibt G-Wert zurück
 		return G;
 	}
 	
-	public int getH() {						// gibt H-Wert zurück
+	public float getH() {						// gibt H-Wert zurück
 		return H;
 	}
 	
@@ -64,16 +64,14 @@ public class Node implements Comparable<Node> {
 		return z;
 	}
 	
-	public void setG(int g){				// setzt G-Wert
+	public void setG(float g){				// setzt G-Wert
 		G=g;
+		F=G+H;								// und aktualisiert F-Wert
 	}
 	
-	public void setH(int h){				// setzt H-Wert
+	public void setH(float h){				// setzt H-Wert
 		H=h;
-	}
-	
-	public void setF(int f){				// setzt F-Wert
-		F=f;
+		F=G+H;								// und aktualisiert F-Wert
 	}
 	
 	public void setParent(Node P){			// setzt Vorgängerknoten
