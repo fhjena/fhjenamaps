@@ -1,4 +1,4 @@
-package eu.AndroidTraining.Dashboard;
+package usajmaps.prototyping;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

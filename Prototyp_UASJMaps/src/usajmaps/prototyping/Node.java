@@ -1,4 +1,5 @@
-package eu.AndroidTraining.Dashboard;
+package usajmaps.prototyping;
+
 
 import android.graphics.Point;
 
@@ -14,12 +15,12 @@ public class Node implements Comparable<Node> {
 	private int z;
 	private Point PictureCoords; // x- & y- Koordinaten (Bild)
 
-	public Node(int ID, int X, int Y, int Z, Point p, int[] angrenzend) { // Konstruktor zum Initialisieren
+	public Node(int ID, int X, int Y, int Z, Point p, int[] adjacent) { // Konstruktor zum Initialisieren
 		this.ID = ID;
 		this.x = X;
 		this.y = Y;
 		this.z = Z;
-		this.Neighbour_ID = angrenzend;
+		this.Neighbour_ID = adjacent;
 		this.PictureCoords = p;
 	}
 	
