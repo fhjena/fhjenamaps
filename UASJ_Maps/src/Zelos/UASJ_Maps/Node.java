@@ -14,6 +14,7 @@ public class Node implements Comparable<Node> {
 	private int y;
 	private int z;
 	private Point PictureCoords; // x- & y- Koordinaten (Bild)
+	private int floorID;
 
 	public Node(int ID, int X, int Y, int Z, Point p, int[] adjacent) { // Konstruktor zum Initialisieren
 		this.ID = ID;
@@ -40,10 +41,6 @@ public class Node implements Comparable<Node> {
 		return ID;
 	}
 	
-	public float getF() {						// gibt F-Wert zurück
-		return F;
-	}
-	
 	public float getG() {						// gibt G-Wert zurück
 		return G;
 	}
@@ -64,6 +61,10 @@ public class Node implements Comparable<Node> {
 		return z;
 	}
 	
+	public int getFloorID(){
+		return floorID;
+	}
+	
 	public void setG(float g){				// setzt G-Wert
 		G=g;
 		F=G+H;								// und aktualisiert F-Wert
@@ -77,6 +78,7 @@ public class Node implements Comparable<Node> {
 	public void setParent(Node P){			// setzt Vorgängerknoten
 		Parent = P;
 	}
+	
 	/* compare-Funktions damit Tree Set geornet werden kann */
 	public int compareTo(Node another) {
 		if (this.F < another.F)

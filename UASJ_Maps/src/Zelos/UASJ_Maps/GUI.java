@@ -13,7 +13,7 @@ import android.widget.*;
 public class GUI extends Activity {
 
 	private Pathfinding RB;
-	private ArrayList<Node> Route;
+	private ArrayList<ArrayList<Node>> Route;
 	private GraphicalOutput go; // beinhaltet grafische Darstellung der Testumgebung
 	private CompassListener cl; // beinhaltet Lagesensor
 

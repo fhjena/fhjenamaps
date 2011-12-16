@@ -4,18 +4,16 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.TreeSet;
-
 import android.graphics.Point;
 
 public class Pathfinding {
 
 	/* ------------- A*-Algorithmus ------------- */
-//	private int Start_ID = 0, Dest_ID = 0; 	// Start- und ZielID
 	private Node SN, DN, Current_N, Parent_N; // Startknoten, Zielknoten, aktueller Knoten, angrenzender Knoten
 	private TreeSet<Node> open_L = new TreeSet<Node>(); // TreeSet, da immer geordnet und immer kleinstes Element gesucht wird
 	private LinkedList<Node> closed_L = new LinkedList<Node>(); // LinkedList, da nach diskreten Elementen gesucht werden muss
 	private LinkedList<Node> TotalList = new LinkedList<Node>(); // Gesamtliste aller Knoten
-	private ArrayList<Node> Path = new ArrayList<Node>(); // enthält nach Routenberechnung die Wegknoten
+	private ArrayList<ArrayList<Node>> Path = new ArrayList<ArrayList<Node>>();
 	private double h_factor = 1.0; // um Heuristik weniger oder stärker in die Wegfindung einzubeziehen
 	private float distance = 0; // Distanz der ermittelten Route
 
@@ -38,18 +36,33 @@ public class Pathfinding {
 		int[] list7 = { 6 };
 		TotalList.add(new Node(7, 17, 13, 0, new Point(55, 485), list7));
 	}
-
-	public float calculate_Distance(int x1, int y1, int z1, int x2, int y2, int z2) { 		// Berechnung der Strecke zwischen zwei Knoten
-		int i = (int) Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2)+ Math.pow(z1 - z2, 2));
+	
+	/**
+	 * Berechnung der Strecke zwischen zwei Knoten
+	 * @params: Koordinaten
+	 * @return: Strecke zwischen zwei Knoten
+	 */
+	public float calculate_Distance(int x1, int y1, int z1, int x2, int y2, int z2) {
+		float i = (float) Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2)+ Math.pow(z1 - z2, 2));
 		return i;
 	}
 
-	public float calculate_H(int x1, int y1, int z1) { 								// Berechnung der Luftlinie zu Zielknoten
-		int i = (int) Math.sqrt(Math.pow(x1 - DN.getX(), 2) + Math.pow(y1 - DN.getY(), 2)+ Math.pow(z1 - DN.getZ(), 2));
+	/**
+	 * Berechnung der Luftlinie zu Zielknoten
+	 * @params: Koordinaten
+	 * @return: Luftlinie
+	 */
+	public float calculate_H(int x1, int y1, int z1) { 								// 
+		float i = (float) Math.sqrt(Math.pow(x1 - DN.getX(), 2) + Math.pow(y1 - DN.getY(), 2)+ Math.pow(z1 - DN.getZ(), 2));
 		return i;
 	}
 
-	public void compute_Path(int Start_ID, int Ziel_ID) {			// berechnet den Weg von Start zu Zielknoten
+	/**
+	 * berechnet den Weg von Start zu Zielknoten
+	 * @param Start_ID
+	 * @param Ziel_ID
+	 */
+	public void compute_Path(int Start_ID, int Ziel_ID) {			
 		SN = TotalList.get(GetIndexOfElement(TotalList, Start_ID)); // Startknoten aus Gesamtliste holen; hier später: Datenbankabfrage + Erstellung eines neuen Knotens
 		SN.setG(0.0f); 												// G auf 0 setzen
 		SN.setH(0.0f); 												// H auf 0 setzen
@@ -84,28 +97,51 @@ public class Pathfinding {
 		// Wegstreckenlänge speichern
 		distance = DN.getG();
 		// speichert Knoten in Array
+		ArrayList<Node> l = new ArrayList<Node>();
 		if (!open_L.isEmpty()) { // Wenn Zielknoten gefunden
+			l.clear();
 			Node Node1 = DN;
-			while (Node1 != SN) { // "Gehe Weg Rückwärts" und speicher die zu begehenden Knoten
-				this.Path.add(0, Node1);
-				Node1 = Node1.getParent();
+			while (Node1 != SN) { // 2D-array füllen. Array mit Arrays von Knoten. Immer Knoten mit gleicher Ebene kommen in ein Unterarray
+				l.add(0, Node1);
+				if(Node1.getFloorID() != Node1.getParent().getFloorID()){		// Wenn Ebene zwischen Knoten verschieden
+					Path.add(l);										// Knotenarray zu 2D-Array hinzufügen
+					l.clear();										// und löschen, um mit Knoten neuer Ebene zu füllen
+				}
+					Node1 = Node1.getParent();
 			}
-			this.Path.add(0, SN);
-		} else
+			l.add(0, SN);					// Zuletzt noch Startknoten hinzufügen
+			Path.add(l);
+			l.clear();
+		} 
+		else{
 			// ansonsten
-			this.Path.clear(); // Liste leeren
-
+			l.clear(); // Liste leeren
+			Path.clear();
+		}
 	}
-
-	public float getDistance() { // Gibt die Länge des Gesamtweges zurück (erst nach Durchführung einer Wegberechnung mit nützlichem Wert gefüllt)
+	
+	/**
+	 * Gibt die Länge des Gesamtweges zurück (erst nach Durchführung einer Wegberechnung mit nützlichem Wert gefüllt)
+	 * @return Wegstrecke
+	 */
+	public float getDistance() { 
 		return distance;
 	}
 
-	public ArrayList<Node> getPath() {		// Gibt den gefundenen Weg als Liste zurück
+	/**
+	 * Gibt den gefundenen Weg als 2D-Array zurück
+	 * @return Weg
+	 */
+	public ArrayList<ArrayList<Node>> getPath() {		
 		return Path;
 	}
 
-	// dient dem extrahieren von Knoten aus der Gesamtliste... wird später durch DB anfrage ersetzt.
+	/**
+	 * dient dem extrahieren von Knoten aus der Gesamtliste... wird später durch DB anfrage ersetzt
+	 * @param List
+	 * @param ID
+	 * @return Index des gesuchten Elements
+	 */
 	private int GetIndexOfElement(LinkedList<Node> Liste, int ID) {
 		ListIterator<Node> it = Liste.listIterator();
 		while (it.hasNext()) {
