@@ -10,17 +10,20 @@ import android.view.View;
 
 public class GraphicalOutput extends View {
 	private Paint var_paint;
-	private ArrayList<Node> var_way;
+	private ArrayList<ArrayList<Node>> var_way;
 	private boolean graphical_output_status = false;
 	private float degree = -1;
 	private int x_ref = 150;
 	private int y_ref = -160;
+	private short check_counter=0;
+	private short current_floor=-1;
+	private int state=-1; // 0: Routenberechnung, 1: Positionsanzeige, 2: Campusanzeige
 
 	// Konstruktor
 	public GraphicalOutput(Context c_txt, ArrayList<Node> route) {
 		super(c_txt);
 		var_paint = new Paint();
-		var_way = route;
+//		var_way = route;
 	}
 
 	// Setzt den Status der Grafischen Ausgabe
@@ -40,6 +43,52 @@ public class GraphicalOutput extends View {
 
 	// ----- TESTUMGEBUNG -----
 	// ------------------------
+	
+	/** 
+	 * Angabe in welche Etage gewechselt werden soll
+	 * @param f (Codierung)
+	 * @return Wert, ob mit Etagen wechsel irgendwelche Grenzen gesetzt werden (nicht weiter nach oben/unten...)
+	 * nicht weiter nach oben: 1
+	 * nicht weiter nach unten: -1
+	 * alles normal: 0
+	 */
+	public short set_floor(int f){
+		return 0;
+	}
+	
+	/**
+	 * Angabe, dass Checkbutton gedrückt wird
+	 * @return Wert, wieviele Ebenen auf dem Weg noch abzuarbeiten sind(z.b. wenn auf letzter Ebene, return 0)
+	 */
+	public short set_check(){
+		check_counter ++;
+		return (short) (var_way.size()-(check_counter+1));
+	}
+	
+	/**
+	 * Setzt Status auf Routenanzeige
+	 * @param list : 2D-Array mit abzuschreitenden Ebenen und Knoten
+	 */
+	public void set_state_path(ArrayList<ArrayList<Node>> list){
+		state = 0;
+		check_counter = 0;
+		var_way = list;
+	}
+	
+	/**
+	 * Setzt Status auf Positionsanzeige
+	 * @param n : Knoten, der angezeigt werden soll
+	 */
+	public void set_state_position(Node n){
+		state = 1;
+	}
+	
+	/**
+	 * Setzt Status auf Campusanzeige(freie Navigation)
+	 */
+	public void set_state_campus(){
+		state = 2;
+	}
 
 	// Hintergrund zeichnen
 	private void draw_background(Canvas canvas) {
@@ -123,23 +172,25 @@ public class GraphicalOutput extends View {
 	// Verbindungen (Punkt zu Punkt) zeichnen
 	private void draw_p2p(Canvas canvas) {
 		ArrayList<Node> TempArr = new ArrayList<Node>();
-		TempArr = var_way;
-		var_paint.setColor(Color.BLUE);
-		for (int i = 0; i < TempArr.size() - 1; i++) {
-			canvas.drawLine(TempArr.get(i).getPictureCoords().x + x_ref,
-					TempArr.get(i).getPictureCoords().y + y_ref,
-					TempArr.get(i + 1).getPictureCoords().x + x_ref, TempArr
-							.get(i + 1).getPictureCoords().y + y_ref, var_paint);
-		}
+//		TempArr = var_way;
+//		var_paint.setColor(Color.BLUE);
+//		for (int i = 0; i < TempArr.size() - 1; i++) {
+//			canvas.drawLine(TempArr.get(i).getPictureCoords().x + x_ref,
+//					TempArr.get(i).getPictureCoords().y + y_ref,
+//					TempArr.get(i + 1).getPictureCoords().x + x_ref, TempArr
+//							.get(i + 1).getPictureCoords().y + y_ref, var_paint);
+//		}
 	}
 
 	// onDraw wird von der Klasse View überschrieben,zeichnet im Endeffekt aus das Canvas
 	protected void onDraw(Canvas canvas) {
-		draw_background(canvas);
-		draw_rotate(canvas);
-		draw_house(canvas);
-		draw_nodes(canvas);
-		draw_p2p(canvas);
+//		draw_background(canvas);
+//		draw_rotate(canvas);
+//		draw_house(canvas);
+//		draw_nodes(canvas);
+//		draw_p2p(canvas);
+		
 	}
+	
 
 }
