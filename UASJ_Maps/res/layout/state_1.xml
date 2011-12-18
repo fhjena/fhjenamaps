@@ -17,7 +17,6 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:onClick="launch_state_2"
         	android:textSize="18dp"
             android:text="ShowPosition" />
 
@@ -42,7 +41,6 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:onClick="launch_state_7"
         	android:textSize="18dp"
             android:text="Campus" />
 
@@ -51,7 +49,6 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:onClick="launch_state_6"
         	android:textSize="18dp"
             android:text="Options" />
     </LinearLayout>

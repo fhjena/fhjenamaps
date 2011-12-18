@@ -26,15 +26,25 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <Button
-        android:id="@+id/go2"
+        android:id="@+id/but_Go2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView22"
         android:layout_marginTop="50dp"
         android:layout_toRightOf="@+id/textView21"
         android:textSize="18dp"
-        android:onClick="launch_state_3"
         android:text="Go!"
         android:width="80dp" />
+
+    <EditText
+        android:id="@+id/editText2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textView22"
+        android:layout_alignBottom="@+id/textView22"
+        android:layout_alignRight="@+id/but_Go2"
+        android:layout_toRightOf="@+id/textView22"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="20dp" />
 
 </RelativeLayout>
