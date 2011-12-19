@@ -25,6 +25,20 @@ public class Node implements Comparable<Node> {
 		this.PictureCoords = p;
 	}
 	
+	public Node(Node a){
+		this.ID = a.ID;
+		this.x = a.x;
+		this.y = a.y;
+		this.z = a.z;
+		this.Neighbour_ID = a.Neighbour_ID;
+		this.PictureCoords = a.PictureCoords;
+		this.F = a.F;
+		this.G = a.G;
+		this.H = a.H;
+		this.Parent = a.Parent;
+		this.floorID = a.floorID;
+	}
+	
 	public Node getParent(){				// gibt Vorgänergknoten zurück
 		return Parent;
 	}

@@ -35,7 +35,8 @@ public class GUI extends Activity {
 		// TODO begin löschen: routenberechnung, weil das hier ja showposition ist
 		Pathfinding RB = new Pathfinding();
 		RB.compute_Path(0, 0);
-		ArrayList<ArrayList<Node>> Route = RB.getPath();
+		ArrayList<ArrayList<Node>> Route = new ArrayList<ArrayList<Node>>();
+		Route = RB.getPath();
 		output = new GraphicalOutput(getApplicationContext(), Route);
 		// ende löschen
 	}

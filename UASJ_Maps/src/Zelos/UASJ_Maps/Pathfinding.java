@@ -94,23 +94,25 @@ public class Pathfinding {
 				}
 			}
 		}
+		
 		// Wegstreckenlänge speichern
 		distance = DN.getG();
 		// speichert Knoten in Array
 		ArrayList<Node> l = new ArrayList<Node>();
+		System.out.println(""+open_L.size());
 		if (!open_L.isEmpty()) { // Wenn Zielknoten gefunden
 			l.clear();
 			Node Node1 = DN;
 			while (Node1 != SN) { // 2D-array füllen. Array mit Arrays von Knoten. Immer Knoten mit gleicher Ebene kommen in ein Unterarray
 				l.add(0, Node1);
 				if(Node1.getFloorID() != Node1.getParent().getFloorID()){		// Wenn Ebene zwischen Knoten verschieden
-					Path.add(l);										// Knotenarray zu 2D-Array hinzufügen
+					Path.add(0,new ArrayList<Node>(l));										// Knotenarray zu 2D-Array hinzufügen
 					l.clear();										// und löschen, um mit Knoten neuer Ebene zu füllen
 				}
 					Node1 = Node1.getParent();
 			}
 			l.add(0, SN);					// Zuletzt noch Startknoten hinzufügen
-			Path.add(l);
+			Path.add(0,new ArrayList<Node>(l));
 			l.clear();
 		} 
 		else{
