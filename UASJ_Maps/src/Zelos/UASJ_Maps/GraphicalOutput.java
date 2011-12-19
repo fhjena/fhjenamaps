@@ -65,7 +65,13 @@ public class GraphicalOutput extends View {
 			current_floor ++; // geht nur, wenn die GUI diese Funktion nicht aufruft, wenn es nicht weiter nach unten/nach oben geht
 			break;
 		case 2:	// Campus anzeigen
-			current_floor = 0;
+//			current_floor = CampusID; //TODO: ID des Campus eintragen
+			break;
+		case 3: // Anzeige wieder auf aktuelle Route/Position setzen
+			if(state==0) 
+				current_floor = (short) var_way.get(check_counter).get(0).getFloorID(); // Current_floor aktualisieren (auf nächste abzuschreitende Ebene)
+			else if(state==1)
+				current_floor = (short) position.getFloorID(); // Current_floor aktualisieren (auf nächste abzuschreitende Ebene)
 			break;
 			
 		}
@@ -85,8 +91,7 @@ public class GraphicalOutput extends View {
 	public short set_check(){
 		check_counter ++;				// Checkcounter erhöhen
 		current_floor = (short) var_way.get(check_counter).get(0).getFloorID(); // Current_floor aktualisieren (auf nächste abzuschreitende Ebene)
-		return (short) (var_way.size()-(check_counter+1));		// restliche Ebendenanzahl zurückgeben
-		// TODO: So wie es jetzt ist, wird beim Drücken von "CHECK" automatisch die nächste Ebene auf dem Weg angezeigt.Auch, wenn man gerade einfach mal in den Ebenen gewechselt hat. Ist das so OK? 
+		return (short) (var_way.size()-(check_counter+1));		// restliche Ebendenanzahl zurückgeben 
 	}
 	
 	/**
@@ -115,7 +120,7 @@ public class GraphicalOutput extends View {
 	 */
 	public void set_state_campus(){
 		state = 2;						// Status auf freie Navigation setzen
-		//current_floor = CampusID	//TODO: CampusID eintragen
+//		current_floor = CampusID	//TODO: CampusID eintragen
 	}
 
 	// Hintergrund zeichnen
@@ -270,6 +275,7 @@ public class GraphicalOutput extends View {
 	 */
 	private void draw_route(Canvas c, ArrayList<Node> list){
 		//zeichne Route
+		this.v
 		//TODO: Algorithmus zum Routenzeichnen muss erstellt werden + Berechnung der Bildknotenkoords aus den Knotenkoordinaten
 	}
 
