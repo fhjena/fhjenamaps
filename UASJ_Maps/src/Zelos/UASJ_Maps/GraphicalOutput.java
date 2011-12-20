@@ -23,7 +23,7 @@ public class GraphicalOutput extends View {
 	
 	//TODO: x_ref & y_ref entferen, dafür Canvas.Translate(x,y) nutzen
 	// Konstruktor
-	public GraphicalOutput(Context c_txt, ArrayList<ArrayList<Node>> route) {
+	public GraphicalOutput(Context c_txt) {
 		super(c_txt);
 		var_paint = new Paint();
 //		var_way = route;
@@ -275,7 +275,7 @@ public class GraphicalOutput extends View {
 	 */
 	private void draw_route(Canvas c, ArrayList<Node> list){
 		//zeichne Route
-		this.v
+//		this.v
 		//TODO: Algorithmus zum Routenzeichnen muss erstellt werden + Berechnung der Bildknotenkoords aus den Knotenkoordinaten
 	}
 

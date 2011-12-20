@@ -45,7 +45,7 @@
         android:layout_alignParentLeft="true"
         android:layout_marginBottom="20dp"
         android:layout_marginLeft="20dp"
-        android:text="Routing"
+        android:text="Show Route"
         android:textSize="18dp"
         android:width="130dp" />
 
@@ -59,7 +59,7 @@
         android:text="Campus"
         android:textSize="18dp"
         android:width="130dp" />
-
+
     <TextView
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
@@ -69,5 +69,16 @@
         android:layout_below="@+id/floor_minus5"
         android:layout_marginTop="20dp"
         android:text="Route:" />
+
+    <Button
+        android:id="@+id/but_Check5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/but_Campus5"
+        android:layout_alignBottom="@+id/but_Campus5"
+        android:layout_alignLeft="@+id/textView5"
+        android:layout_alignRight="@+id/textView5"
+        android:textSize="18dp"
+        android:text="Check" />
 
 </RelativeLayout>
