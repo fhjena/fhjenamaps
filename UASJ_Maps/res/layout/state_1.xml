@@ -18,7 +18,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
         	android:textSize="18dp"
-            android:text="ShowPosition" />
+            android:text="Show Position" />
 
         <Button
             android:id="@+id/but_Routing1"

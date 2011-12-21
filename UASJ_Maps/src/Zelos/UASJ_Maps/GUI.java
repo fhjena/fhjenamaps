@@ -12,33 +12,26 @@ import android.widget.*;
 
 public class GUI extends Activity {
 
-	private GraphicalOutput output; // beinhaltet grafische Darstellung der Testumgebung
+	private GraphicalOutput output; // beinhaltet grafische Darstellung
 	private CompassListener cl; // beinhaltet Lagesensor
 
 	/*
 	 * TODO-liste und was so funktioniert:
 	 * state1: Main menu: funktioniert
-	 * state2: ShowPosition menu: auswahldinger fehlen
-	 * state3: ShowPosition view: onclicklistener fehlen
-	 * state4: Routing menu: ein button ist, der rest fehlt
-	 * state5: Routing view: ohne funktion
+	 * state2: ShowPosition menu: Spinner
+	 * state3: ShowPosition view: fertig?
+	 * state4: Routing menu: Spinner
+	 * state5: Routing view: fertig?
 	 * state6: Options: ohne funktion
-	 * state7: Campus view: ohne funktion
+	 * state7: Campus view: fertig?
 	 */
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) { // App wird gestartet
 		super.onCreate(savedInstanceState); // onCreate von Activity
 		cl = new CompassListener(); // neue Instanz zur Initialisierung des Sensors
-//		output = new GraphicalOutput(getApplicationContext()); TODO enable wenn Konstruktor vorhanden
+		output = new GraphicalOutput(getApplicationContext());
 		launch_state_1(); // Hauptmenu anzeigen
-		// TODO begin löschen: routenberechnung, weil das hier ja showposition ist
-		Pathfinding RB = new Pathfinding();
-		RB.compute_Path(0, 0);
-		ArrayList<ArrayList<Node>> Route = new ArrayList<ArrayList<Node>>();
-		Route = RB.getPath();
-		output = new GraphicalOutput(getApplicationContext(), Route);
-		// ende löschen
 	}
 	
 	@Override
@@ -87,15 +80,13 @@ public class GUI extends Activity {
 				EditText roomInput = (EditText) findViewById(R.id.editText2); // TODO abfangen von fehleingaben
 				Pathfinding pf = new Pathfinding();
 				pf.compute_Path(Integer.parseInt(roomInput.getText().toString()), Integer.parseInt(roomInput.getText().toString()));
-				System.out.println(pf.getPath());
-				System.out.println(pf.getPath().get(0)); // TODO das ding ist leer --> nils fragen
 				launch_state_3(pf.getPath().get(0).get(0)); // ShowPosition view
 			}
 		});
 		// TODO wheel oder wheelpicker
 	}
  
-	private void launch_state_3(Node position) {
+	private void launch_state_3(Node position) { // TODO exception wenn von campus ankomment
 		output.set_state_position(position);
 
 		setContentView(R.layout.state_3); // state_3.xml anzeigen
@@ -104,8 +95,8 @@ public class GUI extends Activity {
 		View backgroundView = findViewById(R.id.view3);
 		final Button fminus = (Button) findViewById(R.id.floor_minus3);
 		final Button fplus = (Button) findViewById(R.id.floor_plus3);
-		Button routing = (Button) findViewById(R.id.but_Routing3);
-		Button campus = (Button) findViewById(R.id.but_Campus3);
+		final Button routing = (Button) findViewById(R.id.but_Routing3);
+		final Button campus = (Button) findViewById(R.id.but_Campus3);
 
 		backgroundView = output; // grafische Ausgabe als Hintergrund setzen
 
@@ -165,7 +156,6 @@ public class GUI extends Activity {
 				EditText roomInput2 = (EditText) findViewById(R.id.editText42); // TODO abfangen von fehleingaben
 				Pathfinding pf = new Pathfinding();
 				pf.compute_Path(Integer.parseInt(roomInput1.getText().toString()), Integer.parseInt(roomInput2.getText().toString()));
-				System.out.println(pf.getPath()); // TODO das ding ist leer --> nils fragen
 				launch_state_5(pf.getPath());
 			}
 		});
@@ -181,8 +171,10 @@ public class GUI extends Activity {
 		View backgroundView = findViewById(R.id.view5);
 		final Button fminus = (Button) findViewById(R.id.floor_minus5);
 		final Button fplus = (Button) findViewById(R.id.floor_plus5);
-		Button routing = (Button) findViewById(R.id.but_Routing5);
-		Button campus = (Button) findViewById(R.id.but_Campus5);
+		final Button route = (Button) findViewById(R.id.but_Routing5);
+		final Button campus = (Button) findViewById(R.id.but_Campus5);
+		final Button check = (Button) findViewById(R.id.but_Check5);
+		final TextView description = (TextView) findViewById(R.id.textView5);
 
 		backgroundView = output; // grafische Ausgabe als Hintergrund setzen
 
@@ -207,7 +199,65 @@ public class GUI extends Activity {
 			}
 		});
 
-		routing.setOnClickListener(new OnClickListener() {
+		route.setOnClickListener(new OnClickListener() {
+			// OnClickListener für Routing
+			public void onClick(View v) {
+				output.set_floor(3);
+			}
+		});
+
+		campus.setOnClickListener(new OnClickListener() {
+			// OnClickListener für Campus
+			public void onClick(View v) {
+				output.set_floor(2);
+				output.invalidate(); // redraw
+			}
+		});
+		
+		check.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				if (0 == output.set_check())
+					check.setEnabled(false);
+			}
+		});
+		
+
+		if (1 == path.size())
+			check.setEnabled(false);
+
+		rl.removeAllViews(); // zunächst müssen alle Views entfernt werden, da sie sonst doppelt vorhanden sind
+		// danach "von hinten nach vorne" die geänderten Elemente wieder hinzufügen, ansonsten würde die Route über den Button dargestellt werden
+		rl.addView(backgroundView);
+		rl.addView(fminus);
+		rl.addView(fplus);
+		rl.addView(route);
+		rl.addView(campus);
+		rl.addView(description);
+		rl.addView(check);
+
+		cl.onResume();
+		// TODO vielleicht lieber in die override, aber momentan gehts auch ohne, da sich die app bei resume noch nicht den status gemerkt hat, also auch onResume und was es sonst noch so gibt mal overriden
+	}
+
+	private void launch_state_6() {
+		setContentView(R.layout.state_6);
+		// TODO
+	}
+
+	private void launch_state_7() {
+//		output.set_state_path(path); TODO
+		
+		setContentView(R.layout.state_7); // state_7.xml anzeigen
+		// Elemente der Anzeige holen, damit sie bearbeitet werden können:
+		final RelativeLayout rl = (RelativeLayout) findViewById(R.id.relativeLayout7);
+		View backgroundView = findViewById(R.id.view7);
+		final Button route = (Button) findViewById(R.id.but_Routing7);
+		final Button campus = (Button) findViewById(R.id.but_Campus7);
+		final Button position = (Button) findViewById(R.id.but_Position7);
+
+		backgroundView = output; // grafische Ausgabe als Hintergrund setzen
+
+		route.setOnClickListener(new OnClickListener() {
 			// OnClickListener für Routing
 			public void onClick(View v) {
 				launch_state_4();
@@ -221,27 +271,22 @@ public class GUI extends Activity {
 				output.invalidate(); // redraw
 			}
 		});
+		
+		position.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				launch_state_2();
+			}
+		});
 
 		rl.removeAllViews(); // zunächst müssen alle Views entfernt werden, da sie sonst doppelt vorhanden sind
 		// danach "von hinten nach vorne" die geänderten Elemente wieder hinzufügen, ansonsten würde die Route über den Button dargestellt werden
 		rl.addView(backgroundView);
-		rl.addView(fminus);
-		rl.addView(fplus);
-		rl.addView(routing);
+		rl.addView(route);
 		rl.addView(campus);
+		rl.addView(position);
 
 		cl.onResume();
 		// TODO vielleicht lieber in die override, aber momentan gehts auch ohne, da sich die app bei resume noch nicht den status gemerkt hat, also auch onResume und was es sonst noch so gibt mal overriden
-	}
-
-	private void launch_state_6() {
-		setContentView(R.layout.state_6);
-		// TODO
-	}
-
-	private void launch_state_7() {
-		setContentView(R.layout.state_7);
-		// TODO
 	}
 
 	private class CompassListener implements SensorEventListener { // innere Klasse
