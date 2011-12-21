@@ -19,7 +19,7 @@ import eu.AndroidTraining.Dashboard.R;
 
 public class GUI extends Activity {
 
-	
+	// HELLO WORLD
 	private int start;	//beinhaltet Startpunkt
 	private int destination;	//beinhaltet Zielpunkt
 	private EditText start_view; //Eingabefeld Startpunkt
