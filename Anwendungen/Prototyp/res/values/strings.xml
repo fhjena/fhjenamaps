@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Prototyp UASJ-Maps</string>
+ 	<string name="but_ShowPosition">Show Position</string>
+ 	<string name="but_Routing">Routing</string>
+ 	<string name="but_Campus">Campus</string>
+ 	
+ 
+</resources>

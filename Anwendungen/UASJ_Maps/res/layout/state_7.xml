@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/relativeLayout7" >
+
+    <View
+        android:id="@+id/view7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" />
+
+    <Button
+        android:id="@+id/but_Routing7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="20dp"
+        android:text="Routing"
+        android:textSize="18dp"
+        android:width="130dp" />
+
+    <Button
+        android:id="@+id/but_Campus7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/but_Routing7"
+        android:layout_toRightOf="@+id/but_Routing7"
+        android:layout_marginLeft="20dp"
+        android:text="Campus"
+        android:textSize="18dp"
+        android:width="130dp" />
+
+    <Button
+        android:id="@+id/but_Position7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/but_Campus7"
+        android:layout_alignBottom="@+id/but_Campus7"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@+id/but_Campus7"
+        android:text="Show Position"
+        android:textSize="18dp" />
+
+</RelativeLayout>
