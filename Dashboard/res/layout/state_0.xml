@@ -1,63 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:padding="10dip" >
-
-    <TableLayout
-        android:id="@+id/tableLayout1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.68" >
-
-        <TableRow
-            android:id="@+id/tableRow1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
-
-            <Button
-                android:id="@+id/sf_ShowPosition"
-                android:layout_width="250dp"
-                android:layout_height="125dp"
-                android:enabled="false"
-                android:text="@string/sf_ShowPosition" />
-
-            <Button
-                android:id="@+id/sf_Routing"
-                android:layout_width="250dp"
-                android:layout_height="125dp"
-                android:onClick="state0_Routing"
-                android:text="@string/sf_Routing" />
-
-        </TableRow>
-
-        <TableRow
-            android:id="@+id/tableRow2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
-
-            <Button
-                android:id="@+id/sf_Campus"
-                android:layout_width="fill_parent"
-                android:layout_height="125dp"
-                android:enabled="false"
-                android:onClick="wechsleActivity"
-                android:text="@string/sf_Campus" />
-
-        </TableRow>
-
-        <TableRow
-            android:id="@+id/tableRow3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
-        </TableRow>
-
-        <TableRow
-            android:id="@+id/tableRow4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
-        </TableRow>
-    </TableLayout>
-
-</LinearLayout>
