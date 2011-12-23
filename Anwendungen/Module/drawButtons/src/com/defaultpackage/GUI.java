@@ -10,6 +10,7 @@ import android.graphics.*;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.*;
+import android.view.ViewGroup.LayoutParams;
 import android.view.View.*;
 import android.widget.*;
 
@@ -28,6 +29,7 @@ public class GUI extends Activity {
 
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
+		System.out.println("oncreate");
 		
 		// enable Fullscreen mode:
 		requestWindowFeature(Window.FEATURE_NO_TITLE); // hide Title of App while running
@@ -171,8 +173,21 @@ public class GUI extends Activity {
 	}
 	
 	private TableLayout initiateUI5() {
-		View mView = new SampleView(context);
-		setContentView(mView);
+//		final SampleView mView = new SampleView(context);
+//		setContentView(mView);
+		final ButtonView bv = new ButtonView(context);
+		bv.setText("Button");
+		bv.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+//				mView.setDegrees(mView.getDegrees()+10);
+//				mView.invalidate();
+				System.out.println("Click");
+			}
+		});
+		setContentView(bv);
+		System.out.println("initiateUI5");
+		bv.setDegree(-45);
+//		setContentView(bv/*, new LayoutParams(200,200)*/);
 		return null;
 	}
 	
@@ -203,23 +218,26 @@ public class GUI extends Activity {
             mPath.close();
         }
 
+        @Override
         protected void onDraw(Canvas canvas) {
-            Paint paint = mPaint;
-
-            canvas.drawColor(Color.WHITE);
-
-            paint.setAntiAlias(true);
-            paint.setColor(Color.BLACK);
-            paint.setStyle(Paint.Style.FILL);
+        	super.onDraw(canvas);
+//            Paint paint = mPaint;
+//
+//            canvas.drawColor(Color.WHITE);
+//
+//            paint.setAntiAlias(true);
+//            paint.setColor(Color.BLACK);
+//            paint.setStyle(Paint.Style.FILL);
 
             int w = canvas.getWidth();
             int h = canvas.getHeight();
             int cx = w / 2;
             int cy = h / 2;
             
+          
             FrameLayout fl = new FrameLayout(context);
     		Button b1 = new Button(context);
-    		b1.setText("clockwise");
+//    		b1.setText("clockwise");
 //    		b1.measure(b1.getMeasuredWidth(), b1.getMeasuredHeight());
     		b1.layout(200, -200, 400, 0);
     		b1.setOnClickListener(new OnClickListener() {
@@ -230,7 +248,7 @@ public class GUI extends Activity {
 					invalidate();
 				}
 			});
-    		fl.addView(b1);
+//    		fl.addView(b1);
     		
     		Button b2 = new Button(context);
     		b2.setText("counter clockwise");
@@ -245,13 +263,25 @@ public class GUI extends Activity {
 				}
 			});
     		fl.addView(b2);
+    		
+//    		addContentView(b1, new LayoutParams(200, 200));
 
+//    		b1.draw(canvas);
             canvas.translate(cx, cy);
             canvas.rotate(rotation);
-            canvas.drawPath(mPath, mPaint);
-    		fl.draw(canvas);
+//            canvas.drawPath(mPath, mPaint);
+//    		fl.draw(canvas);
+            b1.draw(canvas);
         }
 
+        public float getDegrees() {
+        	return rotation;
+        }
+        
+        public void setDegrees(float degrees) {
+        	rotation = degrees;
+        }
+        
         protected void onAttachedToWindow() {
             mAnimate = true;
             super.onAttachedToWindow();
