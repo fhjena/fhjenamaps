@@ -40,6 +40,12 @@ public class GUI extends Activity {
 		super.onPause(); // onPause von Activity
 	}
 	
+	@Override
+	public void onDestroy() { // App wird zerstört
+		cl.onPause(); // stoppt Ausführung des Magnetsensors
+		super.onDestroy(); // onDestroy von Activity
+	}
+	
 	private void launch_state_1() {
 		setContentView(R.layout.state_1); // state_1.xml anzeigen
 		
