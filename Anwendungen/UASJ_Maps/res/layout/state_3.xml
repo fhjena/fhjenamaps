@@ -13,7 +13,7 @@
         android:layout_alignParentTop="true" />
 
     <Button
-        android:id="@+id/floor_plus3"
+        android:id="@+id/but_floor_plus3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
@@ -26,13 +26,13 @@
         android:width="50dp" />
 
     <Button
-        android:id="@+id/floor_minus3"
+        android:id="@+id/but_floor_minus3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/floor_plus3"
-        android:layout_alignBottom="@+id/floor_plus3"
+        android:layout_alignBaseline="@+id/but_floor_plus3"
+        android:layout_alignBottom="@+id/but_floor_plus3"
         android:layout_marginRight="20dp"
-        android:layout_toLeftOf="@+id/floor_plus3"
+        android:layout_toLeftOf="@+id/but_floor_plus3"
         android:height="50dp"
         android:text="F -"
         android:textSize="18dp"

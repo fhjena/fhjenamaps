@@ -6,14 +6,22 @@ import android.app.Activity;
 import android.content.Context;
 import android.hardware.*;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.view.View.*;
 import android.widget.*;
 
 public class GUI extends Activity {
 
 	private GraphicalOutput output; // beinhaltet grafische Darstellung
 	private CompassListener cl; // beinhaltet Lagesensor
+	private OnTouchListener otl = new OnTouchListener() {
+		public boolean onTouch(View v, MotionEvent event) {
+//			if (MotionEvent.ACTION_UP == event.getAction())
+//				output.performClickOnCampus((int) event.getX(), (int) event.getY()); TODO enable wenn verfügbar
+			return true;
+		}
+	};
 
 	/*
 	 * TODO-liste und was so funktioniert:
@@ -44,6 +52,12 @@ public class GUI extends Activity {
 	public void onDestroy() { // App wird zerstört
 		cl.onPause(); // stoppt Ausführung des Magnetsensors
 		super.onDestroy(); // onDestroy von Activity
+	}
+	
+	@Override
+	public void onBackPressed() { // Zurück Button wird gedrückt
+		// TODO hier zurück in vorherigen state gehen. vermutlich die zeile drunter dann nicht ausführen
+		super.onBackPressed(); // onBackPressed von Activity
 	}
 	
 	private void launch_state_1() {
@@ -99,8 +113,8 @@ public class GUI extends Activity {
 		// Elemente der Anzeige holen, damit sie bearbeitet werden können:
 		final RelativeLayout rl = (RelativeLayout) findViewById(R.id.relativeLayout3);
 		View backgroundView = findViewById(R.id.view3);
-		final Button fminus = (Button) findViewById(R.id.floor_minus3);
-		final Button fplus = (Button) findViewById(R.id.floor_plus3);
+		final Button fminus = (Button) findViewById(R.id.but_floor_minus3);
+		final Button fplus = (Button) findViewById(R.id.but_floor_plus3);
 		final Button routing = (Button) findViewById(R.id.but_Routing3);
 		final Button campus = (Button) findViewById(R.id.but_Campus3);
 
@@ -155,7 +169,7 @@ public class GUI extends Activity {
 	}
 
 	private void launch_state_4() {
-		setContentView(R.layout.state_4);
+		setContentView(R.layout.state_4); // state_4.xml anzeigen
 		findViewById(R.id.but_Go4).setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				EditText roomInput1 = (EditText) findViewById(R.id.editText41); // TODO abfangen von fehleingaben
@@ -175,8 +189,8 @@ public class GUI extends Activity {
 		// Elemente der Anzeige holen, damit sie bearbeitet werden können:
 		final RelativeLayout rl = (RelativeLayout) findViewById(R.id.relativeLayout5);
 		View backgroundView = findViewById(R.id.view5);
-		final Button fminus = (Button) findViewById(R.id.floor_minus5);
-		final Button fplus = (Button) findViewById(R.id.floor_plus5);
+		final Button fminus = (Button) findViewById(R.id.but_floor_minus5);
+		final Button fplus = (Button) findViewById(R.id.but_floor_plus5);
 		final Button route = (Button) findViewById(R.id.but_Routing5);
 		final Button campus = (Button) findViewById(R.id.but_Campus5);
 		final Button check = (Button) findViewById(R.id.but_Check5);
