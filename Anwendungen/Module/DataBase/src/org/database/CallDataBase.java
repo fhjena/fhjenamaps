@@ -2,6 +2,7 @@ package org.database;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.AlertDialog.Builder;
@@ -16,11 +17,14 @@ public class CallDataBase extends Activity {
 	
 	InputStream Dateiname=null;					//Dateiname des einzulesenen Files
 	private DataBase myDB;						//Datenbank
+	private Pathfinding pf;
 	
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         myDB = new DataBase(this);      					//Instanz Datenbank
+        
+        pf = new Pathfinding(this);
         
     }
     
@@ -49,24 +53,30 @@ public class CallDataBase extends Activity {
 		
 		EditText destination_view = (EditText) findViewById(R.id.tx_destination);	//Eingabefeld Startpunkt über ID festlegen
 		String destination = destination_view.getText().toString();		//String Zielraum
-		
+		pf.compute_Path(0, 7);
+		ArrayList<ArrayList<Node>> p = new ArrayList<ArrayList<Node>>();
+		p = pf.getPath();
+		System.out.println("Route: ");
+		for(int i=0; i<p.get(0).size();i++){
+			System.out.println(" "+ p.get(0).get(i).getID());
+		}
 	//	Cursor cursorNode = myDB.getDatafromNodeId(2); //Datenbankzugriff Knoten ID
 		
-		Cursor cursorRoom1 = myDB.getDatafromRoom(start);		//Datenbankzugriff Startraum
-		Cursor cursorRoom2 = myDB.getDatafromRoom(destination);	//Datenbankzugriff Zielraum
+//		Cursor cursorRoom1 = myDB.getDatafromRoom(start);		//Datenbankzugriff Startraum
+//		Cursor cursorRoom2 = myDB.getDatafromRoom(destination);	//Datenbankzugriff Zielraum
 		
 //		Cursor cursorRoom1 = myDB.getDatafromRoom('05.02.01');	//Datenbankzugriff genau dieser Raum
 //		Cursor cursorRoom1 = myDB.getDatafromRoom('%05.02.01%');//Datenbankzugriff dieser Raum kommt mit im String vor 
-	
+		
 		
 	//	showData(cursorRoom1); 
 	//	showData(cursorRoom2); 
 		
 		 TextView test = (TextView) findViewById(R.id.test); 
-		 test.setText(showData(cursorRoom1));					//zum Test Cursordaten Startraum ausgeben
+//		 test.setText(showData(cursorRoom1));					//zum Test Cursordaten Startraum ausgeben
 	
 		 TextView test2 = (TextView) findViewById(R.id.test2); 
-		 test2.setText(showData(cursorRoom2));					//zum Test Cursordaten Zielraum ausgeben
+//		 test2.setText(showData(cursorRoom2));					//zum Test Cursordaten Zielraum ausgeben
 		
 	}
     public StringBuilder showData(Cursor cursor) {
