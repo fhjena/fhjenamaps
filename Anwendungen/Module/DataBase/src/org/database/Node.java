@@ -4,7 +4,6 @@ package org.database;
 import java.util.ArrayList;
 
 import android.database.Cursor;
-import android.graphics.Point;
 
 public class Node implements Comparable<Node> {
 	private int ID;					// Knoten-ID
@@ -16,19 +15,17 @@ public class Node implements Comparable<Node> {
 	private int x; 					// x-,y- & z-Koordinaten(real)
 	private int y;
 	private int z;
-	private Point PictureCoords; // x- & y- Koordinaten (Bild)
-	private int floorID;
+	private int floorID;			// EbenenID
 
-	public Node(int ID, int X, int Y, int Z, Point p, ArrayList<Integer> adjacent) { // Konstruktor zum Initialisieren
+	public Node(int ID, int X, int Y, int Z, ArrayList<Integer> adjacent) { // Konstruktor zum Initialisieren
 		this.ID = ID;
 		this.x = X;
 		this.y = Y;
 		this.z = Z;
 		this.Neighbour_ID = adjacent;
-		this.PictureCoords = p;
 	}
 	
-	public Node(Cursor cursor){
+	public Node(Cursor cursor){		// Konstruktor zum Initialisieren eines Knotens nach DB-Abfrage
 		this.Neighbour_ID = new ArrayList<Integer>();
 		 while (cursor.moveToNext()) {
 			//Einzelne Einträge auslesen
@@ -44,13 +41,12 @@ public class Node implements Comparable<Node> {
 		 }
 	}
 	
-	public Node(Node a){
+	public Node(Node a){			// Copy-Konstruktor
 		this.ID = a.ID;
 		this.x = a.x;
 		this.y = a.y;
 		this.z = a.z;
 		this.Neighbour_ID = new ArrayList<Integer>(a.Neighbour_ID);
-		this.PictureCoords = a.PictureCoords;
 		this.F = a.F;
 		this.G = a.G;
 		this.H = a.H;
@@ -66,10 +62,6 @@ public class Node implements Comparable<Node> {
 		return Neighbour_ID;
 	}
 
-	public Point getPictureCoords() {			// gibt Bildkoordinaten zurück
-		return PictureCoords;
-	}
-	
 	public int getID() {					// gibt Knoten-ID zurück
 		return ID;
 	}

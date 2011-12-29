@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 import android.app.Activity;
-import android.app.AlertDialog.Builder;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -53,11 +52,11 @@ public class CallDataBase extends Activity {
 		
 		EditText destination_view = (EditText) findViewById(R.id.tx_destination);	//Eingabefeld Startpunkt über ID festlegen
 		String destination = destination_view.getText().toString();		//String Zielraum
-		pf.compute_Path(0, 7);
-		ArrayList<ArrayList<Node>> p = new ArrayList<ArrayList<Node>>();
+		pf.compute_Path(Integer.parseInt(start), Integer.parseInt(destination));
+		ArrayList<ArrayList<Node>> p = new ArrayList<ArrayList<Node>>();	
 		p = pf.getPath();
 		System.out.println("Route: ");
-		for(int i=0; i<p.get(0).size();i++){
+		for(int i=0; i<p.get(0).size();i++){			// Route ausgeben
 			System.out.println(" "+ p.get(0).get(i).getID());
 		}
 	//	Cursor cursorNode = myDB.getDatafromNodeId(2); //Datenbankzugriff Knoten ID
@@ -72,10 +71,10 @@ public class CallDataBase extends Activity {
 	//	showData(cursorRoom1); 
 	//	showData(cursorRoom2); 
 		
-		 TextView test = (TextView) findViewById(R.id.test); 
+//		 TextView test = (TextView) findViewById(R.id.test); 
 //		 test.setText(showData(cursorRoom1));					//zum Test Cursordaten Startraum ausgeben
 	
-		 TextView test2 = (TextView) findViewById(R.id.test2); 
+//		 TextView test2 = (TextView) findViewById(R.id.test2); 
 //		 test2.setText(showData(cursorRoom2));					//zum Test Cursordaten Zielraum ausgeben
 		
 	}
