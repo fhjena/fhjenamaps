@@ -15,13 +15,10 @@ public class GUI extends Activity {
 
 	private GraphicalOutput output; // beinhaltet grafische Darstellung
 	private CompassListener cl; // beinhaltet Lagesensor
-	private OnTouchListener otl = new OnTouchListener() {
-		public boolean onTouch(View v, MotionEvent event) {
-//			if (MotionEvent.ACTION_UP == event.getAction())
-//				output.performClickOnCampus((int) event.getX(), (int) event.getY()); TODO enable wenn verfügbar
-			return true;
-		}
-	};
+	private int activityState;
+	private Node position;
+	private ArrayList<ArrayList<Node>> path;
+	boolean firstTime3 = true;
 
 	/*
 	 * TODO-liste und was so funktioniert:
@@ -38,29 +35,67 @@ public class GUI extends Activity {
 	public void onCreate(Bundle savedInstanceState) { // App wird gestartet
 		super.onCreate(savedInstanceState); // onCreate von Activity
 		cl = new CompassListener(); // neue Instanz zur Initialisierung des Sensors
-		output = new GraphicalOutput(getApplicationContext());
+		output = new GraphicalOutput(getApplicationContext()); // neue Instanz verschaffen
+		output.setOnTouchListener(new OnTouchListener() { // OnTouchListener hinzufügen für Gebäudeauswahl bei Campusansicht
+			public boolean onTouch(View v, MotionEvent event) { // TODO enable wenn verfügbar
+//				if (output.isStateCampus() && MotionEvent.ACTION_UP == event.getAction()) // Campus ansicht und Finger wird vom Display genommen
+//					output.performClickOnCampus((int) event.getX(), (int) event.getY()); // x und y Werte übergeben
+				return true;
+			}
+		});
 		launch_state_1(); // Hauptmenu anzeigen
 	}
 	
 	@Override
 	public void onPause() { // App wird beendet
-		cl.onPause(); // stoppt Ausführung des Magnetsensors
+		cl.onStop(); // stoppt Ausführung des Magnetsensors
 		super.onPause(); // onPause von Activity
 	}
 	
 	@Override
+	public void onResume() {
+		super.onResume();
+		
+		switch (activityState) {
+		
+		case 2:
+			launch_state_2();
+			break;
+		case 3:
+			launch_state_3();
+			break;
+		case 4:
+			launch_state_4();
+			break;
+		case 5:
+			launch_state_5();
+			break;
+		case 6:
+			launch_state_6();
+			break;
+		case 7:
+			launch_state_7();
+			break;
+		default:
+			launch_state_1();
+			break;
+		}
+	}
+	
+	@Override
 	public void onDestroy() { // App wird zerstört
-		cl.onPause(); // stoppt Ausführung des Magnetsensors
+		cl.onStop(); // stoppt Ausführung des Magnetsensors
 		super.onDestroy(); // onDestroy von Activity
 	}
 	
 	@Override
 	public void onBackPressed() { // Zurück Button wird gedrückt
-		// TODO hier zurück in vorherigen state gehen. vermutlich die zeile drunter dann nicht ausführen
+		// TODO hier zurück in übergeordneten state gehen. vermutlich die zeile drunter dann nicht ausführen
 		super.onBackPressed(); // onBackPressed von Activity
 	}
 	
-	private void launch_state_1() {
+	private void launch_state_1() { // Main menu
+		activityState = 1;
 		setContentView(R.layout.state_1); // state_1.xml anzeigen
 		
 		// OnClickListener für die Buttons:
@@ -93,21 +128,25 @@ public class GUI extends Activity {
 		});
 	}
 
-	private void launch_state_2() {
+	private void launch_state_2() { // ShowPosition menu
+		activityState = 2;
 		setContentView(R.layout.state_2); // state_2.xml anzeigen
 		findViewById(R.id.but_Go2).setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				EditText roomInput = (EditText) findViewById(R.id.editText2); // TODO abfangen von fehleingaben
 				Pathfinding pf = new Pathfinding();
 				pf.compute_Path(Integer.parseInt(roomInput.getText().toString()), Integer.parseInt(roomInput.getText().toString()));
-				launch_state_3(pf.getPath().get(0).get(0)); // ShowPosition view
+				position = new Node (pf.getPath().get(0).get(0));
+				launch_state_3(); // ShowPosition view
 			}
 		});
 		// TODO wheel oder wheelpicker
 	}
  
-	private void launch_state_3(Node position) { // TODO exception wenn von campus ankomment
+	private void launch_state_3() { // SchowPosition view
+		activityState = 3;
 		output.set_state_position(position);
+		int i=0;
 
 		setContentView(R.layout.state_3); // state_3.xml anzeigen
 		// Elemente der Anzeige holen, damit sie bearbeitet werden können:
@@ -117,8 +156,11 @@ public class GUI extends Activity {
 		final Button fplus = (Button) findViewById(R.id.but_floor_plus3);
 		final Button routing = (Button) findViewById(R.id.but_Routing3);
 		final Button campus = (Button) findViewById(R.id.but_Campus3);
-
-		backgroundView = output; // grafische Ausgabe als Hintergrund setzen
+		
+//		if (firstTime3) {
+//			backgroundView = output; // grafische Ausgabe als Hintergrund setzen
+//			firstTime3 = false;
+//		}
 
 		// OnClickListener für die Buttons:
 		fminus.setOnClickListener(new OnClickListener() {
@@ -144,6 +186,7 @@ public class GUI extends Activity {
 		routing.setOnClickListener(new OnClickListener() {
 			// OnClickListener für Routing
 			public void onClick(View v) {
+				cl.onStop(); // stoppt Ausführung des Magnetsensors
 				launch_state_4();
 			}
 		});
@@ -158,17 +201,30 @@ public class GUI extends Activity {
 
 		rl.removeAllViews(); // zunächst müssen alle Views entfernt werden, da sie sonst doppelt vorhanden sind
 		// danach "von hinten nach vorne" die geänderten Elemente wieder hinzufügen, ansonsten würde die Route über den Button dargestellt werden
-		rl.addView(backgroundView);
+
+		System.out.println("state3_" + i++);
+		try {
+			rl.addView(output/*,backgroundView.getLayoutParams()*/); // TODO exception
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			System.out.println("error");
+//			e.printStackTrace();
+		}
+
+		System.out.println("state3_" + i++);
 		rl.addView(fminus);
 		rl.addView(fplus);
 		rl.addView(routing);
 		rl.addView(campus);
 
+		System.out.println("state3_" + i++);
+
 		cl.onResume();
 		// TODO vielleicht lieber in die override, aber momentan gehts auch ohne, da sich die app bei resume noch nicht den status gemerkt hat, also auch onResume und was es sonst noch so gibt mal overriden
 	}
 
-	private void launch_state_4() {
+	private void launch_state_4() { // Routing menu
+		activityState = 4;
 		setContentView(R.layout.state_4); // state_4.xml anzeigen
 		findViewById(R.id.but_Go4).setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -176,13 +232,15 @@ public class GUI extends Activity {
 				EditText roomInput2 = (EditText) findViewById(R.id.editText42); // TODO abfangen von fehleingaben
 				Pathfinding pf = new Pathfinding();
 				pf.compute_Path(Integer.parseInt(roomInput1.getText().toString()), Integer.parseInt(roomInput2.getText().toString()));
-				launch_state_5(pf.getPath());
+				path = new ArrayList<ArrayList<Node>>(pf.getPath());
+				launch_state_5();
 			}
 		});
 		// TODO wheel oder wheelpicker
 	}
 
-	private void launch_state_5(ArrayList<ArrayList<Node>> path) {
+	private void launch_state_5() { // Routing view
+		activityState = 5;
 		output.set_state_path(path);
 		
 		setContentView(R.layout.state_5); // state_5.xml anzeigen
@@ -223,6 +281,7 @@ public class GUI extends Activity {
 			// OnClickListener für Routing
 			public void onClick(View v) {
 				output.set_floor(3);
+				output.invalidate();
 			}
 		});
 
@@ -238,6 +297,7 @@ public class GUI extends Activity {
 			public void onClick(View v) {
 				if (0 == output.set_check())
 					check.setEnabled(false);
+				output.invalidate();
 			}
 		});
 		
@@ -259,13 +319,15 @@ public class GUI extends Activity {
 		// TODO vielleicht lieber in die override, aber momentan gehts auch ohne, da sich die app bei resume noch nicht den status gemerkt hat, also auch onResume und was es sonst noch so gibt mal overriden
 	}
 
-	private void launch_state_6() {
+	private void launch_state_6() { // Options
+		activityState = 6;
 		setContentView(R.layout.state_6);
-		// TODO
+		// TODO hier passiert noch nichts
 	}
 
-	private void launch_state_7() {
-//		output.set_state_path(path); TODO
+	private void launch_state_7() { // Campus view
+		activityState = 7;
+		output.set_state_campus();
 		
 		setContentView(R.layout.state_7); // state_7.xml anzeigen
 		// Elemente der Anzeige holen, damit sie bearbeitet werden können:
@@ -280,6 +342,7 @@ public class GUI extends Activity {
 		route.setOnClickListener(new OnClickListener() {
 			// OnClickListener für Routing
 			public void onClick(View v) {
+				cl.onStop(); // stoppt Ausführung des Magnetsensors
 				launch_state_4();
 			}
 		});
@@ -294,6 +357,7 @@ public class GUI extends Activity {
 		
 		position.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
+				cl.onStop(); // stoppt Ausführung des Magnetsensors
 				launch_state_2();
 			}
 		});
@@ -324,7 +388,7 @@ public class GUI extends Activity {
 			mSensorManager.registerListener(this, Magnet_Sensor, SensorManager.SENSOR_DELAY_GAME);
 		}
 
-		protected void onPause() { // disable Lagesensor
+		protected void onStop() { // disable Lagesensor
 			mSensorManager.unregisterListener(this);
 		}
 
