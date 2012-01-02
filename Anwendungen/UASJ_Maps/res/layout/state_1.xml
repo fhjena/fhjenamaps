@@ -13,12 +13,12 @@
         android:layout_weight="1" >
 
         <Button
-            android:id="@+id/but_ShowPosition1"
+            android:id="@+id/but_LookupLocation1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
         	android:textSize="18dp"
-            android:text="Show Position" />
+            android:text="Look up Location" />
 
         <Button
             android:id="@+id/but_Routing1"

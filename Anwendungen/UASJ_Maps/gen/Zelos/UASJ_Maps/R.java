@@ -21,12 +21,12 @@ public final class R {
         public static final int but_Check5=0x7f05001f;
         public static final int but_Go2=0x7f05000a;
         public static final int but_Go4=0x7f050014;
+        public static final int but_LookupLocation1=0x7f050002;
         public static final int but_Position7=0x7f050025;
         public static final int but_Routing1=0x7f050003;
         public static final int but_Routing3=0x7f050010;
         public static final int but_Routing5=0x7f05001c;
         public static final int but_Routing7=0x7f050023;
-        public static final int but_ShowPosition1=0x7f050002;
         public static final int but_floor_minus3=0x7f05000f;
         public static final int but_floor_minus5=0x7f05001b;
         public static final int but_floor_plus3=0x7f05000e;

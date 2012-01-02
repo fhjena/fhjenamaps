@@ -15,10 +15,16 @@ public class GUI extends Activity {
 
 	private GraphicalOutput output; // beinhaltet grafische Darstellung
 	private CompassListener cl; // beinhaltet Lagesensor
-	private int activityState;
-	private Node position;
-	private ArrayList<ArrayList<Node>> path;
-	boolean firstTime3 = true;
+	private int activityState; // Nummer des momentan/zu letzt aktiven Status
+	private Node location; // Standpunkt der angezeigt werden soll
+	private ArrayList<ArrayList<Node>> path; // Route die angezeigt werden soll
+	private OnTouchListener touch_on_campus = new OnTouchListener() { // OnTouchListener hinzufügen für Gebäudeauswahl bei Campusansicht
+		public boolean onTouch(View v, MotionEvent event) { // TODO enable wenn verfügbar
+//			if (output.isStateCampus() && MotionEvent.ACTION_UP == event.getAction()) // Campus ansicht und Finger wird vom Display genommen
+//				output.performClickOnCampus((int) event.getX(), (int) event.getY()); // x und y Werte übergeben
+			return true;
+		}
+	};
 
 	/*
 	 * TODO-liste und was so funktioniert:
@@ -36,13 +42,7 @@ public class GUI extends Activity {
 		super.onCreate(savedInstanceState); // onCreate von Activity
 		cl = new CompassListener(); // neue Instanz zur Initialisierung des Sensors
 		output = new GraphicalOutput(getApplicationContext()); // neue Instanz verschaffen
-		output.setOnTouchListener(new OnTouchListener() { // OnTouchListener hinzufügen für Gebäudeauswahl bei Campusansicht
-			public boolean onTouch(View v, MotionEvent event) { // TODO enable wenn verfügbar
-//				if (output.isStateCampus() && MotionEvent.ACTION_UP == event.getAction()) // Campus ansicht und Finger wird vom Display genommen
-//					output.performClickOnCampus((int) event.getX(), (int) event.getY()); // x und y Werte übergeben
-				return true;
-			}
-		});
+		output.setOnTouchListener(touch_on_campus); // OnTouchListener für Campusanzeige hinzufügen
 		launch_state_1(); // Hauptmenu anzeigen
 	}
 	
@@ -90,8 +90,26 @@ public class GUI extends Activity {
 	
 	@Override
 	public void onBackPressed() { // Zurück Button wird gedrückt
-		// TODO hier zurück in übergeordneten state gehen. vermutlich die zeile drunter dann nicht ausführen
-		super.onBackPressed(); // onBackPressed von Activity
+		// in übergeordnete Ansicht wechseln
+		switch (activityState) {
+		
+		case 5:
+			cl.onStop(); // stoppt Ausführung des Magnetsensors
+			launch_state_4();
+			break;
+		case 3:
+			cl.onStop(); // stoppt Ausführung des Magnetsensors
+			launch_state_2();
+			break;
+		case 1:
+			cl.onStop(); // stoppt Ausführung des Magnetsensors
+			finish();
+			break;
+		default:
+			cl.onStop(); // stoppt Ausführung des Magnetsensors
+			launch_state_1();
+			break;
+		}
 	}
 	
 	private void launch_state_1() { // Main menu
@@ -99,7 +117,7 @@ public class GUI extends Activity {
 		setContentView(R.layout.state_1); // state_1.xml anzeigen
 		
 		// OnClickListener für die Buttons:
-		findViewById(R.id.but_ShowPosition1).setOnClickListener(new OnClickListener() {
+		findViewById(R.id.but_LookupLocation1).setOnClickListener(new OnClickListener() {
 			// OnClickListener für ShowPosition
 			public void onClick(View v) {
 				launch_state_2(); // ShowPositions menu
@@ -136,7 +154,7 @@ public class GUI extends Activity {
 				EditText roomInput = (EditText) findViewById(R.id.editText2); // TODO abfangen von fehleingaben
 				Pathfinding pf = new Pathfinding();
 				pf.compute_Path(Integer.parseInt(roomInput.getText().toString()), Integer.parseInt(roomInput.getText().toString()));
-				position = new Node (pf.getPath().get(0).get(0));
+				location = new Node (pf.getPath().get(0).get(0));
 				launch_state_3(); // ShowPosition view
 			}
 		});
@@ -145,8 +163,9 @@ public class GUI extends Activity {
  
 	private void launch_state_3() { // SchowPosition view
 		activityState = 3;
-		output.set_state_position(position);
-		int i=0;
+		output = new GraphicalOutput(getApplicationContext()); // neue Instanz verschaffen
+		output.setOnTouchListener(touch_on_campus); // OnTouchListener für Campusanzeige hinzufügen
+		output.set_state_position(location);
 
 		setContentView(R.layout.state_3); // state_3.xml anzeigen
 		// Elemente der Anzeige holen, damit sie bearbeitet werden können:
@@ -157,10 +176,7 @@ public class GUI extends Activity {
 		final Button routing = (Button) findViewById(R.id.but_Routing3);
 		final Button campus = (Button) findViewById(R.id.but_Campus3);
 		
-//		if (firstTime3) {
-//			backgroundView = output; // grafische Ausgabe als Hintergrund setzen
-//			firstTime3 = false;
-//		}
+		backgroundView = output; // grafische Ausgabe als Hintergrund setzen
 
 		// OnClickListener für die Buttons:
 		fminus.setOnClickListener(new OnClickListener() {
@@ -201,26 +217,13 @@ public class GUI extends Activity {
 
 		rl.removeAllViews(); // zunächst müssen alle Views entfernt werden, da sie sonst doppelt vorhanden sind
 		// danach "von hinten nach vorne" die geänderten Elemente wieder hinzufügen, ansonsten würde die Route über den Button dargestellt werden
-
-		System.out.println("state3_" + i++);
-		try {
-			rl.addView(output/*,backgroundView.getLayoutParams()*/); // TODO exception
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			System.out.println("error");
-//			e.printStackTrace();
-		}
-
-		System.out.println("state3_" + i++);
+		rl.addView(backgroundView);
 		rl.addView(fminus);
 		rl.addView(fplus);
 		rl.addView(routing);
 		rl.addView(campus);
 
-		System.out.println("state3_" + i++);
-
-		cl.onResume();
-		// TODO vielleicht lieber in die override, aber momentan gehts auch ohne, da sich die app bei resume noch nicht den status gemerkt hat, also auch onResume und was es sonst noch so gibt mal overriden
+		cl.onResume(); // enable Lagesensor
 	}
 
 	private void launch_state_4() { // Routing menu
@@ -241,6 +244,8 @@ public class GUI extends Activity {
 
 	private void launch_state_5() { // Routing view
 		activityState = 5;
+		output = new GraphicalOutput(getApplicationContext()); // neue Instanz verschaffen
+		output.setOnTouchListener(touch_on_campus); // OnTouchListener für Campusanzeige hinzufügen
 		output.set_state_path(path);
 		
 		setContentView(R.layout.state_5); // state_5.xml anzeigen
@@ -315,8 +320,7 @@ public class GUI extends Activity {
 		rl.addView(description);
 		rl.addView(check);
 
-		cl.onResume();
-		// TODO vielleicht lieber in die override, aber momentan gehts auch ohne, da sich die app bei resume noch nicht den status gemerkt hat, also auch onResume und was es sonst noch so gibt mal overriden
+		cl.onResume(); // enable Lagesensor
 	}
 
 	private void launch_state_6() { // Options
@@ -327,6 +331,8 @@ public class GUI extends Activity {
 
 	private void launch_state_7() { // Campus view
 		activityState = 7;
+		output = new GraphicalOutput(getApplicationContext()); // neue Instanz verschaffen
+		output.setOnTouchListener(touch_on_campus); // OnTouchListener für Campusanzeige hinzufügen
 		output.set_state_campus();
 		
 		setContentView(R.layout.state_7); // state_7.xml anzeigen
@@ -369,8 +375,7 @@ public class GUI extends Activity {
 		rl.addView(campus);
 		rl.addView(position);
 
-		cl.onResume();
-		// TODO vielleicht lieber in die override, aber momentan gehts auch ohne, da sich die app bei resume noch nicht den status gemerkt hat, also auch onResume und was es sonst noch so gibt mal overriden
+		cl.onResume(); // enable Lagesensor
 	}
 
 	private class CompassListener implements SensorEventListener { // innere Klasse

@@ -11,7 +11,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="57dp"
-        android:text="Show Position"
+        android:text="Look up Location"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
