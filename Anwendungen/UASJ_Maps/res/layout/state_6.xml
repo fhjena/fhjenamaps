@@ -12,4 +12,14 @@
         android:text="Options"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView6"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="80dp"
+        android:text="not available in beta version"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
 </RelativeLayout>

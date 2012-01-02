@@ -47,7 +47,7 @@
         android:layout_marginLeft="20dp"
         android:text="Show Route"
         android:textSize="18dp"
-        android:width="130dp" />
+        android:width="150dp" />
 
     <Button
         android:id="@+id/but_Campus5"
@@ -58,7 +58,7 @@
         android:layout_marginLeft="20dp"
         android:text="Campus"
         android:textSize="18dp"
-        android:width="130dp" />
+        android:width="150dp" />
 
     <TextView
         android:id="@+id/textView5"

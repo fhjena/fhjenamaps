@@ -39,26 +39,26 @@
         android:width="50dp" />
 
     <Button
-        android:id="@+id/but_Routing3"
+        android:id="@+id/but_ShowPosition3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_marginBottom="20dp"
         android:layout_marginLeft="20dp"
-        android:text="Routing"
+        android:text="Show Position"
         android:textSize="18dp"
-        android:width="130dp" />
+        android:width="150dp" />
 
     <Button
         android:id="@+id/but_Campus3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/but_Routing3"
-        android:layout_toRightOf="@+id/but_Routing3"
+        android:layout_alignBaseline="@+id/but_ShowPosition3"
+        android:layout_toRightOf="@+id/but_ShowPosition3"
         android:layout_marginLeft="20dp"
         android:text="Campus"
         android:textSize="18dp"
-        android:width="130dp" />
+        android:width="150dp" />
 
 </RelativeLayout>
