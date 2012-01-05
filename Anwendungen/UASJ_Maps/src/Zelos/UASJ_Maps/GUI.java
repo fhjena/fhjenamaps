@@ -8,6 +8,7 @@ import android.hardware.*;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.*;
 import android.widget.*;
 
@@ -41,7 +42,9 @@ public class GUI extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) { // App wird gestartet
 		super.onCreate(savedInstanceState); // onCreate von Activity
+		System.out.println(savedInstanceState);
 		cl = new CompassListener(); // neue Instanz zur Initialisierung des Sensors
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD); // Tastensperre deaktivieren
 		launch_state_1(); // Hauptmenu anzeigen
 	}
 	
@@ -54,31 +57,7 @@ public class GUI extends Activity {
 	@Override
 	public void onResume() { // App wird wieder ausgeführt
 		super.onResume(); // onResume von Activity
-		
-		switch (activityState) { // Welcher Status war zuletzt aktiv?
-		
-		case 2:
-			launch_state_2(); // Look up Location (B3)
-			break;
-		case 3:
-			launch_state_3(); // Look up Location Output (B4)
-			break;
-		case 4:
-			launch_state_4(); // Routing (B5)
-			break;
-		case 5:
-			launch_state_5(); // Routing Output (B6)
-			break;
-		case 6:
-			launch_state_6(); // Options (B2)
-			break;
-		case 7:
-			launch_state_7(); // Campus Output (B7)
-			break;
-		default:
-			launch_state_1(); // Main menu (B1)
-			break;
-		}
+		cl.onResume(); // setzt Ausführung des Magnetsensors fort
 	}
 	
 	@Override
@@ -411,8 +390,11 @@ public class GUI extends Activity {
 				if ((f_new % 5) > 2.5) // Sensor auf 5° Schritte auf bzw. abrunden
 					f_new += 5;
 				f_old = f_new - (f_new % 5); // neuen Winkel merken
-				output.set_degree(f_old); // neuen Winkel an Ausgabe übergeben
-				output.invalidate(); // Bild neu zeichnen
+				
+				if (output!=null) {
+					output.set_degree(f_old); // neuen Winkel an Ausgabe übergeben
+					output.invalidate(); // Bild neu zeichnen
+				}
 			}
 		}
 
