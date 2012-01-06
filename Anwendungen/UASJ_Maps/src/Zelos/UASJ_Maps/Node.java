@@ -1,7 +1,9 @@
 package Zelos.UASJ_Maps;
 
 
-import android.graphics.Point;
+import java.util.ArrayList;
+
+import android.database.Cursor;
 
 public class Node implements Comparable<Node> {
 	private int ID;					// Knoten-ID
@@ -9,29 +11,42 @@ public class Node implements Comparable<Node> {
 	private float G;					// G-Wert (Distanz zwischen zwei Knoten)
 	private float H;					// Wert fü Distanz zwischen Knoten und Zielknoten
 	private Node Parent; 			// Vorgängerknoten
-	private int[] Neighbour_ID; 	// Nachbarknoten
+	private ArrayList<Integer> Neighbour_ID; 	// Nachbarknoten
 	private int x; 					// x-,y- & z-Koordinaten(real)
 	private int y;
 	private int z;
-	private Point PictureCoords; // x- & y- Koordinaten (Bild)
-	private int floorID;
+	private int floorID;			// EbenenID
 
-	public Node(int ID, int X, int Y, int Z, Point p, int[] adjacent) { // Konstruktor zum Initialisieren
+	public Node(int ID, int X, int Y, int Z, ArrayList<Integer> adjacent) { // Konstruktor zum Initialisieren
 		this.ID = ID;
 		this.x = X;
 		this.y = Y;
 		this.z = Z;
 		this.Neighbour_ID = adjacent;
-		this.PictureCoords = p;
 	}
 	
-	public Node(Node a){
+	public Node(Cursor cursor){		// Konstruktor zum Initialisieren eines Knotens nach DB-Abfrage
+		this.Neighbour_ID = new ArrayList<Integer>();
+		 while (cursor.moveToNext()) {
+			//Einzelne Einträge auslesen
+	           this.ID = cursor.getInt(1);
+	           this.floorID = cursor.getInt(3);
+	           this.x = cursor.getInt(4);
+	           this.y = cursor.getInt(5);
+	           this.z = cursor.getInt(6);
+	           this.Neighbour_ID.add(cursor.getInt(7));
+	           this.Neighbour_ID.add(cursor.getInt(8));
+	           this.Neighbour_ID.add(cursor.getInt(9));
+	           this.Neighbour_ID.add(cursor.getInt(10));
+		 }
+	}
+	
+	public Node(Node a){			// Copy-Konstruktor
 		this.ID = a.ID;
 		this.x = a.x;
 		this.y = a.y;
 		this.z = a.z;
-		this.Neighbour_ID = a.Neighbour_ID;
-		this.PictureCoords = a.PictureCoords;
+		this.Neighbour_ID = new ArrayList<Integer>(a.Neighbour_ID);
 		this.F = a.F;
 		this.G = a.G;
 		this.H = a.H;
@@ -43,14 +58,10 @@ public class Node implements Comparable<Node> {
 		return Parent;
 	}
 	
-	public int[] getNeigbour_ID(){			// gibt Nachbarknoten-IDs zurück
+	public ArrayList<Integer> getNeigbour_ID(){			// gibt Nachbarknoten-IDs zurück
 		return Neighbour_ID;
 	}
 
-	public Point getPictureCoords() {			// gibt Bildkoordinaten zurück
-		return PictureCoords;
-	}
-	
 	public int getID() {					// gibt Knoten-ID zurück
 		return ID;
 	}

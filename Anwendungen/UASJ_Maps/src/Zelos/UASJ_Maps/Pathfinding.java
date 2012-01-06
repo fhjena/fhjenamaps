@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.TreeSet;
-import android.graphics.Point;
+
+import android.content.Context;
+import android.database.Cursor;
 
 public class Pathfinding {
 
@@ -16,25 +18,14 @@ public class Pathfinding {
 	private ArrayList<ArrayList<Node>> Path = new ArrayList<ArrayList<Node>>();
 	private double h_factor = 1.0; // um Heuristik weniger oder stärker in die Wegfindung einzubeziehen
 	private float distance = 0; // Distanz der ermittelten Route
+	private DataBase myDB; // Datenbank zur Abfrage
 
 	public Pathfinding() {
-		// Knoten Ebene0
-		int[] list0 = { 1 };												// Liste mit angrenzenden Knoten
-		TotalList.add(new Node(0, 0, 0, 0, new Point(300, 220), list0));	// neuen Knoten mit Eigenschaften erstellen
-		int[] list1 = { 0, 2, 3 };
-		TotalList.add(new Node(1, 3, 0, 0, new Point(300, 280), list1));
-		int[] list2 = { 1, 5 };
-		TotalList.add(new Node(2, 3, 3, 0, new Point(220, 280), list2));
-		int[] list3 = { 1, 4 };
-		TotalList.add(new Node(3, 12, 0, 0, new Point(300, 360), list3));
-		int[] list4 = { 3, 5 };
-		TotalList.add(new Node(4, 15, 0, 0, new Point(300, 485), list4));
-		int[] list5 = { 2, 6, 4 };
-		TotalList.add(new Node(5, 16, 7, 0, new Point(170, 485), list5));
-		int[] list6 = { 5, 7 };
-		TotalList.add(new Node(6, 17, 10, 0, new Point(125, 485), list6));
-		int[] list7 = { 6 };
-		TotalList.add(new Node(7, 17, 13, 0, new Point(55, 485), list7));
+		
+	}
+	
+	public Pathfinding(Context c) {
+		myDB = new DataBase(c);
 	}
 	
 	/**
@@ -62,34 +53,49 @@ public class Pathfinding {
 	 * @param Start_ID
 	 * @param Ziel_ID
 	 */
-	public void compute_Path(int Start_ID, int Ziel_ID) {			
-		SN = TotalList.get(GetIndexOfElement(TotalList, Start_ID)); // Startknoten aus Gesamtliste holen; hier später: Datenbankabfrage + Erstellung eines neuen Knotens
+	public void compute_Path(int Start_ID, int Ziel_ID) {
+		Node n;						// Knoten für Eintrag in Gesamtliste
+		Cursor c;					// Cursor zum Datenbankzugriff
+		c = myDB.getDatafromNodeId(Start_ID);			// Datenbankabfrage nach Startknoten
+		n = new Node(c);								// Startknoten initialisieren
+		TotalList.add(n);								// Startknoten der Gesamtliste hinzufügen
+		SN = TotalList.get(GetIndexOfElement(TotalList, Start_ID)); // Startknoten aus Gesamtliste holen
 		SN.setG(0.0f); 												// G auf 0 setzen
 		SN.setH(0.0f); 												// H auf 0 setzen
-		DN = TotalList.get(GetIndexOfElement(TotalList, Ziel_ID));	// Zielknoten aus Gesamtliste holen; hier später: Datenbankabfrage + Erstellung eines neuen Knotens
+		
+		c = myDB.getDatafromNodeId(Ziel_ID);			// Datenbankabfrage nach Zielknoten
+		n = new Node(c);								// Zielknoten initialisieren
+		TotalList.add(n);								// Zielknoten der Gesamtliste hinzufügen
+		DN = TotalList.get(GetIndexOfElement(TotalList, Ziel_ID));	// Zielknoten aus Gesamtliste holen
+		
 		open_L.add(SN);												// Startknoten zu offener Liste hinzufügen
-
+		
 		while ((!closed_L.contains(DN)) && (!open_L.isEmpty()) ) {
 			Current_N = open_L.pollFirst(); 						// aktueller Knoten = Knoten mit niedrigstem f-Wert
 			closed_L.add(Current_N); 								// aktueller Knoten in geschlossene Liste hinzugefügt
-			for (int i = 0; i <= Current_N.getNeigbour_ID().length - 1; i++) { // Für alle angrenzenden Knoten
-				Parent_N = TotalList.get(GetIndexOfElement(TotalList,
-						Current_N.getNeigbour_ID()[i])); 			// hier später: Datenbankabfrage, Erstellung einer neuen Instanz vom Knoten
-				if (closed_L.contains(Parent_N)) {/* nichts */} 	// wenn schon in geschlossener Liste, dann zue nichts
-				else { 												// ansonsten (wenn nicht in geschlossener Liste)
-					if (open_L.contains(Parent_N)) { 				// wenn schon in offener Liste
-						if ((Current_N.getG()+calculate_Distance(Parent_N.getX(), Parent_N.getY(), Parent_N.getZ(),Current_N.getX(), Current_N.getY(), Current_N.getZ())) < Parent_N.getG()){ // Wenn Strecke zwischen angrenzendem Knoten über aktuellen Knoten < als bisheriger Weg zu angrenzendem Knoten
-							Parent_N.setG(Current_N.getG()+calculate_Distance(Parent_N.getX(), Parent_N.getY(), Parent_N.getZ(),Current_N.getX(), Current_N.getY(), Current_N.getZ())); // aktualsiere G (Strecke von Start bis zu diesem Knoten
-							Parent_N.setParent(Current_N); // setze aktuellen Knoten als Vorgängerknoten für angrenzden Knoten (alter angrenzender Knoten wird übeschrieben)
+			for (int i = 0; i <= Current_N.getNeigbour_ID().size() - 1; i++) { // Für alle angrenzenden Knoten
+				if(Current_N.getNeigbour_ID().get(i) != -1){		// Wenn eingetragene NachbarID eine eine gültige ID ist
+					c = myDB.getDatafromNodeId(Current_N.getNeigbour_ID().get(i));	// Datenbankabfrage
+					n = new Node(c);								// Knoteninitialisierung
+					if (GetIndexOfElement(TotalList, n.getID()) == -1) // Wenn Knoten noch nicht in Gesamtliste
+						TotalList.add(n);								// Knoten hinzufügen
+					Parent_N = TotalList.get(GetIndexOfElement(TotalList, Current_N.getNeigbour_ID().get(i))); 			// Angrenzenden Knoten festsetzen
+					if (closed_L.contains(Parent_N)) {/* nichts */} 	// wenn schon in geschlossener Liste, dann zue nichts
+					else { 												// ansonsten (wenn nicht in geschlossener Liste)
+						if (open_L.contains(Parent_N)) { 				// wenn schon in offener Liste
+							if ((Current_N.getG()+calculate_Distance(Parent_N.getX(), Parent_N.getY(), Parent_N.getZ(),Current_N.getX(), Current_N.getY(), Current_N.getZ())) < Parent_N.getG()){ // Wenn Strecke zwischen angrenzendem Knoten über aktuellen Knoten < als bisheriger Weg zu angrenzendem Knoten
+								Parent_N.setG(Current_N.getG()+calculate_Distance(Parent_N.getX(), Parent_N.getY(), Parent_N.getZ(),Current_N.getX(), Current_N.getY(), Current_N.getZ())); // aktualsiere G (Strecke von Start bis zu diesem Knoten
+								Parent_N.setParent(Current_N); // setze aktuellen Knoten als Vorgängerknoten für angrenzden Knoten (alter angrenzender Knoten wird übeschrieben)
+							}
 						}
-					}
-
-					else { 	// wenn noch nicht in offener Liste
-
-						Parent_N.setParent(Current_N); // aktuellen Knoten als Vorgänger von angrenzenden Knoten eintragen + Werte aktualisieren
-						Parent_N.setG(Parent_N.getParent().getG()+calculate_Distance(Parent_N.getX(), Parent_N.getY(), Parent_N.getZ(),Parent_N.getParent().getX(), Parent_N.getParent().getY(),Parent_N.getParent().getZ()));
-						Parent_N.setH((float) (calculate_H(Parent_N.getX(), Parent_N.getY(), Parent_N.getZ()) * h_factor));
-						open_L.add(Parent_N); // zu offener Liste hinzufügen
+	
+						else { 	// wenn noch nicht in offener Liste
+	
+							Parent_N.setParent(Current_N); // aktuellen Knoten als Vorgänger von angrenzenden Knoten eintragen + Werte aktualisieren
+							Parent_N.setG(Parent_N.getParent().getG()+calculate_Distance(Parent_N.getX(), Parent_N.getY(), Parent_N.getZ(),Parent_N.getParent().getX(), Parent_N.getParent().getY(),Parent_N.getParent().getZ()));
+							Parent_N.setH((float) (calculate_H(Parent_N.getX(), Parent_N.getY(), Parent_N.getZ()) * h_factor));
+							open_L.add(Parent_N); // zu offener Liste hinzufügen
+						}
 					}
 				}
 			}
@@ -99,7 +105,6 @@ public class Pathfinding {
 		distance = DN.getG();
 		// speichert Knoten in Array
 		ArrayList<Node> l = new ArrayList<Node>();
-		System.out.println(""+open_L.size());
 		if (!open_L.isEmpty()) { // Wenn Zielknoten gefunden
 			l.clear();
 			Node Node1 = DN;
@@ -120,6 +125,9 @@ public class Pathfinding {
 			l.clear(); // Liste leeren
 			Path.clear();
 		}
+		closed_L.clear(); // alle Listen löschen
+		open_L.clear();
+		TotalList.clear();
 	}
 	
 	/**
