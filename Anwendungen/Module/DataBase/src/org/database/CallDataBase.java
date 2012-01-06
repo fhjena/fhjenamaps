@@ -52,13 +52,14 @@ public class CallDataBase extends Activity {
 		
 		EditText destination_view = (EditText) findViewById(R.id.tx_destination);	//Eingabefeld Startpunkt über ID festlegen
 		String destination = destination_view.getText().toString();		//String Zielraum
-		pf.compute_Path(Integer.parseInt(start), Integer.parseInt(destination));
-		ArrayList<ArrayList<Node>> p = new ArrayList<ArrayList<Node>>();	
-		p = pf.getPath();
-		System.out.println("Route: ");
-		for(int i=0; i<p.get(0).size();i++){			// Route ausgeben
-			System.out.println(" "+ p.get(0).get(i).getID());
-		}
+//		pf.compute_Path(Integer.parseInt(start), Integer.parseInt(destination));
+		testDB();
+//		ArrayList<ArrayList<Node>> p = new ArrayList<ArrayList<Node>>();	
+//		p = pf.getPath();
+//		System.out.println("Route: ");
+//		for(int i=0; i<p.get(0).size();i++){			// Route ausgeben
+//			System.out.println(" "+ p.get(0).get(i).getID());
+//		}
 	//	Cursor cursorNode = myDB.getDatafromNodeId(2); //Datenbankzugriff Knoten ID
 		
 //		Cursor cursorRoom1 = myDB.getDatafromRoom(start);		//Datenbankzugriff Startraum
@@ -78,6 +79,36 @@ public class CallDataBase extends Activity {
 //		 test2.setText(showData(cursorRoom2));					//zum Test Cursordaten Zielraum ausgeben
 		
 	}
+	 
+	 private void testDB(){
+		 int j=0,x=0, i;
+		 Node n1,n2;
+		 boolean gefunden;
+		 System.out.println("los\n");
+		 for(i=0; i<=149; i++){
+
+			 Cursor c1 = myDB.getDatafromNodeId(i);
+				n1 = new Node(c1);
+				for(j=0; j<n1.getNeigbour_ID().size();j++){
+					if(n1.getNeigbour_ID().get(j)>=0){
+						Cursor c2 = myDB.getDatafromNodeId(n1.getNeigbour_ID().get(j));
+						n2 = new Node(c2);
+						gefunden = false;
+						for(x=0;x<n2.getNeigbour_ID().size();x++){
+							if(n2.getNeigbour_ID().get(x) == i)
+								gefunden = true;
+
+						}
+						if(gefunden==false)
+							System.out.println("Fehler bei Knoten: " + i + " mit Nachbarn Nr.: " + (j+1));
+						
+					}
+					
+				}
+
+		 }
+		 System.out.println("stop" +i +"\n");
+	 }
     public StringBuilder showData(Cursor cursor) {
         // alles in einen String schreiben
         StringBuilder builder = new StringBuilder( 
