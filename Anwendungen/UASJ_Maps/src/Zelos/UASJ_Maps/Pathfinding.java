@@ -74,7 +74,7 @@ public class Pathfinding {
 			Current_N = open_L.pollFirst(); 						// aktueller Knoten = Knoten mit niedrigstem f-Wert
 			closed_L.add(Current_N); 								// aktueller Knoten in geschlossene Liste hinzugefügt
 			for (int i = 0; i <= Current_N.getNeigbour_ID().size() - 1; i++) { // Für alle angrenzenden Knoten
-				if(Current_N.getNeigbour_ID().get(i) != -1){		// Wenn eingetragene NachbarID eine eine gültige ID ist
+				if(Current_N.getNeigbour_ID().get(i) > -1){		// Wenn eingetragene NachbarID eine eine gültige ID ist
 					c = myDB.getDatafromNodeId(Current_N.getNeigbour_ID().get(i));	// Datenbankabfrage
 					n = new Node(c);								// Knoteninitialisierung
 					if (GetIndexOfElement(TotalList, n.getID()) == -1) // Wenn Knoten noch nicht in Gesamtliste
@@ -103,6 +103,7 @@ public class Pathfinding {
 		
 		// Wegstreckenlänge speichern
 		distance = DN.getG();
+		Path.clear(); // alte Wege löschen
 		// speichert Knoten in Array
 		ArrayList<Node> l = new ArrayList<Node>();
 		if (!open_L.isEmpty()) { // Wenn Zielknoten gefunden
