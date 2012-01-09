@@ -4,15 +4,24 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Context;
+import android.database.DataSetObserver;
 import android.hardware.*;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.View.*;
 import android.widget.*;
 
 public class GUI extends Activity {
+	
+	private static String room[][][] = // 3D Array mit allen Raumnummern nach folgender Codierung: {Haus1, Haus2, Haus3, ...} mit Haus1 = {Etage1, Etage2, Etage3, ...} mit Etage1 = {Etagennummer, Raumnummer1, Raumnummer2, Raumnummer3,...} 
+		{{{"-1","12","13(SZS/ZSB)"},{"01","11","16"},{"02","11","12","14"},{"03","11","12","13","14"},{"04","18(Senatsvortragsraum)"}}, // Haus 1 {Etage -1}, {Etage 01}, {Etage 02}, {Etage03}, {Etage 04}
+		{{"02","01"},{"03","01","03"}}, // Haus 2 {Etage 02}, {Etage 03}
+		{{"00","02(GW)","15/1","15/2","17(Büro)","18","19","32","34(Büro)","43"},{"01","09","12","13","15","17(Büro)","29","31","36","39","41"},{"02","01","02","09","11","14","17","22(WT/WI)","30","37-40"},{"03","01(HS 1)","10/1","10/2","33","42/1","42/2"}}, // Haus 3 {Etage 00}, {Etage 01}, {Etage 02}, {Etage 03}
+		{{"-1","01(Aula)","06","07","09","11","13","15/FA","15/FT","17","19-22","23"},{"00","01(HS 6)","02(HS 7)","04/1","04/2","06","07","08(CIM)","09(CAM)","10","11","12","14","15/FA","15/FT","16","17","18","19","20","22(Reinr.)","25","26","27","28","29","30","33","34","36","37","48","50","56"},{"01","01","02","03","08","09","10","11","12","15"},{"02","07","10","12","15","16","19","20"},{"03","07","10","11","12","15"}}, // Haus 4 {Etage -1}, {Etage 00}, {Etage 01}, {Etage 02}, {Etage 03}
+		{{"-1","204(CAD1)","207(CAD2)","208(CAD3)","226","230","231(KR)","24/25"},{"00","01","03","04","06","10","11","12"},{"01","20(SW)","21","32/33(SW)","42","43","44","45","57"},{"02","13","14","15","16","26","27","28","29","36","38","39","40","48","49","50","52","61"},{"03","01","02(HS 5)","05","06(Sprachen)","07(SW)","08(SW)","09(SW)","11(SW)","201","202","203","204","205(SW)","206","207(SW)","224","225","229","230","28","29(Sprachen)","32","33","36","37(HS 2)","40(HS 3)","43(HS 4)"}}}; // Haus 5 {Etage -1}, {Etage 00}, {Etage 01}, {Etage 02}, {Etage 03}
 
 	private GraphicalOutput output; // beinhaltet grafische Darstellung
 	private CompassListener cl; // beinhaltet Lagesensor
@@ -42,10 +51,14 @@ public class GUI extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) { // App wird gestartet
 		super.onCreate(savedInstanceState); // onCreate von Activity
-		System.out.println(savedInstanceState);
 		cl = new CompassListener(); // neue Instanz zur Initialisierung des Sensors
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD); // Tastensperre deaktivieren
 		launch_state_1(); // Hauptmenu anzeigen
+		
+		for (int i=0; i<room.length; i++) // testet room, TODO fällt irgendwann raus
+			for (int j=0; j<room[i].length; j++)
+				for (int k=1; k<room[i][j].length; k++)
+					System.out.println("Haus " + (i+1) + ":Etage " + room[i][j][0] + ":Raum " + room[i][j][k]);
 	}
 	
 	@Override
@@ -127,15 +140,27 @@ public class GUI extends Activity {
 	private void launch_state_2() { // Look up Location (B3)
 		activityState = 2;
 		setContentView(R.layout.state_2); // state_2.xml anzeigen
+		
+		Spinner spHouse = (Spinner) findViewById(R.id.spinner21);
+		Spinner spFloor = (Spinner) findViewById(R.id.spinner22);
+		Spinner spRoom = (Spinner) findViewById(R.id.spinner23);
+		
+//		ArrayAdapter<CharSequence> aaHouse = ArrayAdapter.createFromResource(getApplicationContext(), R.array.house_array, R.layout.simple_spinner_layout); 
+//		aaHouse.setDropDownViewResource(R.layout.state_2);
+//		spHouse.setAdapter(aaHouse); TODO
+		
+		spFloor.setEnabled(false);
+		spRoom.setEnabled(false);
+		
 		findViewById(R.id.but_Go2).setOnClickListener(new OnClickListener() {
 			// On ClickListener für Go!
 			public void onClick(View v) {
-				EditText roomInput = (EditText) findViewById(R.id.editText2); // TODO abfangen von fehleingaben
-				Pathfinding pf = new Pathfinding(); // neue Instanz verschaffen
-				int i = Integer.parseInt(roomInput.getText().toString()); // eingegebenen Raum umwandeln
-				pf.compute_Path(i,i); // "Route berechnen"; wobei hier nur der Knoten mit der ID i ermittelt werden soll 
-				location = new Node (pf.getPath().get(0).get(0)); // Location merken, falls App zwischendurch in den Hintergrund kommen sollte
-				launch_state_3(); // Look up Location Output (B4)
+//				EditText roomInput = (EditText) findViewById(R.id.editText2); // TODO abfangen von fehleingaben
+//				Pathfinding pf = new Pathfinding(); // neue Instanz verschaffen
+//				int i = Integer.parseInt(roomInput.getText().toString()); // eingegebenen Raum umwandeln
+//				pf.compute_Path(i,i); // "Route berechnen"; wobei hier nur der Knoten mit der ID i ermittelt werden soll 
+//				location = new Node (pf.getPath().get(0).get(0)); // Location merken, falls App zwischendurch in den Hintergrund kommen sollte
+//				launch_state_3(); // Look up Location Output (B4)
 			}
 		});
 		// TODO wheel oder wheelpicker
