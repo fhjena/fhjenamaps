@@ -5,7 +5,11 @@
     
     <string name="house">Choose a house</string>
     
-    <string-array name="house_array">
+    <string name="floor">Choose a floor</string>
+    
+    <string name="room">Choose a room</string>
+    
+    <string-array name="campus">
         <item>01</item>
         <item>02</item>
         <item>03</item>
@@ -13,8 +17,67 @@
         <item>05</item>
     </string-array>
     
-    <string-array name="floor_array"></string-array>
+    <string-array name="house01">
+        <item>-1</item>
+        <item>01</item>
+        <item>02</item>
+        <item>03</item>
+        <item>04</item>
+    </string-array>
     
-    <string-array name="room_array"></string-array>
+    <string-array name="house01_floorminus1">
+        <item>12</item>
+        <item>13 (SZS/ZSB)</item>
+    </string-array>
+    
+    <string-array name="house01_floor01">
+        <item>11</item>
+        <item>16</item>
+    </string-array>
+    
+    <string-array name="house01_floor02">
+        <item>11</item>
+        <item>12</item>
+        <item>14</item>
+    </string-array>
+    
+    <string-array name="house01_floor03">
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+    </string-array>
+    
+    <string-array name="house01_floor04">
+        <item>18 (Senatsvortragsraum)</item>
+    </string-array>
+    
+    <string-array name="house02">
+        <item>02</item>
+        <item>03</item>
+    </string-array>
+    
+    <string-array name="house03">
+        <item>00</item>
+        <item>01</item>
+        <item>02</item>
+        <item>03</item>
+    </string-array>
+    
+    <string-array name="house04">
+        <item>-1</item>
+        <item>00</item>
+        <item>01</item>
+        <item>02</item>
+        <item>03</item>
+    </string-array>
+    
+    <string-array name="house05">
+        <item>-1</item>
+        <item>00</item>
+        <item>01</item>
+        <item>02</item>
+        <item>03</item>
+    </string-array>
 
 </resources>

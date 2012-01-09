@@ -31,9 +31,7 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="50dp"
         android:layout_toRightOf="@+id/textView22"
-        android:width="100dp"
-        android:prompt="@string/house"
-        android:entries="@array/house_array" />
+        android:prompt="@string/house" />
 
     <Spinner
         android:id="@+id/spinner22"
@@ -41,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/dot21"
-        android:width="100dp" />
+        android:prompt="@string/floor" />
 
     <Spinner
         android:id="@+id/spinner23"
@@ -49,7 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/dot22"
-        android:width="100dp" />
+        android:prompt="@string/room" />
 
     <Button
         android:id="@+id/but_Go2"
