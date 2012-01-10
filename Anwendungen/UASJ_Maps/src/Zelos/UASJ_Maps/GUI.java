@@ -126,17 +126,13 @@ public class GUI extends Activity {
 		activityState = 2;
 		setContentView(R.layout.state_2); // state_2.xml anzeigen
 		
-		final Spinner spHouse = (Spinner) findViewById(R.id.spinner21);
-		final Spinner spFloor = (Spinner) findViewById(R.id.spinner22);
-		final Spinner spRoom = (Spinner) findViewById(R.id.spinner23);
 		final Button go = (Button) findViewById(R.id.but_Go2);
-		
-		final RoomSpinner RS = new RoomSpinner(getApplicationContext(), spHouse, spFloor, spRoom);
+		final RoomSpinner RS = new RoomSpinner(getApplicationContext(), (Spinner) findViewById(R.id.spinner21), (Spinner) findViewById(R.id.spinner22), (Spinner) findViewById(R.id.spinner23)); // neue Verwaltung für die Spinner instanziieren
 		
 		go.setOnClickListener(new OnClickListener() {
 			// On ClickListener für Go!
 			public void onClick(View v) { // TODO enable wenn verfügbar
-				String room = new String(RS.getString());
+				String room = new String(RS.getString()); // String des ausgewählten Raums holen
 				System.out.println(room);
 //				Pathfinding pf = new Pathfinding(getApplicationContext()); // neue Instanz verschaffen
 //				pf.compute_Path(room,room); // "Route berechnen"; wobei hier nur der Knoten mit der ID i ermittelt werden soll 
@@ -217,15 +213,15 @@ public class GUI extends Activity {
 		findViewById(R.id.but_Go4).setOnClickListener(new OnClickListener() {
 			// OnClickListener für Go!
 			public void onClick(View v) {
-				EditText roomInput1 = (EditText) findViewById(R.id.editText41); // TODO abfangen von fehleingaben
-				EditText roomInput2 = (EditText) findViewById(R.id.editText42); // TODO abfangen von fehleingaben
+				EditText roomInput1 = (EditText) findViewById(R.id.editText41);
+				EditText roomInput2 = (EditText) findViewById(R.id.editText42);
 				Pathfinding pf = new Pathfinding(); // neue Instanz verschaffen
 				pf.compute_Path(Integer.parseInt(roomInput1.getText().toString()), Integer.parseInt(roomInput2.getText().toString())); // Pfad berechnen
 				route = new ArrayList<ArrayList<Node>>(pf.getPath()); // Route merken, falls App zwischendurch in den Hintergrund kommen sollte
 				launch_state_5(); // Routing Output (B6)
 			}
 		});
-		// TODO wheel oder wheelpicker
+		// TODO RoomSpinner einfügen
 	}
 
 	private void launch_state_5() { // Routing Output (B6)
