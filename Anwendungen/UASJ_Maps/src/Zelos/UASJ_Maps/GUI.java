@@ -131,96 +131,19 @@ public class GUI extends Activity {
 		final Spinner spRoom = (Spinner) findViewById(R.id.spinner23);
 		final Button go = (Button) findViewById(R.id.but_Go2);
 		
-		ArrayAdapter<CharSequence> aaHouse = ArrayAdapter.createFromResource(getApplicationContext(), R.array.campus, android.R.layout.simple_spinner_item); 
-		aaHouse.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		spHouse.setAdapter(aaHouse);
-		
-		spHouse.setOnItemSelectedListener(new OnItemSelectedListener() {
-
-			public void onItemSelected(AdapterView<?> arg0, View arg1, int house, long arg3) {
-				ArrayAdapter<CharSequence> aaFloor;
-				switch(house) {
-				case 1:
-					aaFloor = ArrayAdapter.createFromResource(getApplicationContext(), R.array.house02, android.R.layout.simple_spinner_item); 
-					aaFloor.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-					spFloor.setAdapter(aaFloor);
-					break;
-				case 2:
-					aaFloor = ArrayAdapter.createFromResource(getApplicationContext(), R.array.house03, android.R.layout.simple_spinner_item); 
-					aaFloor.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-					spFloor.setAdapter(aaFloor);
-					break;
-				case 3:
-					aaFloor = ArrayAdapter.createFromResource(getApplicationContext(), R.array.house04, android.R.layout.simple_spinner_item); 
-					aaFloor.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-					spFloor.setAdapter(aaFloor);
-					break;
-				case 4:
-					aaFloor = ArrayAdapter.createFromResource(getApplicationContext(), R.array.house05, android.R.layout.simple_spinner_item); 
-					aaFloor.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-					spFloor.setAdapter(aaFloor);
-					break;
-					
-				default:
-					aaFloor = ArrayAdapter.createFromResource(getApplicationContext(), R.array.house01, android.R.layout.simple_spinner_item); 
-					aaFloor.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-					spFloor.setAdapter(aaFloor);
-					spFloor.setOnItemSelectedListener(new OnItemSelectedListener() {
-
-						public void onItemSelected(AdapterView<?> arg0, View arg1, int floor, long arg3) {
-							ArrayAdapter<CharSequence> aaLocation;
-							switch(floor) {
-							case 1:
-								aaLocation = ArrayAdapter.createFromResource(getApplicationContext(), R.array.house01_floor01, android.R.layout.simple_spinner_item); 
-								aaLocation.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-								spRoom.setAdapter(aaLocation);
-								break;
-							case 2:
-								aaLocation = ArrayAdapter.createFromResource(getApplicationContext(), R.array.house01_floor02, android.R.layout.simple_spinner_item); 
-								aaLocation.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-								spRoom.setAdapter(aaLocation);
-								break;
-							case 3:
-								aaLocation = ArrayAdapter.createFromResource(getApplicationContext(), R.array.house01_floor03, android.R.layout.simple_spinner_item); 
-								aaLocation.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-								spRoom.setAdapter(aaLocation);
-								break;
-							case 4:
-								aaLocation = ArrayAdapter.createFromResource(getApplicationContext(), R.array.house01_floor04, android.R.layout.simple_spinner_item); 
-								aaLocation.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-								spRoom.setAdapter(aaLocation);
-								break;
-							default:
-								aaLocation = ArrayAdapter.createFromResource(getApplicationContext(), R.array.house01_floorminus1, android.R.layout.simple_spinner_item); 
-								aaLocation.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-								spRoom.setAdapter(aaLocation);
-								break;
-							}
-						}
-
-						public void onNothingSelected(AdapterView<?> arg0) {							
-						}
-					});
-					break;
-				}
-			}
-
-			public void onNothingSelected(AdapterView<?> arg0) {
-			}
-		});
+		final RoomSpinner RS = new RoomSpinner(getApplicationContext(), spHouse, spFloor, spRoom);
 		
 		go.setOnClickListener(new OnClickListener() {
 			// On ClickListener für Go!
-			public void onClick(View v) {
-//				EditText roomInput = (EditText) findViewById(R.id.editText2); // TODO abfangen von fehleingaben
-//				Pathfinding pf = new Pathfinding(); // neue Instanz verschaffen
-//				int i = Integer.parseInt(roomInput.getText().toString()); // eingegebenen Raum umwandeln
-//				pf.compute_Path(i,i); // "Route berechnen"; wobei hier nur der Knoten mit der ID i ermittelt werden soll 
+			public void onClick(View v) { // TODO enable wenn verfügbar
+				String room = new String(RS.getString());
+				System.out.println(room);
+//				Pathfinding pf = new Pathfinding(getApplicationContext()); // neue Instanz verschaffen
+//				pf.compute_Path(room,room); // "Route berechnen"; wobei hier nur der Knoten mit der ID i ermittelt werden soll 
 //				location = new Node (pf.getPath().get(0).get(0)); // Location merken, falls App zwischendurch in den Hintergrund kommen sollte
 //				launch_state_3(); // Look up Location Output (B4)
 			}
 		});
-		// TODO wheel oder wheelpicker
 	}
  
 	private void launch_state_3() { // Look up Location Output (B4)

@@ -17,67 +17,289 @@
         <item>05</item>
     </string-array>
     
-    <string-array name="house01">
-        <item>-1</item>
-        <item>01</item>
-        <item>02</item>
-        <item>03</item>
-        <item>04</item>
-    </string-array>
+	    <string-array name="house01">
+	        <item>-1</item>
+	        <item>01</item>
+	        <item>02</item>
+	        <item>03</item>
+	        <item>04</item>
+	    </string-array>
+	    
+		    <string-array name="house01_floor_1">
+		        <item>12</item>
+		        <item>13 (SZS/ZSB)</item>
+		    </string-array>
+		    
+		    <string-array name="house01_floor01">
+		        <item>11</item>
+		        <item>16</item>
+		    </string-array>
+		    
+		    <string-array name="house01_floor02">
+		        <item>11</item>
+		        <item>12</item>
+		        <item>14</item>
+		    </string-array>
+		    
+		    <string-array name="house01_floor03">
+		        <item>11</item>
+		        <item>12</item>
+		        <item>13</item>
+		        <item>14</item>
+		    </string-array>
+		    
+		    <string-array name="house01_floor04">
+		        <item>18 (Senatsvortragsraum)</item>
+		    </string-array>
+	    
+	    <string-array name="house02">
+	        <item>02</item>
+	        <item>03</item>
+	    </string-array>
+	    
+	        <string-array name="house02_floor02">
+	            <item>01</item>
+	        </string-array>
+	        
+	        <string-array name="house02_floor03">
+	            <item>01</item>
+	            <item>03</item>
+	        </string-array>
+	    
+	    <string-array name="house03">
+	        <item>00</item>
+	        <item>01</item>
+	        <item>02</item>
+	        <item>03</item>
+	    </string-array>
+	    
+	        <string-array name="house03_floor00">
+	            <item>02 (GW)</item>
+	            <item>15/1</item>
+	            <item>15/2</item>
+	            <item>17 (Büro)</item>
+	            <item>18</item>
+	            <item>19</item>
+	            <item>32</item>
+	            <item>34 (Büro)</item>
+	            <item>43</item>
+	        </string-array>
+	        
+	        <string-array name="house03_floor01">
+	            <item>09</item>
+	            <item>12</item>
+	            <item>13</item>
+	            <item>15</item>
+	            <item>17 (Büro)</item>
+	            <item>29</item>
+	            <item>31</item>
+	            <item>36</item>
+	            <item>39</item>
+	            <item>41</item>
+	        </string-array>
+	        
+	        <string-array name="house03_floor02">
+	            <item>01</item>
+	            <item>02</item>
+	            <item>09</item>
+	            <item>11</item>
+	            <item>14</item>
+	            <item>17</item>
+	            <item>22 (WT/WI)</item>
+	            <item>30</item>
+	            <item>37</item>
+	            <item>38</item>
+	            <item>39</item>
+	            <item>40</item>
+	        </string-array>
+	    
+	        <string-array name="house03_floor03">
+	            <item>01 (HS 1)</item>
+	            <item>10/1</item>
+	            <item>10/2</item>
+	            <item>33</item>
+	            <item>42/1</item>
+	            <item>42/2</item>
+	        </string-array>
+	            
+	    <string-array name="house04">
+	        <item>-1</item>
+	        <item>00</item>
+	        <item>01</item>
+	        <item>02</item>
+	        <item>03</item>
+	    </string-array>
+	    
+	        <string-array name="house04_floor_1">
+	            <item>01 (Aula)</item>
+	            <item>06</item>
+	            <item>07</item>
+	            <item>09</item>
+	            <item>11</item>
+	            <item>13</item>
+	            <item>15</item>
+	            <item>17</item>
+	            <item>19</item>
+	            <item>20</item>
+	            <item>21</item>
+	            <item>22</item>
+	            <item>23</item>
+	        </string-array>
+	        
+	        <string-array name="house04_floor00">
+	            <item>01 (HS 6)</item>
+	            <item>02 (HS 7)</item>
+	            <item>04/1</item>
+	            <item>04/2</item>
+	            <item>06</item>
+	            <item>07</item>
+	            <item>08 (CIM)</item>
+	            <item>09 (CAM)</item>
+	            <item>10</item>
+	            <item>11</item>
+	            <item>12</item>
+	            <item>14</item>
+	            <item>15</item>
+	            <item>16</item>
+	            <item>17</item>
+	            <item>18</item>
+	            <item>19</item>
+	            <item>20</item>
+	            <item>22 (Reinr.)</item>
+	            <item>25</item>
+	            <item>26</item>
+	            <item>27</item>
+	            <item>28</item>
+	            <item>29</item>
+	            <item>30</item>
+	            <item>33</item>
+	            <item>34</item>
+	            <item>36</item>
+	            <item>37</item>
+	            <item>48</item>
+	            <item>50</item>
+	            <item>56</item>
+	        </string-array>
+	        
+	        <string-array name="house04_floor01">
+	            <item>01</item>
+	            <item>02</item>
+	            <item>03</item>
+	            <item>08</item>
+	            <item>09</item>
+	            <item>10</item>
+	            <item>11</item>
+	            <item>12</item>
+	            <item>15</item>
+	        </string-array>
+	        
+	        <string-array name="house04_floor02">
+	            <item>07</item>
+	            <item>10</item>
+	            <item>12</item>
+	            <item>15</item>
+	            <item>16</item>
+	            <item>19</item>
+	            <item>20</item>
+	        </string-array>
+	        
+	        <string-array name="house04_floor03">
+	            <item>07</item>
+	            <item>10</item>
+	            <item>11</item>
+	            <item>12</item>
+	            <item>15</item>
+	        </string-array>
+	    
+	    <string-array name="house05">
+	        <item>-1</item>
+	        <item>00</item>
+	        <item>01</item>
+	        <item>02</item>
+	        <item>03</item>
+	    </string-array>
     
-    <string-array name="house01_floorminus1">
-        <item>12</item>
-        <item>13 (SZS/ZSB)</item>
-    </string-array>
-    
-    <string-array name="house01_floor01">
-        <item>11</item>
-        <item>16</item>
-    </string-array>
-    
-    <string-array name="house01_floor02">
-        <item>11</item>
-        <item>12</item>
-        <item>14</item>
-    </string-array>
-    
-    <string-array name="house01_floor03">
-        <item>11</item>
-        <item>12</item>
-        <item>13</item>
-        <item>14</item>
-    </string-array>
-    
-    <string-array name="house01_floor04">
-        <item>18 (Senatsvortragsraum)</item>
-    </string-array>
-    
-    <string-array name="house02">
-        <item>02</item>
-        <item>03</item>
-    </string-array>
-    
-    <string-array name="house03">
-        <item>00</item>
-        <item>01</item>
-        <item>02</item>
-        <item>03</item>
-    </string-array>
-    
-    <string-array name="house04">
-        <item>-1</item>
-        <item>00</item>
-        <item>01</item>
-        <item>02</item>
-        <item>03</item>
-    </string-array>
-    
-    <string-array name="house05">
-        <item>-1</item>
-        <item>00</item>
-        <item>01</item>
-        <item>02</item>
-        <item>03</item>
-    </string-array>
+        	<string-array name="house05_floor_1">
+        	    <item>204 (CAD 1)</item>
+            	<item>207 (CAD 2)</item>
+            	<item>208 (CAD 3)</item>
+            	<item>226</item>
+            	<item>230</item>
+            	<item>231 (KR)</item>
+            	<item>24</item>
+            	<item>25</item>
+        	</string-array>
+        	
+        	<string-array name="house05_floor00">
+        	    <item>01</item>
+            	<item>03</item>
+            	<item>04</item>
+            	<item>06</item>
+            	<item>10</item>
+            	<item>11</item>
+            	<item>12</item>
+        	</string-array>
+        	
+        	<string-array name="house05_floor01">
+        	    <item>20 (SW)</item>
+            	<item>21</item>
+            	<item>32 (SW)</item>
+            	<item>33 (SW)</item>
+            	<item>42</item>
+            	<item>43</item>
+            	<item>44</item>
+            	<item>45</item>
+            	<item>57</item>
+        	</string-array>
+        	
+        	<string-array name="house05_floor02">
+        	    <item>13</item>
+            	<item>14</item>
+            	<item>15</item>
+            	<item>16</item>
+            	<item>26</item>
+            	<item>27</item>
+            	<item>28</item>
+            	<item>29</item>
+            	<item>36</item>
+            	<item>38</item>
+            	<item>39</item>
+            	<item>40</item>
+            	<item>48</item>
+            	<item>49</item>
+            	<item>50</item>
+            	<item>52</item>
+            	<item>61</item>
+        	</string-array>
+        	
+        	<string-array name="house05_floor03">
+        	    <item>01</item>
+            	<item>02 (HS 5)</item>
+            	<item>05</item>
+            	<item>06 (Sprachen)</item>
+            	<item>07 (SW)</item>
+            	<item>08 (SW)</item>
+            	<item>09 (SW)</item>
+            	<item>11 (SW)</item>
+            	<item>201</item>
+            	<item>202</item>
+            	<item>203</item>
+            	<item>204</item>
+            	<item>205 (SW)</item>
+            	<item>206</item>
+            	<item>207 (SW)</item>
+            	<item>224</item>
+            	<item>225</item>
+            	<item>229</item>
+            	<item>230</item>
+            	<item>28</item>
+            	<item>29 (Sprachen)</item>
+            	<item>32</item>
+            	<item>33</item>
+            	<item>36</item>
+            	<item>37 (HS 2)</item>
+            	<item>40 (HS 3)</item>
+            	<item>43 (HS 4)</item>
+        	</string-array>
 
 </resources>
