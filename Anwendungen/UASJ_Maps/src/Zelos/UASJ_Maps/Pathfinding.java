@@ -53,20 +53,22 @@ public class Pathfinding {
 	 * @param Start_ID
 	 * @param Ziel_ID
 	 */
-	public void compute_Path(int Start_ID, int Ziel_ID) {
+	public void compute_Path(String Start, String Destination) {
+		//TODO: noch Rückgabewert einfügen? Z.b. ob Datenbankarbeit geklappt hat etc.
 		Node n;						// Knoten für Eintrag in Gesamtliste
 		Cursor c;					// Cursor zum Datenbankzugriff
-		c = myDB.getDatafromNodeId(Start_ID);			// Datenbankabfrage nach Startknoten
+		
+		c = myDB.getDatafromRoom(Start);			// Datenbankabfrage nach Startknoten
 		n = new Node(c);								// Startknoten initialisieren
 		TotalList.add(n);								// Startknoten der Gesamtliste hinzufügen
-		SN = TotalList.get(GetIndexOfElement(TotalList, Start_ID)); // Startknoten aus Gesamtliste holen
+		SN = TotalList.get(GetIndexOfElement(TotalList, n.getID())); // Startknoten aus Gesamtliste holen
 		SN.setG(0.0f); 												// G auf 0 setzen
 		SN.setH(0.0f); 												// H auf 0 setzen
 		
-		c = myDB.getDatafromNodeId(Ziel_ID);			// Datenbankabfrage nach Zielknoten
+		c = myDB.getDatafromRoom(Destination);			// Datenbankabfrage nach Zielknoten
 		n = new Node(c);								// Zielknoten initialisieren
 		TotalList.add(n);								// Zielknoten der Gesamtliste hinzufügen
-		DN = TotalList.get(GetIndexOfElement(TotalList, Ziel_ID));	// Zielknoten aus Gesamtliste holen
+		DN = TotalList.get(GetIndexOfElement(TotalList, n.getID()));	// Zielknoten aus Gesamtliste holen
 		
 		open_L.add(SN);												// Startknoten zu offener Liste hinzufügen
 		

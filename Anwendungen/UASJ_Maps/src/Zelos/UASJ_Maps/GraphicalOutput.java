@@ -55,8 +55,39 @@ public class GraphicalOutput extends View {
 		degree = f;
 	}
 
-	// ----- TESTUMGEBUNG -----
-	// ------------------------
+	/**
+	 * gibt die reale Hausummer der aktuellen Eben zurück
+	 * @return
+	 */
+	public String get_HouseNumber(){
+		if((current_floor > 0) && (current_floor <=7)) return "5";
+		else
+			if((current_floor > 7) && (current_floor <=13)) return "3;2;1";
+			else return "Campus";
+	}
+	
+	/**
+	 * gibt die reale Ebenenbezeichnung der aktuellen Eben zurück
+	 * @return
+	 */
+	public String get_floorNumber(){
+		switch(current_floor){
+		case 1: return "-2";
+		case 2: return "-1";
+		case 3: return "0";
+		case 4: return "1";
+		case 5: return "2";
+		case 6: return "3";
+		case 7: return "3Z";
+		case 8: return "-1";
+		case 9: return "0";
+		case 10: return "1";
+		case 11: return "2";
+		case 12: return "3";
+		case 13: return "4";
+		default: return "";
+		}
+	}
 	
 	/** 
 	 * Angabe in welche Etage gewechselt werden soll
@@ -160,19 +191,6 @@ public class GraphicalOutput extends View {
 		canvas.drawPaint(var_paint);
 	}
 
-	// Verbindungen (Punkt zu Punkt) zeichnen
-//	private void draw_p2p(Canvas canvas) {
-//		ArrayList<Node> TempArr = new ArrayList<Node>();
-//		TempArr = var_way;
-//		var_paint.setColor(Color.BLUE);
-//		for (int i = 0; i < TempArr.size() - 1; i++) {
-//			canvas.drawLine(TempArr.get(i).getPictureCoords().x + x_ref,
-//					TempArr.get(i).getPictureCoords().y + y_ref,
-//					TempArr.get(i + 1).getPictureCoords().x + x_ref, TempArr
-//							.get(i + 1).getPictureCoords().y + y_ref, var_paint);
-//		}
-//	}
-
 	/**
 	 * onDraw wird von der Klasse View überschrieben,zeichnet im Endeffekt aus das Canvas
 	 */
@@ -183,13 +201,16 @@ public class GraphicalOutput extends View {
 		switch(state){ // jenachdem in welchem Zustand und auf welcher Ebene man sich befindet wird nun noch eine Route oder eine Position in die Ebene gezeichnet
 		case 0:			// Wenn in Routenberechnung, dann soll Weg angezeigt werden, falls dieser in aktueller Ebene vorhanden
 			if(var_way_contains_floor(current_floor)!=-1){ // Wenn auf aktueller Ebene Route vorhanden
-				draw_route(canvas, var_way.get(var_way_contains_floor(current_floor))); // zeichen Route für folgenden 
+				draw_route_or_position(canvas, var_way.get(var_way_contains_floor(current_floor))); // zeichen Route für folgenden 
 			}
 //			draw_route(ArrayList<Node>);
 			break;
 		case 1: // Wenn in Positionsanzeige(keine Routenanzeige)
-			if(current_floor == position.getFloorID())
-				draw_position(canvas, position);
+			if(current_floor == position.getFloorID()){
+				ArrayList<Node> list = new ArrayList<Node>();
+				list.add(position);
+				draw_route_or_position(canvas, list);
+			}
 			break;
 		case 2:	// Wenn in Campusanzeige(keine Routenanzeige & keine Positionsanzeige
 			//TODO: überlegen, ob hier noch etwas rein soll. Theoretisch wäre ansonsten alles abgedeckt. brauch man den Case-Fall überhaupt?
@@ -201,14 +222,6 @@ public class GraphicalOutput extends View {
 		
 	}
 	
-	/**
-	 * Zeichnet die Position des Knotens ins Canvas
-	 * @param p
-	 */
-	private void draw_position(Canvas c, Node p) {
-		// TODO: Postion muss noch auf Canvas gezeichnet werden + Umrechnung der Koordinaten
-	}
-
 	/**
 	 * Durchsucht die Wegstrecke, ob angegebene Ebene enthalten ist
 	 * @param floorID : EbenenID nach der gesucht werden soll
@@ -224,14 +237,23 @@ public class GraphicalOutput extends View {
 	}
 	
 	/**
-	 * Zeichnet die Route auf das Canvas
+	 * Zeichnet die Route/Position auf das Canvas
 	 * @param c : canvas auf das gezeichnet wird
-	 * @param list : Abzugehende Knoten auf einer Ebene
+	 * @param list : Abzugehende Knoten auf einer Ebene (Bei Position nur ein Knoten)
 	 */
-	private void draw_route(Canvas c, ArrayList<Node> list){
-		//zeichne Route
-//		this.v
-		//TODO: Algorithmus zum Routenzeichnen muss erstellt werden + Berechnung der Bildknotenkoords aus den Knotenkoordinaten
+	private void draw_route_or_position(Canvas c, ArrayList<Node> list){
+		var_paint.setColor(Color.BLUE); // Farbe setzen
+		c.drawLine(list.get(0).getX()+20, list.get(0).getY()+20, list.get(0).getX()-20, list.get(0).getY()-20, var_paint); // Startkreuz setzen(strich1)
+		c.drawLine(list.get(0).getX()+20, list.get(0).getY()-20, list.get(0).getX()-20, list.get(0).getY()+20, var_paint); // Startkreuz Strich2
+		
+		for (int i = 0; i < list.size() - 1; i++) {
+			c.drawLine(list.get(i).getX(),list.get(i).getY(),				// Startpunkt der Linie
+					list.get(i + 1).getX(), list.get(i + 1).getY(), var_paint); // Zielpunkt der Linie
+		}
+		
+		c.drawLine(list.get(list.size()-1).getX()+20, list.get(list.size()-1).getY()+20, list.get(list.size()-1).getX()-20, list.get(list.size()-1).getY()-20, var_paint); // Zielkreuz (strich1)
+		c.drawLine(list.get(list.size()-1).getX()+20, list.get(list.size()-1).getY()-20, list.get(list.size()-1).getX()-20, list.get(list.size()-1).getY()+20, var_paint); // Zielkreuz (strich2)
+		//TODO: eventuell noch Farben anpassen (Startkreuz z.b. andere Farbe als Zielkreuz usw)
 	}
 	
 	/**

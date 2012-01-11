@@ -1,9 +1,11 @@
 package Zelos.UASJ_Maps;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
-
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.hardware.*;
 import android.os.Bundle;
 import android.view.*;
@@ -14,6 +16,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 public class GUI extends Activity {
 	
 	private GraphicalOutput output; // beinhaltet grafische Darstellung
+	private DataBase myDB;			// Datenbank
 	private CompassListener cl; // beinhaltet Lagesensor
 	private int activityState; // Nummer des momentan/zu letzt aktiven Status; siehe State-Übersicht
 	private Node location; // Standpunkt der angezeigt werden soll
@@ -44,6 +47,20 @@ public class GUI extends Activity {
 		cl = new CompassListener(); // neue Instanz zur Initialisierung des Sensors
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD); // Tastensperre deaktivieren
 		launch_state_1(); // Hauptmenu anzeigen
+		
+		
+		InputStream FileName=null;
+		//Zugriff auf Assets-Ordner in dem CSV-Datei liegt
+    	AssetManager assetManager = getAssets();		
+		try {
+			FileName = assetManager.open("DataBase.csv");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	
+		myDB.WriteCSVintoDataBase(FileName);	//CSV-Datei in Datenbank übertragen
 	}
 	
 	@Override
@@ -134,10 +151,10 @@ public class GUI extends Activity {
 			public void onClick(View v) { // TODO enable wenn verfügbar
 				String room = new String(RS.getString()); // String des ausgewählten Raums holen
 				System.out.println(room);
-//				Pathfinding pf = new Pathfinding(getApplicationContext()); // neue Instanz verschaffen
-//				pf.compute_Path(room,room); // "Route berechnen"; wobei hier nur der Knoten mit der ID i ermittelt werden soll 
-//				location = new Node (pf.getPath().get(0).get(0)); // Location merken, falls App zwischendurch in den Hintergrund kommen sollte
-//				launch_state_3(); // Look up Location Output (B4)
+				Pathfinding pf = new Pathfinding(getApplicationContext()); // neue Instanz verschaffen
+				pf.compute_Path(room,room); // "Route berechnen"; wobei hier nur der Knoten mit der ID i ermittelt werden soll 
+				location = new Node (pf.getPath().get(0).get(0)); // Location merken, falls App zwischendurch in den Hintergrund kommen sollte
+				launch_state_3(); // Look up Location Output (B4)
 			}
 		});
 	}
@@ -216,7 +233,7 @@ public class GUI extends Activity {
 				EditText roomInput1 = (EditText) findViewById(R.id.editText41);
 				EditText roomInput2 = (EditText) findViewById(R.id.editText42);
 				Pathfinding pf = new Pathfinding(); // neue Instanz verschaffen
-				pf.compute_Path(Integer.parseInt(roomInput1.getText().toString()), Integer.parseInt(roomInput2.getText().toString())); // Pfad berechnen
+				pf.compute_Path(roomInput1.getText().toString(), roomInput2.getText().toString()); // Pfad berechnen
 				route = new ArrayList<ArrayList<Node>>(pf.getPath()); // Route merken, falls App zwischendurch in den Hintergrund kommen sollte
 				launch_state_5(); // Routing Output (B6)
 			}
