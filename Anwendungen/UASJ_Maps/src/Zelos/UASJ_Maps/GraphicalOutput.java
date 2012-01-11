@@ -54,24 +54,56 @@ public class GraphicalOutput extends View {
 	public void set_degree(float f) {
 		degree = f;
 	}
-
+	
 	/**
-	 * gibt die reale Hausummer der aktuellen Eben zurück
+	 * Gibt die Pfadbeschreibung zurück. Muss nach jedem Ebenenwechsel neu abgefragt werden.
 	 * @return
 	 */
-	public String get_HouseNumber(){
-		if((current_floor > 0) && (current_floor <=7)) return "5";
+	public String get_PathDescription(){
+		if(state==0){					// gibt nur gültigen String aus, wenn in Status Routenberechnung
+			String str;
+			if(var_way_contains_floor(current_floor)!=-1){			// wenn die aktuelle Ebene des Pfades angezeigt wird
+				if((var_way.size()-(check_counter+1)) == 0){// wenn auf letzter Ebene{
+					return "Follow path to the final destination";
+				}
+				else{
+					if(get_HouseNumber(1)=="Campus")			// Wenn man auf den Campus wechseln soll
+						str = "At the end of the path: use the exit to campus";
+					else 	
+						if(get_HouseNumber(0)=="Campus" && get_HouseNumber(1)!= "Campus")		// Wenn man aus dem Campus in ein Haus wechseln soll
+							str = "At the end of the path: use entrance to House " + get_HouseNumber(1) + "floor: " + get_floorNumber(1);
+						else		// Wenn man Ebenen in einem Haus wechseln soll
+							str = "At the end of the path: use the elevator/stairs to floor " + get_floorNumber(1);
+					return str;		// Gesetzten String zurückgeben
+				}
+			}
+			else{		// Wenn man in freier Navigation ist und eine andere Ebene anzeigt, als die aktuelle abzuschreitende Ebene
+				str = "For further instructions: please return to the path via \"show route\"";
+				return str;			// gesetzen String zurückgeben
+			}
+		}
 		else
-			if((current_floor > 7) && (current_floor <=13)) return "3;2;1";
+			return "";		// leeren String zurückgeben, wenn man nicht in Routenberechnung ist
+	}
+/**
+ * gibt die reale Hausummer der aktuellen Eben zurück
+ * @param offset (0 wenn aktuelle Ebene, 1 wenn nächste nächste Ebene)
+ * @return
+ */
+	public String get_HouseNumber(int offset){
+		if(((current_floor+offset) > 0) && ((current_floor+offset) <=7)) return "5";
+		else
+			if(((current_floor+offset) > 7) && ((current_floor+offset) <=13)) return "3;2;1";
 			else return "Campus";
 	}
 	
 	/**
 	 * gibt die reale Ebenenbezeichnung der aktuellen Eben zurück
+	 * @param offset (0 wenn aktuelle Ebene, 1 wenn nächste nächste Ebene)
 	 * @return
 	 */
-	public String get_floorNumber(){
-		switch(current_floor){
+	public String get_floorNumber(int offset){
+		switch((current_floor+offset)){
 		case 1: return "-2";
 		case 2: return "-1";
 		case 3: return "0";
@@ -85,7 +117,7 @@ public class GraphicalOutput extends View {
 		case 11: return "2";
 		case 12: return "3";
 		case 13: return "4";
-		default: return "";
+		default: return "Campus";
 		}
 	}
 	
@@ -303,54 +335,6 @@ public class GraphicalOutput extends View {
 			break;
 		case 13:
 			draw_floor_13(c);
-			break;
-		case 14:
-			draw_floor_14(c);
-			break;
-		case 15:
-			draw_floor_15(c);
-			break;
-		case 16:
-			draw_floor_16(c);
-			break;
-		case 17:
-			draw_floor_17(c);
-			break;
-		case 18:
-			draw_floor_18(c);
-			break;
-		case 19:
-			draw_floor_19(c);
-			break;
-		case 20:
-			draw_floor_20(c);
-			break;
-		case 21:
-			draw_floor_21(c);
-			break;
-		case 22:
-			draw_floor_22(c);
-			break;
-		case 23:
-			draw_floor_23(c);
-			break;
-		case 24:
-			draw_floor_24(c);
-			break;
-		case 25:
-			draw_floor_25(c);
-			break;
-		case 26:
-			draw_floor_26(c);
-			break;
-		case 27:
-			draw_floor_27(c);
-			break;
-		case 28:
-			draw_floor_28(c);
-			break;
-		case 29:
-			draw_floor_29(c);
 			break;
 		default: 
 			System.out.println("EbenenID nicht vorhanden");
@@ -1144,92 +1128,26 @@ public class GraphicalOutput extends View {
 	}
 	
 	private void draw_floor_08(Canvas c){ 		// Zeichnet 1.-01
-		c.drawText("Haus:1 Ebene: -1", 300, 200, new Paint());
+		c.drawText("Haus:1,2,3 Ebene: -1", 300, 200, new Paint());
 	}
 	
 	private void draw_floor_09(Canvas c){ 		// Zeichnet 1.00
-		c.drawText("Haus:1 Ebene: 00", 300, 200, new Paint());
+		c.drawText("Haus:1,2,3 Ebene: 00", 300, 200, new Paint());
 	}
 	
 	private void draw_floor_10(Canvas c){ 		// Zeichnet 1.01
-		c.drawText("Haus:1 Ebene: 01", 300, 200, new Paint());
+		c.drawText("Haus:1,2,3 Ebene: 01", 300, 200, new Paint());
 	}
 	
 	private void draw_floor_11(Canvas c){ 		// Zeichnet 1.02
-		c.drawText("Haus:1 Ebene: 02", 300, 200, new Paint());
+		c.drawText("Haus:1,2,3 Ebene: 02", 300, 200, new Paint());
 	}
 	
 	private void draw_floor_12(Canvas c){ 		// Zeichnet 1.03
-		c.drawText("Haus:1 Ebene: 03", 300, 200, new Paint());
+		c.drawText("Haus:1,2,3 Ebene: 03", 300, 200, new Paint());
 	}
 	
 	private void draw_floor_13(Canvas c){ 		// Zeichnet 1.04
-		c.drawText("Haus:1 Ebene: 04", 300, 200, new Paint());
+		c.drawText("Haus:1,2,3 Ebene: 04", 300, 200, new Paint());
 	}
-	
-	private void draw_floor_14(Canvas c){ 		// Zeichnet 2.-01
-		c.drawText("Haus:2 Ebene: -1", 300, 200, new Paint());
-	}
-	
-	private void draw_floor_15(Canvas c){ 		// Zeichnet 2.00
-		c.drawText("Haus:2 Ebene: 00", 300, 200, new Paint());
-	}
-	
-	private void draw_floor_16(Canvas c){ 		// Zeichnet 2.01
-		c.drawText("Haus:2 Ebene: 01", 300, 200, new Paint());
-	}
-	
-	private void draw_floor_17(Canvas c){ 		// Zeichnet 2.02
-		c.drawText("Haus:2 Ebene: 02", 300, 200, new Paint());
-	}
-
-	private void draw_floor_18(Canvas c){ 		// Zeichnet 2.03
-		c.drawText("Haus:2 Ebene: 03", 300, 200, new Paint());
-	}
-
-	private void draw_floor_19(Canvas c){ 		// Zeichnet 2.04
-		c.drawText("Haus:2 Ebene: 04", 300, 200, new Paint());
-	}
-
-	private void draw_floor_20(Canvas c){ 		// Zeichnet 3.-01
-		c.drawText("Haus:3 Ebene: -1", 300, 200, new Paint());
-	}
-
-	private void draw_floor_21(Canvas c){ 		// Zeichnet 3.00
-		c.drawText("Haus:3 Ebene: 00", 300, 200, new Paint());
-	}
-
-	private void draw_floor_22(Canvas c){ 		// Zeichnet 3.01
-		c.drawText("Haus:3 Ebene: 01", 300, 200, new Paint());
-	}
-
-	private void draw_floor_23(Canvas c){ 		// Zeichnet 3.02
-		c.drawText("Haus:3 Ebene: 02", 300, 200, new Paint());
-	}
-
-	private void draw_floor_24(Canvas c){ 		// Zeichnet 3.03
-		c.drawText("Haus:3 Ebene: 03", 300, 200, new Paint());
-	}
-
-	private void draw_floor_25(Canvas c){ 		// Zeichnet 4.-01
-		c.drawText("Haus:4 Ebene: -1", 300, 200, new Paint());
-	}
-
-	private void draw_floor_26(Canvas c){ 		// Zeichnet 4.00
-		c.drawText("Haus:4 Ebene: 00", 300, 200, new Paint());
-	}
-
-	private void draw_floor_27(Canvas c){ 		// Zeichnet 4.01
-		c.drawText("Haus:4 Ebene: 01", 300, 200, new Paint());
-	}
-
-	private void draw_floor_28(Canvas c){ 		// Zeichnet 4.02
-		c.drawText("Haus:4 Ebene: 02", 300, 200, new Paint());
-	}
-
-	private void draw_floor_29(Canvas c){ 		// Zeichnet 4.03
-		c.drawText("Haus:4 Ebene: 03", 300, 200, new Paint());
-	}
-
-
 }
