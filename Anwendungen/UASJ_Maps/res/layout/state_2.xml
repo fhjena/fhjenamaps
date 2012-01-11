@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relativeLayout2"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/relativeLayout2" >
+    android:layout_height="match_parent" >
 
     <TextView
         android:id="@+id/textView21"
@@ -14,69 +14,70 @@
         android:text="Look up Location"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <TextView
-        android:id="@+id/textView22"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="44dp"
-        android:text="Room:"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <Spinner
-        android:id="@+id/spinner21"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="50dp"
-        android:layout_toRightOf="@+id/textView22"
-        android:prompt="@string/house" />
-
-    <Spinner
-        android:id="@+id/spinner22"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/dot21"
-        android:prompt="@string/floor" />
-
-    <Spinner
-        android:id="@+id/spinner23"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/dot22"
-        android:prompt="@string/room" />
-
     <Button
         android:id="@+id/but_Go2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/spinner21"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="44dp"
+        android:layout_marginLeft="32dp"
         android:layout_toRightOf="@+id/textView21"
         android:text="Go!"
         android:textSize="18dp"
         android:width="80dp" />
 
-    <TextView
-        android:id="@+id/dot21"
+    <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/spinner21"
-        android:layout_alignBottom="@+id/spinner21"
-        android:textSize="35dp"  
-        android:text="." />
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" >
 
-    <TextView
-        android:id="@+id/dot22"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/spinner22"
-        android:layout_alignBottom="@+id/spinner22"
-        android:textSize="35dp"  
-        android:text="." />
+        <TextView
+            android:id="@+id/textView22"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Room:"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <Spinner
+            android:id="@+id/spinner21"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:prompt="@string/house" />
+
+        <TextView
+            android:id="@+id/dot21"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="."
+            android:textSize="35dp"
+            android:layout_gravity="bottom" />
+
+        <Spinner
+            android:id="@+id/spinner22"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:prompt="@string/floor" />
+
+        <TextView
+            android:id="@+id/dot22"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="."
+            android:textSize="35dp"
+            android:layout_gravity="bottom" />
+
+        <Spinner
+            android:id="@+id/spinner23"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:prompt="@string/room" />
+    </LinearLayout>
 
 </RelativeLayout>

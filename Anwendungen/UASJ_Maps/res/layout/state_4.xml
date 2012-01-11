@@ -14,57 +14,127 @@
         android:text="Routing"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <TextView
-        android:id="@+id/textView43"
+    <LinearLayout
+        android:id="@+id/linearLayout41"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="80dp"
-        android:text="Target:"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:layout_below="@+id/textView41"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp" >
+
+        <TextView
+            android:id="@+id/textView42"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Start:"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <Spinner
+            android:id="@+id/spinner411"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:prompt="@string/house" />
+
+        <TextView
+            android:id="@+id/dot411"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            android:text="."
+            android:textSize="35dp" />
+
+        <Spinner
+            android:id="@+id/spinner412"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:prompt="@string/floor" />
+
+        <TextView
+            android:id="@+id/dot412"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            android:text="."
+            android:textSize="35dp" />
+
+        <Spinner
+            android:id="@+id/spinner413"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:prompt="@string/room" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/LinearLayout42"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/linearLayout41"
+        android:layout_below="@+id/linearLayout41"
+        android:layout_marginTop="30dp" >
+
+        <TextView
+            android:id="@+id/TextView42"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Target:"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <Spinner
+            android:id="@+id/spinner421"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="17dp"
+            android:layout_weight="1"
+            android:prompt="@string/house" />
+
+        <TextView
+            android:id="@+id/dot421"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            android:text="."
+            android:textSize="35dp" />
+
+        <Spinner
+            android:id="@+id/spinner422"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:prompt="@string/floor" />
+
+        <TextView
+            android:id="@+id/dot422"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            android:text="."
+            android:textSize="35dp" />
+
+        <Spinner
+            android:id="@+id/spinner423"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:prompt="@string/room" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/but_Go4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView43"
-        android:layout_marginLeft="84dp"
-        android:layout_marginTop="35dp"
-        android:layout_toRightOf="@+id/textView41"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/LinearLayout42"
+        android:layout_marginRight="72dp"
+        android:layout_marginTop="28dp"
         android:text="Go!"
-        android:textSize="18dp" />
-
-    <TextView
-        android:id="@+id/textView42"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/textView43"
-        android:layout_alignRight="@+id/textView43"
-        android:layout_marginBottom="34dp"
-        android:text="Start:"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-    
-    <EditText
-        android:id="@+id/editText41"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView42"
-        android:layout_alignBottom="@+id/textView42"
-        android:layout_alignRight="@+id/but_Go4"
-        android:layout_toRightOf="@+id/textView42"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="20dp" />
-    
-    <EditText
-        android:id="@+id/editText42"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView43"
-        android:layout_alignBottom="@+id/textView43"
-        android:layout_alignRight="@+id/but_Go4"
-        android:layout_toRightOf="@+id/textView43"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="20dp" />
+        android:textSize="18dp"
+        android:width="80dp" />
 
 </RelativeLayout>

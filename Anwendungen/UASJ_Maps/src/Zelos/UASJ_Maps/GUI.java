@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.hardware.*;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.*;
 import android.view.View.*;
@@ -18,18 +19,18 @@ public class GUI extends Activity {
 	private GraphicalOutput output; // beinhaltet grafische Darstellung
 	private DataBase myDB;			// Datenbank
 	private CompassListener cl; // beinhaltet Lagesensor
-	private int activityState; // Nummer des momentan/zu letzt aktiven Status; siehe State-ï¿½bersicht
+	private int activityState; // Nummer des momentan/zu letzt aktiven Status; siehe State-übersicht
 	private Node location; // Standpunkt der angezeigt werden soll
 	private ArrayList<ArrayList<Node>> route; // Route die angezeigt werden soll
-	private OnTouchListener touch_on_campus = new OnTouchListener() { // OnTouchListener hinzufï¿½gen fï¿½r Gebï¿½udeauswahl bei Campusansicht
-		public boolean onTouch(View v, MotionEvent event) { // TODO enable wenn verfï¿½gbar
+	private OnTouchListener touch_on_campus = new OnTouchListener() { // OnTouchListener hinzufügen für Gebüudeauswahl bei Campusansicht
+		public boolean onTouch(View v, MotionEvent event) { // TODO enable wenn verfügbar
 //			if (output.isStateCampus() && MotionEvent.ACTION_UP == event.getAction()) // Campus ansicht und Finger wird vom Display genommen
-//				output.performClickOnCampus((int) event.getX(), (int) event.getY()); // x und y Werte ï¿½bergeben
+//				output.performClickOnCampus((int) event.getX(), (int) event.getY()); // x und y Werte übergeben
 			return true;
 		}
 	};
 
-	/* State-ï¿½bersicht:
+	/* State-übersicht:
 	 * state1: Main menu (B1): funktioniert
 	 * state2: Look up Location (B3): Spinner
 	 * state3: Look up Location Output (B4): fertig?
@@ -44,9 +45,27 @@ public class GUI extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) { // App wird gestartet
 		super.onCreate(savedInstanceState); // onCreate von Activity
+		setContentView(R.layout.splashscreen);
 		cl = new CompassListener(); // neue Instanz zur Initialisierung des Sensors
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD); // Tastensperre deaktivieren
-		launch_state_1(); // Hauptmenu anzeigen
+		new AsyncTask<Void, Void, Void>() {
+
+			@Override
+			protected Void doInBackground(Void... params) {
+				try {
+					Thread.sleep(3000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return null;
+			}
+			
+			@Override
+			protected void onPostExecute(Void params) {
+				launch_state_1(); // Hauptmenu anzeigen
+			}
+		}.execute(null,null,null);
 		
 		
 //		InputStream FileName=null;
@@ -60,46 +79,46 @@ public class GUI extends Activity {
 //		}
 //		
 //	
-//		myDB.WriteCSVintoDataBase(FileName);	//CSV-Datei in Datenbank ï¿½bertragen
+//		myDB.WriteCSVintoDataBase(FileName);	//CSV-Datei in Datenbank übertragen
 	}
 	
 	@Override
 	public void onPause() { // App wird pausiert
-		cl.onStop(); // stoppt Ausfï¿½hrung des Magnetsensors
+		cl.onStop(); // stoppt Ausführung des Magnetsensors
 		super.onPause(); // onPause von Activity
 	}
 	
 	@Override
-	public void onResume() { // App wird wieder ausgefï¿½hrt
+	public void onResume() { // App wird wieder ausgeführt
 		super.onResume(); // onResume von Activity
-		cl.onResume(); // setzt Ausfï¿½hrung des Magnetsensors fort
+		cl.onResume(); // setzt Ausführung des Magnetsensors fort
 	}
 	
 	@Override
-	public void onDestroy() { // App wird zerstï¿½rt
-		cl.onStop(); // stoppt Ausfï¿½hrung des Magnetsensors
+	public void onDestroy() { // App wird zerstürt
+		cl.onStop(); // stoppt Ausführung des Magnetsensors
 		super.onDestroy(); // onDestroy von Activity
 	}
 	
 	@Override
-	public void onBackPressed() { // Zurï¿½ck Button wird gedrï¿½ckt
-		// in ï¿½bergeordnete Ansicht wechseln
-		switch (activityState) { // In welchem Status wird auf den Zurï¿½ckButton gedrï¿½ckt?
+	public void onBackPressed() { // Zurück Button wird gedrückt
+		// in übergeordnete Ansicht wechseln
+		switch (activityState) { // In welchem Status wird auf den ZurückButton gedrückt?
 		
 		case 5: // Routing Output (B6)
-			cl.onStop(); // stoppt Ausfï¿½hrung des Magnetsensors
+			cl.onStop(); // stoppt Ausführung des Magnetsensors
 			launch_state_4(); // Routing (B5)
 			break;
 		case 3: // Look up Location Output (B4)
-			cl.onStop(); // stoppt Ausfï¿½hrung des Magnetsensors
+			cl.onStop(); // stoppt Ausführung des Magnetsensors
 			launch_state_2(); // Look up Location (B3)
 			break;
 		case 1: // Main menu (B1)
-			cl.onStop(); // stoppt Ausfï¿½hrung des Magnetsensors
+			cl.onStop(); // stoppt Ausführung des Magnetsensors
 			finish(); // App beenden
 			break;
 		default:
-			cl.onStop(); // stoppt Ausfï¿½hrung des Magnetsensors
+			cl.onStop(); // stoppt Ausführung des Magnetsensors
 			launch_state_1(); // Main menu (B1)
 			break;
 		}
@@ -109,30 +128,30 @@ public class GUI extends Activity {
 		activityState = 1;
 		setContentView(R.layout.state_1); // state_1.xml anzeigen
 		
-		// OnClickListener fï¿½r die Buttons:
+		// OnClickListener für die Buttons:
 		findViewById(R.id.but_LookupLocation1).setOnClickListener(new OnClickListener() {
-			// OnClickListener fï¿½r Look up Location
+			// OnClickListener für Look up Location
 			public void onClick(View v) {
 				launch_state_2(); // Look up Location (B3)
 			}
 		});
 		
 		findViewById(R.id.but_Routing1).setOnClickListener(new OnClickListener() {
-			// OnClickListener fï¿½r Routing
+			// OnClickListener für Routing
 			public void onClick(View v) {
 				launch_state_4(); // Routing (B5)
 			}
 		});
 		
 		findViewById(R.id.but_Campus1).setOnClickListener(new OnClickListener() {
-			// OnClickListener fï¿½r Campus
+			// OnClickListener für Campus
 			public void onClick(View v) {
 				launch_state_7(); // Campus Output (B7)
 			}
 		});
 		
 		findViewById(R.id.but_options1).setOnClickListener(new OnClickListener() {
-			// OnClickListener fï¿½r Options
+			// OnClickListener für Options
 			public void onClick(View v) {
 				launch_state_6(); // Options (B2)
 			}
@@ -144,15 +163,14 @@ public class GUI extends Activity {
 		setContentView(R.layout.state_2); // state_2.xml anzeigen
 		
 		final Button go = (Button) findViewById(R.id.but_Go2);
-		final RoomSpinner RS = new RoomSpinner(getApplicationContext(), (Spinner) findViewById(R.id.spinner21), (Spinner) findViewById(R.id.spinner22), (Spinner) findViewById(R.id.spinner23)); // neue Verwaltung fï¿½r die Spinner instanziieren
+		final RoomSpinner RS = new RoomSpinner(getApplicationContext(), (Spinner) findViewById(R.id.spinner21), (Spinner) findViewById(R.id.spinner22), (Spinner) findViewById(R.id.spinner23)); // neue Verwaltung für die Spinner instanziieren
 		
 		go.setOnClickListener(new OnClickListener() {
-			// On ClickListener fï¿½r Go!
-			public void onClick(View v) { // TODO enable wenn verfï¿½gbar
-				String room = new String(RS.getString()); // String des ausgewï¿½hlten Raums holen
-				System.out.println(room);
+			// On ClickListener für Go!
+			public void onClick(View v) {
+				String roomInput = new String(RS.getString()); // String des ausgewählten Raums holen
 				Pathfinding pf = new Pathfinding(getApplicationContext()); // neue Instanz verschaffen
-				pf.compute_Path(room,room); // "Route berechnen"; wobei hier nur der Knoten mit der ID i ermittelt werden soll 
+				pf.compute_Path(roomInput,roomInput); // "Route berechnen"; wobei hier nur der Knoten mit der ID i ermittelt werden soll 
 				location = new Node (pf.getPath().get(0).get(0)); // Location merken, falls App zwischendurch in den Hintergrund kommen sollte
 				launch_state_3(); // Look up Location Output (B4)
 			}
@@ -165,7 +183,7 @@ public class GUI extends Activity {
 		output.set_state_position(location); // Location anzeigen
 
 		setContentView(R.layout.state_3); // state_3.xml anzeigen
-		// Elemente der Anzeige holen, damit sie bearbeitet werden kï¿½nnen:
+		// Elemente der Anzeige holen, damit sie bearbeitet werden künnen:
 		final RelativeLayout rl = (RelativeLayout) findViewById(R.id.relativeLayout3);
 		View backgroundView = findViewById(R.id.view3);
 		final Button fminus = (Button) findViewById(R.id.but_floor_minus3);
@@ -175,11 +193,11 @@ public class GUI extends Activity {
 		
 		backgroundView = output; // grafische Ausgabe als Hintergrund setzen
 
-		// OnClickListener fï¿½r die Buttons:
+		// OnClickListener für die Buttons:
 		fminus.setOnClickListener(new OnClickListener() {
-			// OnClickListener fï¿½r F-
+			// OnClickListener für F-
 			public void onClick(View v) {
-				fplus.setEnabled(true); // falls F- auf oberstem Stockwerk gedrï¿½ckt wurde, F+ wieder enablen
+				fplus.setEnabled(true); // falls F- auf oberstem Stockwerk gedrückt wurde, F+ wieder enablen
 				if (-1 == output.set_floor(0)) // wenn -1 returned wird, unterstes Stockwerk erreicht
 					fminus.setEnabled(false); // F- disabeln
 				output.invalidate(); // redraw
@@ -187,9 +205,9 @@ public class GUI extends Activity {
 		});
 
 		fplus.setOnClickListener(new OnClickListener() {
-			// OnClickListener fï¿½r F+
+			// OnClickListener für F+
 			public void onClick(View v) {
-				fminus.setEnabled(true); // falls F+ auf unterstem Stockwerk gedrï¿½ckt wurde, F- wieder enablen
+				fminus.setEnabled(true); // falls F+ auf unterstem Stockwerk gedrückt wurde, F- wieder enablen
 				if (1 == output.set_floor(1)) // wenn 1 returned wird, oberstes Stockwerk erreicht
 					fplus.setEnabled(false); // F+ disabeln
 				output.invalidate(); // redraw
@@ -197,7 +215,7 @@ public class GUI extends Activity {
 		});
 
 		showposition.setOnClickListener(new OnClickListener() {
-			// OnClickListener fï¿½r Show Position
+			// OnClickListener für Show Position
 			public void onClick(View v) {
 				output.set_floor(3);
 				output.invalidate(); // redraw
@@ -205,16 +223,16 @@ public class GUI extends Activity {
 		});
 
 		campus.setOnClickListener(new OnClickListener() {
-			// OnClickListener fï¿½r Campus
+			// OnClickListener für Campus
 			public void onClick(View v) {
-				output.setOnTouchListener(touch_on_campus); // OnTouchListener fï¿½r Campusanzeige hinzufï¿½gen
+				output.setOnTouchListener(touch_on_campus); // OnTouchListener für Campusanzeige hinzufügen
 				output.set_floor(2);
 				output.invalidate(); // redraw
 			}
 		});
 
-		rl.removeAllViews(); // zunï¿½chst mï¿½ssen alle Views entfernt werden, da sie sonst doppelt vorhanden sind
-		// danach "von hinten nach vorne" die geï¿½nderten Elemente wieder hinzufï¿½gen, ansonsten wï¿½rde die Route ï¿½ber den Button dargestellt werden
+		rl.removeAllViews(); // zunüchst müssen alle Views entfernt werden, da sie sonst doppelt vorhanden sind
+		// danach "von hinten nach vorne" die geünderten Elemente wieder hinzufügen, ansonsten würde die Route über den Button dargestellt werden
 		rl.addView(backgroundView);
 		rl.addView(fminus);
 		rl.addView(fplus);
@@ -227,18 +245,17 @@ public class GUI extends Activity {
 	private void launch_state_4() { // Routing (B5)
 		activityState = 4;
 		setContentView(R.layout.state_4); // state_4.xml anzeigen
+		final RoomSpinner RS1 = new RoomSpinner(getApplicationContext(), (Spinner) findViewById(R.id.spinner411), (Spinner) findViewById(R.id.spinner412), (Spinner) findViewById(R.id.spinner413)); // neue Verwaltung für die Spinner instanziieren
+		final RoomSpinner RS2 = new RoomSpinner(getApplicationContext(), (Spinner) findViewById(R.id.spinner421), (Spinner) findViewById(R.id.spinner422), (Spinner) findViewById(R.id.spinner423)); // neue Verwaltung für die Spinner instanziieren
 		findViewById(R.id.but_Go4).setOnClickListener(new OnClickListener() {
-			// OnClickListener fï¿½r Go!
+			// OnClickListener für Go!
 			public void onClick(View v) {
-				EditText roomInput1 = (EditText) findViewById(R.id.editText41);
-				EditText roomInput2 = (EditText) findViewById(R.id.editText42);
 				Pathfinding pf = new Pathfinding(); // neue Instanz verschaffen
-				pf.compute_Path(roomInput1.getText().toString(), roomInput2.getText().toString()); // Pfad berechnen
+				pf.compute_Path(RS1.getString(), RS2.getString()); // Pfad berechnen
 				route = new ArrayList<ArrayList<Node>>(pf.getPath()); // Route merken, falls App zwischendurch in den Hintergrund kommen sollte
 				launch_state_5(); // Routing Output (B6)
 			}
 		});
-		// TODO RoomSpinner einfï¿½gen
 	}
 
 	private void launch_state_5() { // Routing Output (B6)
@@ -247,7 +264,7 @@ public class GUI extends Activity {
 		output.set_state_path(route); // Route anzeigen
 		
 		setContentView(R.layout.state_5); // state_5.xml anzeigen
-		// Elemente der Anzeige holen, damit sie bearbeitet werden kï¿½nnen:
+		// Elemente der Anzeige holen, damit sie bearbeitet werden künnen:
 		final RelativeLayout rl = (RelativeLayout) findViewById(R.id.relativeLayout5);
 		View backgroundView = findViewById(R.id.view5);
 		final Button fminus = (Button) findViewById(R.id.but_floor_minus5);
@@ -259,11 +276,11 @@ public class GUI extends Activity {
 
 		backgroundView = output; // grafische Ausgabe als Hintergrund setzen
 
-		// OnClickListener fï¿½r die Buttons:
+		// OnClickListener für die Buttons:
 		fminus.setOnClickListener(new OnClickListener() {
-			// OnClickListener fï¿½r F-
+			// OnClickListener für F-
 			public void onClick(View v) {
-				fplus.setEnabled(true); // falls F- auf oberstem Stockwerk gedrï¿½ckt wurde, F+ wieder enablen
+				fplus.setEnabled(true); // falls F- auf oberstem Stockwerk gedrückt wurde, F+ wieder enablen
 				if (-1 == output.set_floor(0)) // wenn -1 returned wird, unterstes Stockwerk erreicht
 					fminus.setEnabled(false); // F- disabeln
 				output.invalidate(); // redraw
@@ -271,9 +288,9 @@ public class GUI extends Activity {
 		});
 
 		fplus.setOnClickListener(new OnClickListener() {
-			// OnClickListener fï¿½r F+
+			// OnClickListener für F+
 			public void onClick(View v) {
-				fminus.setEnabled(true); // falls F+ auf unterstem Stockwerk gedrï¿½ckt wurde, F- wieder enablen
+				fminus.setEnabled(true); // falls F+ auf unterstem Stockwerk gedrückt wurde, F- wieder enablen
 				if (1 == output.set_floor(1)) // wenn 1 returned wird, oberstes Stockwerk erreicht
 					fplus.setEnabled(false); // F+ disabeln
 				output.invalidate(); // redraw
@@ -281,7 +298,7 @@ public class GUI extends Activity {
 		});
 
 		routing.setOnClickListener(new OnClickListener() {
-			// OnClickListener fï¿½r Routing
+			// OnClickListener für Routing
 			public void onClick(View v) {
 				output.set_floor(3);
 				output.invalidate(); // redraw
@@ -289,16 +306,16 @@ public class GUI extends Activity {
 		});
 
 		campus.setOnClickListener(new OnClickListener() {
-			// OnClickListener fï¿½r Campus
+			// OnClickListener für Campus
 			public void onClick(View v) {
-				output.setOnTouchListener(touch_on_campus); // OnTouchListener fï¿½r Campusanzeige hinzufï¿½gen
+				output.setOnTouchListener(touch_on_campus); // OnTouchListener für Campusanzeige hinzufügen
 				output.set_floor(2);
 				output.invalidate(); // redraw
 			}
 		});
 		
 		check.setOnClickListener(new OnClickListener() {
-			// OnClickListener fï¿½r Check
+			// OnClickListener für Check
 			public void onClick(View v) {
 				if (0 == output.set_check()) // Click auf Check an output weiter geben; Sind noch weitere Ebenen abzuarbeiten?
 					check.setEnabled(false); // disable Check-Button
@@ -309,8 +326,8 @@ public class GUI extends Activity {
 		if (1 == route.size()) // Nur eine Ebene anzuzeigen?
 			check.setEnabled(false); // disable Check-Button
 
-		rl.removeAllViews(); // zunï¿½chst mï¿½ssen alle Views entfernt werden, da sie sonst doppelt vorhanden sind
-		// danach "von hinten nach vorne" die geï¿½nderten Elemente wieder hinzufï¿½gen, ansonsten wï¿½rde die Route ï¿½ber den Button dargestellt werden
+		rl.removeAllViews(); // zunüchst müssen alle Views entfernt werden, da sie sonst doppelt vorhanden sind
+		// danach "von hinten nach vorne" die geünderten Elemente wieder hinzufügen, ansonsten würde die Route über den Button dargestellt werden
 		rl.addView(backgroundView);
 		rl.addView(fminus);
 		rl.addView(fplus);
@@ -331,11 +348,11 @@ public class GUI extends Activity {
 	private void launch_state_7() { // Campus Output (B7)
 		activityState = 7;
 		output = new GraphicalOutput(getApplicationContext()); // neue Instanz verschaffen
-		output.setOnTouchListener(touch_on_campus); // OnTouchListener fï¿½r Campusanzeige hinzufï¿½gen
+		output.setOnTouchListener(touch_on_campus); // OnTouchListener für Campusanzeige hinzufügen
 		output.set_state_campus(); // freie Campusnavigation anzeigen
 		
 		setContentView(R.layout.state_7); // state_7.xml anzeigen
-		// Elemente der Anzeige holen, damit sie bearbeitet werden kï¿½nnen:
+		// Elemente der Anzeige holen, damit sie bearbeitet werden künnen:
 		final RelativeLayout rl = (RelativeLayout) findViewById(R.id.relativeLayout7);
 		View backgroundView = findViewById(R.id.view7);
 		final Button fminus = (Button) findViewById(R.id.but_floor_minus7);
@@ -344,11 +361,11 @@ public class GUI extends Activity {
 
 		backgroundView = output; // grafische Ausgabe als Hintergrund setzen
 
-		// OnClickListener fï¿½r die Buttons:
+		// OnClickListener für die Buttons:
 		fminus.setOnClickListener(new OnClickListener() {
-			// OnClickListener fï¿½r F-
+			// OnClickListener für F-
 			public void onClick(View v) {
-				fplus.setEnabled(true); // falls F- auf oberstem Stockwerk gedrï¿½ckt wurde, F+ wieder enablen
+				fplus.setEnabled(true); // falls F- auf oberstem Stockwerk gedrückt wurde, F+ wieder enablen
 				if (-1 == output.set_floor(0)) // wenn -1 returned wird, unterstes Stockwerk erreicht
 					fminus.setEnabled(false); // F- disabeln
 				output.invalidate(); // redraw
@@ -356,9 +373,9 @@ public class GUI extends Activity {
 		});
 
 		fplus.setOnClickListener(new OnClickListener() {
-			// OnClickListener fï¿½r F+
+			// OnClickListener für F+
 			public void onClick(View v) {
-				fminus.setEnabled(true); // falls F+ auf unterstem Stockwerk gedrï¿½ckt wurde, F- wieder enablen
+				fminus.setEnabled(true); // falls F+ auf unterstem Stockwerk gedrückt wurde, F- wieder enablen
 				if (1 == output.set_floor(1)) // wenn 1 returned wird, oberstes Stockwerk erreicht
 					fplus.setEnabled(false); // F+ disabeln
 				output.invalidate(); // redraw
@@ -366,15 +383,15 @@ public class GUI extends Activity {
 		});
 
 		campus.setOnClickListener(new OnClickListener() {
-			// OnClickListener fï¿½r Campus
+			// OnClickListener für Campus
 			public void onClick(View v) {
 				output.set_floor(2);
 				output.invalidate(); // redraw
 			}
 		});
 
-		rl.removeAllViews(); // zunï¿½chst mï¿½ssen alle Views entfernt werden, da sie sonst doppelt vorhanden sind
-		// danach "von hinten nach vorne" die geï¿½nderten Elemente wieder hinzufï¿½gen, ansonsten wï¿½rde die Route ï¿½ber den Button dargestellt werden
+		rl.removeAllViews(); // zunüchst müssen alle Views entfernt werden, da sie sonst doppelt vorhanden sind
+		// danach "von hinten nach vorne" die geünderten Elemente wieder hinzufügen, ansonsten würde die Route über den Button dargestellt werden
 		rl.addView(backgroundView);
 		rl.addView(fminus);
 		rl.addView(fplus);
@@ -391,7 +408,7 @@ public class GUI extends Activity {
 
 		public CompassListener() { // Konstruktor
 			mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE); // SensorManager holen
-			Magnet_Sensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION); // Lagesensor auswï¿½hlen
+			Magnet_Sensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION); // Lagesensor auswühlen
 		}
 
 		protected void onResume() { // enable Lagesensor
@@ -405,12 +422,12 @@ public class GUI extends Activity {
 		public void onSensorChanged(SensorEvent event) {
 			float f_new = -event.values[0]; // Sensor auslesen
 			if (Math.abs(f_new - f_old) > 3.5) { // Hysterese, damit Bild an der Schaltschwelle nicht hin- und herdreht
-				if ((f_new % 5) > 2.5) // Sensor auf 5ï¿½ Schritte auf bzw. abrunden
+				if ((f_new % 5) > 2.5) // Sensor auf 5ü Schritte auf bzw. abrunden
 					f_new += 5;
 				f_old = f_new - (f_new % 5); // neuen Winkel merken
 				
 				if (output!=null) {
-					output.set_degree(f_old); // neuen Winkel an Ausgabe ï¿½bergeben
+					output.set_degree(f_old); // neuen Winkel an Ausgabe übergeben
 					output.invalidate(); // Bild neu zeichnen
 				}
 			}
