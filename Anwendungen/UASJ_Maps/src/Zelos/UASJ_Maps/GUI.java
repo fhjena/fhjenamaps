@@ -1,8 +1,10 @@
 package Zelos.UASJ_Maps;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -12,16 +14,29 @@ import android.os.Bundle;
 import android.view.*;
 import android.view.View.*;
 import android.widget.*;
-import android.widget.AdapterView.OnItemSelectedListener;
 
 public class GUI extends Activity {
 	
 	private GraphicalOutput output; // beinhaltet grafische Darstellung
 	private DataBase myDB;			// Datenbank
 	private CompassListener cl; // beinhaltet Lagesensor
-	private int activityState; // Nummer des momentan/zu letzt aktiven Status; siehe State-übersicht
+	private int activityState = 0; // Nummer des momentan/zu letzt aktiven Status; siehe State-übersicht
 	private Node location; // Standpunkt der angezeigt werden soll
 	private ArrayList<ArrayList<Node>> route; // Route die angezeigt werden soll
+	private float mPosX = 250.f;    //x Wert für Verschiebung GraphicalOutput  
+	private float mPosY = -130.f;   //y Wert für Verschiebung GraphicalOutput        
+	private float mLastTouchX;     	//x Koordinate bei TouchEvent
+	private float mLastTouchY;      //y Koordinate bei TouchEvent     
+	private ScaleGestureDetector mScaleDetector; //Skalierungsdetektor
+	private float mScaleFactor = 1.f;	//Skalierungsfaktor Canvas         
+	private float x_z = 420.f;			//x Koordinate um die gezoomt wird
+	private float y_z = 130.f;			//y Koordinate um die gezoomt wird
+	private int NONE;
+	static final int DRAG = 1;			//Modus Verschieben (Singletouch)
+	static final int ZOOMM = 2;			//Modus Zoomen (Multitouch
+	int mode = NONE;					//Modus keines von beiden (Verschieben,Zoomen)
+	File file = new File("/data/data/Zelos.UASJ_Maps/databases/database.db");
+	InputStream Dateiname=null;
 	private OnTouchListener touch_on_campus = new OnTouchListener() { // OnTouchListener hinzufügen für Gebüudeauswahl bei Campusansicht
 		public boolean onTouch(View v, MotionEvent event) { // TODO enable wenn verfügbar
 //			if (output.isStateCampus() && MotionEvent.ACTION_UP == event.getAction()) // Campus ansicht und Finger wird vom Display genommen
@@ -29,6 +44,85 @@ public class GUI extends Activity {
 			return true;
 		}
 	};
+	boolean DBcreated = false;
+	
+	private OnTouchListener touch_single_multi = new OnTouchListener() {
+		public boolean onTouch(View v, MotionEvent event) {
+			
+			float x_z0 = 0;
+			float y_z0 = 0;
+			float x_z1 = 0;
+			float y_z1 = 0;
+		
+			mScaleDetector.onTouchEvent(event); //Skalierungsdetektor überwacht alle Events
+			
+			final int action = event.getAction();         
+			switch (action & MotionEvent.ACTION_MASK) {         
+			
+			case MotionEvent.ACTION_DOWN: {    	//Ein Finger auf Touchscreen         
+				final float x = event.getX();   //x-Koordinate holen          
+				final float y = event.getY(); 	//y-Koordinate holen
+				
+				mLastTouchX = x;             	//x-Koordinate speichern
+				mLastTouchY = y;             	//y-Koordinate speichern
+				mode = DRAG;					//Modus "Verschieben" setzen
+				break;         
+				}   
+			
+			case MotionEvent.ACTION_POINTER_DOWN:	//zwei Finger auf Touchscreen				
+				x_z0 = event.getX(0);				
+				y_z0 = event.getY(0);
+				x_z1 = event.getX(1);
+				y_z1 = event.getY(1);
+				x_z = (x_z1+x_z0)/2;				//x Mittelpunkt berechnen
+				y_z = (y_z1+y_z0)/2;				//y Mittelpunkt berechnen
+				mode = ZOOMM;						// Modus "Zoom" setzen
+				break;
+				
+			case MotionEvent.ACTION_MOVE: {             
+		          
+				final float x = event.getX();       //aktuelle x Koordinate      
+				final float y = event.getY();       //aktuelle y Koordinate       
+				       
+				 if (mode == DRAG) {                //Modus "Verschieben" aktiv 
+					final float dx = x - mLastTouchX;   //Differenz dx berechnen              
+					final float dy = y - mLastTouchY; 	//Differenz dy berechnen
+					
+					mPosX += dx;                 	//Differenz dx speichern
+					mPosY += dy; 					//Differenz dy speichern
+					
+					mLastTouchX = x;            	//neuen x-Wert speichern
+					mLastTouchY = y; 				//neuen y-Wert speichern
+									
+				//	go.moveX(dx);
+				//	go.moveY(dy);
+					
+					output.set_position(mPosX, mPosY);	//Positionswerte an GO weiterreichen
+					output.invalidate();             
+					}			
+								
+				 else if (mode == ZOOMM) {			//Modus "Zoom"
+						
+					 output.set_zoom(mScaleFactor, x_z, y_z); //Skalierungsfaktor und Mittelpunkte an GO weiterreichen
+					 output.invalidate();
+			      	  }
+				
+				break;         
+				}                      
+
+			
+			case MotionEvent.ACTION_POINTER_UP: {	//zweiter Finger verlässt Touchscreen
+				mode = NONE;						//kein Modus mehr aktiv --> verhindert springen
+				x_z = 420.f;						//Mittelpunkt x auf Touchscreenmitte setzen
+				y_z = 130.f;						//Mittelpunkt y auf Touchscreenmitte setzen
+				break;         
+				}
+			
+			}                  
+			return true;    
+		}
+
+		};
 
 	/* State-übersicht:
 	 * state1: Main menu (B1): funktioniert
@@ -47,39 +141,54 @@ public class GUI extends Activity {
 		super.onCreate(savedInstanceState); // onCreate von Activity
 		setContentView(R.layout.splashscreen);
 		cl = new CompassListener(); // neue Instanz zur Initialisierung des Sensors
+		mScaleDetector = new ScaleGestureDetector(this, new ScaleListener());  //neue Instanz Skalierungsdetektor
+		myDB = new DataBase(this);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD); // Tastensperre deaktivieren
-		new AsyncTask<Void, Void, Void>() {
+		
+		if (!file.exists()){	//prüfen ob Datenbank schon existiert
+			new AsyncTask<Void, Void, Void>() {
 
+				@Override
+				protected Void doInBackground(Void... params) {
+		        	//Zugriff auf Assets-Ordner in dem CSV-Datei liegt
+		        	AssetManager assetManager = getAssets();
+		    		try {
+		    			Dateiname = assetManager.open("DataBase.csv");
+		    		} catch (IOException e) {
+		    			// TODO Auto-generated catch block
+		    			e.printStackTrace();
+		    		}
+		    		myDB.WriteCSVintoDataBase(Dateiname);	//CSV-Datei in Datenbank übertragen
+					return null;
+				}
+				
+				@Override
+				protected void onPostExecute(Void params) {
+					DBcreated = true;
+				}
+			}.execute(null,null,null);
+        }
+		else
+			DBcreated = true;
+		
+		new AsyncTask<Void, Void, Void>() {
 			@Override
 			protected Void doInBackground(Void... params) {
 				try {
+					while(!DBcreated)
+						Thread.sleep(100);
 					Thread.sleep(3000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				} catch (InterruptedException e) { //unused
 				}
 				return null;
 			}
 			
 			@Override
 			protected void onPostExecute(Void params) {
-				launch_state_1(); // Hauptmenu anzeigen
+				if (0 == activityState)
+					launch_state_1(); // Hauptmenu anzeigen
 			}
 		}.execute(null,null,null);
-		
-		
-//		InputStream FileName=null;
-//		//Zugriff auf Assets-Ordner in dem CSV-Datei liegt
-    //	AssetManager assetManager = getAssets();		
-//		try {
-//			FileName = assetManager.open("DataBase.csv");
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		
-//	
-//		myDB.WriteCSVintoDataBase(FileName);	//CSV-Datei in Datenbank übertragen
 	}
 	
 	@Override
@@ -103,25 +212,26 @@ public class GUI extends Activity {
 	@Override
 	public void onBackPressed() { // Zurück Button wird gedrückt
 		// in übergeordnete Ansicht wechseln
-		switch (activityState) { // In welchem Status wird auf den ZurückButton gedrückt?
-		
-		case 5: // Routing Output (B6)
-			cl.onStop(); // stoppt Ausführung des Magnetsensors
-			launch_state_4(); // Routing (B5)
-			break;
-		case 3: // Look up Location Output (B4)
-			cl.onStop(); // stoppt Ausführung des Magnetsensors
-			launch_state_2(); // Look up Location (B3)
-			break;
-		case 1: // Main menu (B1)
-			cl.onStop(); // stoppt Ausführung des Magnetsensors
-			finish(); // App beenden
-			break;
-		default:
-			cl.onStop(); // stoppt Ausführung des Magnetsensors
-			launch_state_1(); // Main menu (B1)
-			break;
-		}
+		if (DBcreated)
+			switch (activityState) { // In welchem Status wird auf den ZurückButton gedrückt?
+			
+			case 5: // Routing Output (B6)
+				cl.onStop(); // stoppt Ausführung des Magnetsensors
+				launch_state_4(); // Routing (B5)
+				break;
+			case 3: // Look up Location Output (B4)
+				cl.onStop(); // stoppt Ausführung des Magnetsensors
+				launch_state_2(); // Look up Location (B3)
+				break;
+			case 1: // Main menu (B1)
+				cl.onStop(); // stoppt Ausführung des Magnetsensors
+				finish(); // App beenden
+				break;
+			default:
+				cl.onStop(); // stoppt Ausführung des Magnetsensors
+				launch_state_1(); // Main menu (B1)
+				break;
+			}
 	}
 	
 	private void launch_state_1() { // Main menu (B1)
@@ -181,6 +291,7 @@ public class GUI extends Activity {
 		activityState = 3;
 		output = new GraphicalOutput(getApplicationContext()); // neue Instanz verschaffen
 		output.set_state_position(location); // Location anzeigen
+		output.setOnTouchListener(touch_single_multi);	
 
 		setContentView(R.layout.state_3); // state_3.xml anzeigen
 		// Elemente der Anzeige holen, damit sie bearbeitet werden künnen:
@@ -225,7 +336,6 @@ public class GUI extends Activity {
 		campus.setOnClickListener(new OnClickListener() {
 			// OnClickListener für Campus
 			public void onClick(View v) {
-				output.setOnTouchListener(touch_on_campus); // OnTouchListener für Campusanzeige hinzufügen
 				output.set_floor(2);
 				output.invalidate(); // redraw
 			}
@@ -262,6 +372,7 @@ public class GUI extends Activity {
 		activityState = 5;
 		output = new GraphicalOutput(getApplicationContext()); // neue Instanz verschaffen
 		output.set_state_path(route); // Route anzeigen
+		output.setOnTouchListener(touch_single_multi);	
 		
 		setContentView(R.layout.state_5); // state_5.xml anzeigen
 		// Elemente der Anzeige holen, damit sie bearbeitet werden künnen:
@@ -308,7 +419,6 @@ public class GUI extends Activity {
 		campus.setOnClickListener(new OnClickListener() {
 			// OnClickListener für Campus
 			public void onClick(View v) {
-				output.setOnTouchListener(touch_on_campus); // OnTouchListener für Campusanzeige hinzufügen
 				output.set_floor(2);
 				output.invalidate(); // redraw
 			}
@@ -348,8 +458,8 @@ public class GUI extends Activity {
 	private void launch_state_7() { // Campus Output (B7)
 		activityState = 7;
 		output = new GraphicalOutput(getApplicationContext()); // neue Instanz verschaffen
-		output.setOnTouchListener(touch_on_campus); // OnTouchListener für Campusanzeige hinzufügen
 		output.set_state_campus(); // freie Campusnavigation anzeigen
+		output.setOnTouchListener(touch_single_multi);	
 		
 		setContentView(R.layout.state_7); // state_7.xml anzeigen
 		// Elemente der Anzeige holen, damit sie bearbeitet werden künnen:
@@ -358,6 +468,7 @@ public class GUI extends Activity {
 		final Button fminus = (Button) findViewById(R.id.but_floor_minus7);
 		final Button fplus = (Button) findViewById(R.id.but_floor_plus7);
 		final Button campus = (Button) findViewById(R.id.but_Campus7);
+		final TextView house_floor = (TextView) findViewById(R.id.house_floor7);
 
 		backgroundView = output; // grafische Ausgabe als Hintergrund setzen
 
@@ -369,6 +480,7 @@ public class GUI extends Activity {
 				if (-1 == output.set_floor(0)) // wenn -1 returned wird, unterstes Stockwerk erreicht
 					fminus.setEnabled(false); // F- disabeln
 				output.invalidate(); // redraw
+				house_floor.setText(output.get_HouseNumber(0) + "." + output.get_floorNumber(0) + ".");
 			}
 		});
 
@@ -379,6 +491,7 @@ public class GUI extends Activity {
 				if (1 == output.set_floor(1)) // wenn 1 returned wird, oberstes Stockwerk erreicht
 					fplus.setEnabled(false); // F+ disabeln
 				output.invalidate(); // redraw
+				house_floor.setText(" " + output.get_HouseNumber(0) + "." + output.get_floorNumber(0) + ". ");
 			}
 		});
 
@@ -387,6 +500,7 @@ public class GUI extends Activity {
 			public void onClick(View v) {
 				output.set_floor(2);
 				output.invalidate(); // redraw
+				house_floor.setText("Campus");
 			}
 		});
 
@@ -396,8 +510,20 @@ public class GUI extends Activity {
 		rl.addView(fminus);
 		rl.addView(fplus);
 		rl.addView(campus);
+		rl.addView(house_floor);
 
 		cl.onResume(); // enable Lagesensor
+	}
+	
+	private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener { //innere Klasse
+		@Override        
+		public boolean onScale(ScaleGestureDetector detector) { //Skalierfunktion            
+			mScaleFactor *= detector.getScaleFactor();			//Skalierungsfaktor holen
+   
+			mScaleFactor = Math.max(0.5f, Math.min(mScaleFactor, 5.0f)); //Begrenzung des Zoomwertes                     
+			return true;         
+			
+		}
 	}
 
 	private class CompassListener implements SensorEventListener { // innere Klasse

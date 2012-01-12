@@ -30,7 +30,7 @@ public class RoomSpinner {
 		spHouse.setOnItemSelectedListener(createHouseListener()); // Listener setzen
 	}
 
-	/**@return RaumID als String z.B. "05.02.01" 
+	/**@return RaumID als String z.B. '%05.02.01%' 
 	 */
 	public String getString() {
 		String shortenedRoom = (String) spRoom.getSelectedItem(); // kompletter angezeigter String des Raums

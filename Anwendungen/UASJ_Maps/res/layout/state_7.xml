@@ -48,4 +48,16 @@
         android:textSize="18dp"
         android:text="Campus" />
 
+    <TextView
+        android:id="@+id/house_floor7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:textColor="@android:color/white"
+        android:background="@android:color/black"
+        android:textSize="18dp" />
+
 </RelativeLayout>
