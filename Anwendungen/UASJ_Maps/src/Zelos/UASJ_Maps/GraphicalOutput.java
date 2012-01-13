@@ -118,7 +118,7 @@ public class GraphicalOutput extends View {
 	public String get_PathDescription(){
 		if(state==0){					// gibt nur gültigen String aus, wenn in Status Routenberechnung
 			String str;
-			if(var_way_contains_floor(current_floor)!=-1 && var_way_contains_floor(check_counter)==var_way_contains_floor(current_floor)){			// wenn die aktuelle Ebene des Pfades angezeigt wird
+			if(var_way.get(check_counter).get(0).getFloorID() == current_floor){			// wenn die aktuelle Ebene des Pfades angezeigt wird
 				if((var_way.size()-(check_counter+1)) == 0){// wenn auf letzter Ebene{
 					return "Follow path to the final destination";
 				}
@@ -151,7 +151,7 @@ public class GraphicalOutput extends View {
 		if(current == true)
 			floorID = current_floor;		// Ausgabe für freie Navigation
 		else
-			floorID = var_way.get(var_way_contains_floor(check_counter+1)).get(0).getFloorID(); //Ausgabe für Textausgabe in Wegbeschreibung
+			floorID = var_way.get(check_counter+1).get(0).getFloorID(); //Ausgabe für Textausgabe in Wegbeschreibung
 		
 		if(((floorID) > 0) && ((floorID) <=7)) return "05";
 		else
@@ -169,7 +169,7 @@ public class GraphicalOutput extends View {
 		if(current == true)
 			floorID = current_floor;
 		else
-			floorID = var_way.get(var_way_contains_floor(check_counter+1)).get(0).getFloorID();
+			floorID = var_way.get(check_counter+1).get(0).getFloorID();
 
 		switch(floorID){
 			case 1: return "-2";
