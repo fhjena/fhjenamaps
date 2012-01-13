@@ -480,7 +480,7 @@ public class GUI extends Activity {
 				if (-1 == output.set_floor(0)) // wenn -1 returned wird, unterstes Stockwerk erreicht
 					fminus.setEnabled(false); // F- disabeln
 				output.invalidate(); // redraw
-				house_floor.setText(output.get_HouseNumber(0) + "." + output.get_floorNumber(0) + ".");
+				house_floor.setText(output.get_HouseNumber(true) + "." + output.get_floorNumber(true) + ".");
 			}
 		});
 
@@ -491,7 +491,7 @@ public class GUI extends Activity {
 				if (1 == output.set_floor(1)) // wenn 1 returned wird, oberstes Stockwerk erreicht
 					fplus.setEnabled(false); // F+ disabeln
 				output.invalidate(); // redraw
-				house_floor.setText(" " + output.get_HouseNumber(0) + "." + output.get_floorNumber(0) + ". ");
+				house_floor.setText(" " + output.get_HouseNumber(true) + "." + output.get_floorNumber(true) + ". ");
 			}
 		});
 

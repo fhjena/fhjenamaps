@@ -130,8 +130,11 @@ public class Pathfinding {
 		}
 		if(Path.size()>1){ // Löscht alle Ebenen, die nur einen Knoten beinhalten (außer, wenn es insgesamt nur eine abzuschreitende Ebene gibt)
 			for(int i=0;i<Path.size();i++){
-				if(Path.get(i).size()==1)			// Array-Länge vergleichen
-					Path.remove(i);					// Array löschen
+				if(Path.get(i).size()==1)		{	// Array-Länge vergleichen
+					Path.remove(i--);				// Array löschen
+					
+				}
+				
 			}
 		}
 		

@@ -81,18 +81,18 @@ public class GraphicalOutput extends View {
 	public String get_PathDescription(){
 		if(state==0){					// gibt nur gültigen String aus, wenn in Status Routenberechnung
 			String str;
-			if(var_way_contains_floor(current_floor)!=-1){			// wenn die aktuelle Ebene des Pfades angezeigt wird
+			if(var_way_contains_floor(current_floor)!=-1 && var_way_contains_floor(check_counter)==var_way_contains_floor(current_floor)){			// wenn die aktuelle Ebene des Pfades angezeigt wird
 				if((var_way.size()-(check_counter+1)) == 0){// wenn auf letzter Ebene{
 					return "Follow path to the final destination";
 				}
 				else{
-					if(get_HouseNumber(1)=="Campus")			// Wenn man auf den Campus wechseln soll
+					if(get_HouseNumber(false)=="Campus")			// Wenn man auf den Campus wechseln soll
 						str = "At the end of the path: use the exit to campus";
 					else 	
-						if(get_HouseNumber(0)=="Campus" && get_HouseNumber(1)!= "Campus")		// Wenn man aus dem Campus in ein Haus wechseln soll
-							str = "At the end of the path: use entrance to House " + get_HouseNumber(1) + "floor: " + get_floorNumber(1);
+						if(get_HouseNumber(true)=="Campus" && get_HouseNumber(false)!= "Campus")		// Wenn man aus dem Campus in ein Haus wechseln soll
+							str = "At the end of the path: use entrance to House " + get_HouseNumber(false) + "floor: " + get_floorNumber(false);
 						else		// Wenn man Ebenen in einem Haus wechseln soll
-							str = "At the end of the path: use the elevator/stairs to floor " + get_floorNumber(1);
+							str = "At the end of the path: use the elevator/stairs to floor " + get_floorNumber(false);
 					return str;		// Gesetzten String zurückgeben
 				}
 			}
@@ -106,36 +106,48 @@ public class GraphicalOutput extends View {
 	}
 /**
  * gibt die reale Hausummer der aktuellen Eben zurück
- * @param offset (0 wenn aktuelle Ebene, 1 wenn nächste nächste Ebene)
+ * @param current (true: gibt aktuelle Ebene zurück, false: gibt nächste abzuschreitende Ebene zurück)
  * @return
  */
-	public String get_HouseNumber(int offset){
-		if(((current_floor+offset) > 0) && ((current_floor+offset) <=7)) return "5";
+	public String get_HouseNumber(boolean current){
+		int floorID=0;
+		if(current == true)
+			floorID = current_floor;		// Ausgabe für freie Navigation
 		else
-			if(((current_floor+offset) > 7) && ((current_floor+offset) <=13)) return "3;2;1";
+			floorID = var_way.get(var_way_contains_floor(check_counter+1)).get(0).getFloorID(); //Ausgabe für Textausgabe in Wegbeschreibung
+		
+		if(((floorID) > 0) && ((floorID) <=7)) return "05";
+		else
+			if(((floorID) > 7) && ((floorID) <=13)) return "03;02;01";
 			else return "Campus";
 	}
 	
 	/**
 	 * gibt die reale Ebenenbezeichnung der aktuellen Eben zurück
-	 * @param offset (0 wenn aktuelle Ebene, 1 wenn nächste nächste Ebene)
+	 * @param current (true: gibt aktuelle Ebene zurück, false: gibt nächste abzuschreitende Ebene zurück)
 	 * @return
 	 */
-	public String get_floorNumber(int offset){
-		switch((current_floor+offset)){
-		case 1: return "-2";
-		case 2: return "-1";
-		case 3: return "0";
-		case 4: return "1";
-		case 5: return "2";
-		case 6: return "3";
-		case 7: return "3Z";
-		case 8: return "-1";
-		case 9: return "0";
-		case 10: return "1";
-		case 11: return "2";
-		case 12: return "3";
-		case 13: return "4";
+	public String get_floorNumber(boolean current){
+		int floorID=0;
+		if(current == true)
+			floorID = current_floor;
+		else
+			floorID = var_way.get(var_way_contains_floor(check_counter+1)).get(0).getFloorID();
+
+		switch(floorID){
+			case 1: return "-2";
+			case 2: return "-1";
+			case 3: return "00";
+			case 4: return "01";
+			case 5: return "02";
+			case 6: return "03";
+			case 7: return "3Z";
+			case 8: return "-1";
+			case 9: return "0";
+			case 10: return "01";
+			case 11: return "02";
+			case 12: return "03";
+			case 13: return "04";
 		default: return "Campus";
 		}
 	}
