@@ -49,7 +49,7 @@ public final class R {
         public static final int but_Campus1=0x7f060006;
         public static final int but_Campus3=0x7f060017;
         public static final int but_Campus5=0x7f06002e;
-        public static final int but_Campus7=0x7f060037;
+        public static final int but_Campus7=0x7f060038;
         public static final int but_Check5=0x7f060030;
         public static final int but_Go2=0x7f06000a;
         public static final int but_Go4=0x7f060028;
@@ -59,10 +59,10 @@ public final class R {
         public static final int but_ShowPosition3=0x7f060016;
         public static final int but_floor_minus3=0x7f060015;
         public static final int but_floor_minus5=0x7f06002c;
-        public static final int but_floor_minus7=0x7f060036;
+        public static final int but_floor_minus7=0x7f060037;
         public static final int but_floor_plus3=0x7f060014;
         public static final int but_floor_plus5=0x7f06002b;
-        public static final int but_floor_plus7=0x7f060035;
+        public static final int but_floor_plus7=0x7f060036;
         public static final int but_options1=0x7f060007;
         public static final int dot21=0x7f06000e;
         public static final int dot22=0x7f060010;
@@ -71,7 +71,8 @@ public final class R {
         public static final int dot421=0x7f060024;
         public static final int dot422=0x7f060026;
         public static final int house_floor3=0x7f060018;
-        public static final int house_floor7=0x7f060038;
+        public static final int house_floor5=0x7f060031;
+        public static final int house_floor7=0x7f060039;
         public static final int image0=0x7f060000;
         public static final int linearLayout11=0x7f060002;
         public static final int linearLayout12=0x7f060005;
@@ -80,7 +81,7 @@ public final class R {
         public static final int relativeLayout2=0x7f060008;
         public static final int relativeLayout3=0x7f060012;
         public static final int relativeLayout5=0x7f060029;
-        public static final int relativeLayout7=0x7f060033;
+        public static final int relativeLayout7=0x7f060034;
         public static final int spinner21=0x7f06000d;
         public static final int spinner22=0x7f06000f;
         public static final int spinner23=0x7f060011;
@@ -91,16 +92,16 @@ public final class R {
         public static final int spinner422=0x7f060025;
         public static final int spinner423=0x7f060027;
         public static final int tableLayout1=0x7f060001;
-        public static final int textView1=0x7f060032;
+        public static final int textView1=0x7f060033;
         public static final int textView21=0x7f060009;
         public static final int textView22=0x7f06000c;
         public static final int textView41=0x7f060019;
         public static final int textView42=0x7f06001b;
         public static final int textView5=0x7f06002f;
-        public static final int textView6=0x7f060031;
+        public static final int textView6=0x7f060032;
         public static final int view3=0x7f060013;
         public static final int view5=0x7f06002a;
-        public static final int view7=0x7f060034;
+        public static final int view7=0x7f060035;
     }
     public static final class layout {
         public static final int splashscreen=0x7f030000;

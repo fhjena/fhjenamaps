@@ -1,9 +1,6 @@
 package Zelos.UASJ_Maps;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
+import java.io.*;
 
 import android.app.Activity;
 import android.content.Context;
@@ -20,9 +17,9 @@ public class GUI extends Activity {
 	private GraphicalOutput output; // beinhaltet grafische Darstellung
 	private DataBase myDB;			// Datenbank
 	private CompassListener cl; // beinhaltet Lagesensor
+	private boolean DBcreated = false; // Wurde Datenbank erstellt?
 	private int activityState = 0; // Nummer des momentan/zu letzt aktiven Status; siehe State-übersicht
-	private Node location; // Standpunkt der angezeigt werden soll
-	private ArrayList<ArrayList<Node>> route; // Route die angezeigt werden soll
+	private Pathfinding pf; // neue Instanz verschaffen
 	private float mPosX = 250.f;    //x Wert für Verschiebung GraphicalOutput  
 	private float mPosY = -130.f;   //y Wert für Verschiebung GraphicalOutput        
 	private float mLastTouchX;     	//x Koordinate bei TouchEvent
@@ -32,19 +29,11 @@ public class GUI extends Activity {
 	private float x_z = 420.f;			//x Koordinate um die gezoomt wird
 	private float y_z = 130.f;			//y Koordinate um die gezoomt wird
 	private int NONE;
-	static final int DRAG = 1;			//Modus Verschieben (Singletouch)
-	static final int ZOOMM = 2;			//Modus Zoomen (Multitouch
-	int mode = NONE;					//Modus keines von beiden (Verschieben,Zoomen)
-	File file = new File("/data/data/Zelos.UASJ_Maps/databases/database.db");
-	InputStream Dateiname=null;
-	private OnTouchListener touch_on_campus = new OnTouchListener() { // OnTouchListener hinzufügen für Gebüudeauswahl bei Campusansicht
-		public boolean onTouch(View v, MotionEvent event) { // TODO enable wenn verfügbar
-//			if (output.isStateCampus() && MotionEvent.ACTION_UP == event.getAction()) // Campus ansicht und Finger wird vom Display genommen
-//				output.performClickOnCampus((int) event.getX(), (int) event.getY()); // x und y Werte übergeben
-			return true;
-		}
-	};
-	boolean DBcreated = false;
+	private static final int DRAG = 1;			//Modus Verschieben (Singletouch)
+	private static final int ZOOMM = 2;			//Modus Zoomen (Multitouch
+	private int mode = NONE;					//Modus keines von beiden (Verschieben,Zoomen)
+	private File file = new File("/data/data/Zelos.UASJ_Maps/databases/database.db");
+	private InputStream Dateiname = null;
 	
 	private OnTouchListener touch_single_multi = new OnTouchListener() {
 		public boolean onTouch(View v, MotionEvent event) {
@@ -56,8 +45,14 @@ public class GUI extends Activity {
 		
 			mScaleDetector.onTouchEvent(event); //Skalierungsdetektor überwacht alle Events
 			
+//			TODO mal mit thomas drüber reden, dass die nich im anschluss an eine verschiebnung ausgeführt wurde
+//			if (event.getAction() == MotionEvent.ACTION_UP)
+//				if (output.isStateCampus()) // Wird Campus angezeigt?
+//					output.performClickOnCampus((int) event.getX(), (int) event.getY()); // x und y Werte übergeben
+			
+			
 			final int action = event.getAction();         
-			switch (action & MotionEvent.ACTION_MASK) {         
+			switch (action & MotionEvent.ACTION_MASK) {
 			
 			case MotionEvent.ACTION_DOWN: {    	//Ein Finger auf Touchscreen         
 				final float x = event.getX();   //x-Koordinate holen          
@@ -117,11 +112,9 @@ public class GUI extends Activity {
 				y_z = 130.f;						//Mittelpunkt y auf Touchscreenmitte setzen
 				break;         
 				}
-			
-			}                  
-			return true;    
-		}
-
+			}
+			return true;
+			}
 		};
 
 	/* State-übersicht:
@@ -139,17 +132,17 @@ public class GUI extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) { // App wird gestartet
 		super.onCreate(savedInstanceState); // onCreate von Activity
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD); // Tastensperre deaktivieren
 		setContentView(R.layout.splashscreen);
 		cl = new CompassListener(); // neue Instanz zur Initialisierung des Sensors
 		mScaleDetector = new ScaleGestureDetector(this, new ScaleListener());  //neue Instanz Skalierungsdetektor
 		myDB = new DataBase(this);
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD); // Tastensperre deaktivieren
+		pf = new Pathfinding(getApplicationContext());
 		
-		if (!file.exists()){	//prüfen ob Datenbank schon existiert
-			new AsyncTask<Void, Void, Void>() {
-
-				@Override
-				protected Void doInBackground(Void... params) {
+		new AsyncTask<Void, Void, Void>() {
+			@Override
+			protected Void doInBackground(Void... params) {
+				if (!file.exists())	{ //prüfen ob Datenbank schon existiert
 		        	//Zugriff auf Assets-Ordner in dem CSV-Datei liegt
 		        	AssetManager assetManager = getAssets();
 		    		try {
@@ -159,33 +152,31 @@ public class GUI extends Activity {
 		    			e.printStackTrace();
 		    		}
 		    		myDB.WriteCSVintoDataBase(Dateiname);	//CSV-Datei in Datenbank übertragen
-					return null;
-				}
-				
-				@Override
-				protected void onPostExecute(Void params) {
-					DBcreated = true;
-				}
-			}.execute(null,null,null);
-        }
-		else
-			DBcreated = true;
-		
-		new AsyncTask<Void, Void, Void>() {
-			@Override
-			protected Void doInBackground(Void... params) {
-				try {
-					while(!DBcreated)
-						Thread.sleep(100);
-					Thread.sleep(3000);
-				} catch (InterruptedException e) { //unused
 				}
 				return null;
 			}
 			
 			@Override
 			protected void onPostExecute(Void params) {
-				if (0 == activityState)
+				DBcreated = true;
+			}
+		}.execute(null,null,null);
+		
+		new AsyncTask<Void, Void, Void>() { // neuen Task erstellen für Anzeige Splashscreen
+			@Override
+			protected Void doInBackground(Void... params) { // Aufgabe des AsyncTask
+				try {
+					while(!DBcreated) // Solange DB noch nicht erstellt wurde
+						Thread.sleep(100); // 100ms warten
+					
+					Thread.sleep(3000); //  nachdem DB erstellt wurde, noch 3000ms Splashscreen anzeigen
+				} catch (InterruptedException e) {} //unused
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(Void params) { // wird ausgeführt nachdem doInBackground fertig ist
+				if (0 == activityState) // Wird noch immer der Splashscreen angezeigt?
 					launch_state_1(); // Hauptmenu anzeigen
 			}
 		}.execute(null,null,null);
@@ -211,10 +202,9 @@ public class GUI extends Activity {
 	
 	@Override
 	public void onBackPressed() { // Zurück Button wird gedrückt
-		// in übergeordnete Ansicht wechseln
-		if (DBcreated)
+		if (DBcreated) // Wurde Datenbank bereits erstellt?
+			// in übergeordnete Ansicht wechseln
 			switch (activityState) { // In welchem Status wird auf den ZurückButton gedrückt?
-			
 			case 5: // Routing Output (B6)
 				cl.onStop(); // stoppt Ausführung des Magnetsensors
 				launch_state_4(); // Routing (B5)
@@ -232,6 +222,15 @@ public class GUI extends Activity {
 				launch_state_1(); // Main menu (B1)
 				break;
 			}
+	}
+
+	/** @param house_floor aktualisiert Ausgabetext von house_floor
+	 */
+	private void updateHouseFloor(TextView house_floor) {
+		if (output.get_HouseNumber(true) != "Campus") // Wird gerade nicht der Campus angezeigt?
+			house_floor.setText(output.get_HouseNumber(true) + "." + output.get_floorNumber(true) + "."); // Hausnummer + . + Etagennummer + .
+		else
+			house_floor.setText("Campus"); // es wird gerade der Campus angezeigt
 	}
 	
 	private void launch_state_1() { // Main menu (B1)
@@ -279,9 +278,7 @@ public class GUI extends Activity {
 			// On ClickListener für Go!
 			public void onClick(View v) {
 				String roomInput = new String(RS.getString()); // String des ausgewählten Raums holen
-				Pathfinding pf = new Pathfinding(getApplicationContext()); // neue Instanz verschaffen
-				pf.compute_Path(roomInput,roomInput); // "Route berechnen"; wobei hier nur der Knoten mit der ID i ermittelt werden soll 
-				location = new Node (pf.getPath().get(0).get(0)); // Location merken, falls App zwischendurch in den Hintergrund kommen sollte
+				pf.compute_Path(roomInput,roomInput); // "Route berechnen"; wobei hier nur der Knoten mit der ID i ermittelt werden soll
 				launch_state_3(); // Look up Location Output (B4)
 			}
 		});
@@ -290,7 +287,7 @@ public class GUI extends Activity {
 	private void launch_state_3() { // Look up Location Output (B4)
 		activityState = 3;
 		output = new GraphicalOutput(getApplicationContext()); // neue Instanz verschaffen
-		output.set_state_position(location); // Location anzeigen
+		output.set_state_position(pf.getPath().get(0).get(0)); // Location anzeigen
 		output.setOnTouchListener(touch_single_multi);	
 
 		setContentView(R.layout.state_3); // state_3.xml anzeigen
@@ -301,8 +298,10 @@ public class GUI extends Activity {
 		final Button fplus = (Button) findViewById(R.id.but_floor_plus3);
 		final Button showposition = (Button) findViewById(R.id.but_ShowPosition3);
 		final Button campus = (Button) findViewById(R.id.but_Campus3);
+		final TextView house_floor = (TextView) findViewById(R.id.house_floor3);
 		
 		backgroundView = output; // grafische Ausgabe als Hintergrund setzen
+		updateHouseFloor(house_floor); // Anzeige oben links aktualisieren
 
 		// OnClickListener für die Buttons:
 		fminus.setOnClickListener(new OnClickListener() {
@@ -312,6 +311,7 @@ public class GUI extends Activity {
 				if (-1 == output.set_floor(0)) // wenn -1 returned wird, unterstes Stockwerk erreicht
 					fminus.setEnabled(false); // F- disabeln
 				output.invalidate(); // redraw
+				updateHouseFloor(house_floor); // Anzeige oben links aktualisieren
 			}
 		});
 
@@ -322,6 +322,7 @@ public class GUI extends Activity {
 				if (1 == output.set_floor(1)) // wenn 1 returned wird, oberstes Stockwerk erreicht
 					fplus.setEnabled(false); // F+ disabeln
 				output.invalidate(); // redraw
+				updateHouseFloor(house_floor); // Anzeige oben links aktualisieren
 			}
 		});
 
@@ -330,6 +331,7 @@ public class GUI extends Activity {
 			public void onClick(View v) {
 				output.set_floor(3);
 				output.invalidate(); // redraw
+				updateHouseFloor(house_floor); // Anzeige oben links aktualisieren
 			}
 		});
 
@@ -338,6 +340,7 @@ public class GUI extends Activity {
 			public void onClick(View v) {
 				output.set_floor(2);
 				output.invalidate(); // redraw
+				updateHouseFloor(house_floor); // Anzeige oben links aktualisieren
 			}
 		});
 
@@ -348,6 +351,7 @@ public class GUI extends Activity {
 		rl.addView(fplus);
 		rl.addView(showposition);
 		rl.addView(campus);
+		rl.addView(house_floor);
 
 		cl.onResume(); // enable Lagesensor
 	}
@@ -360,9 +364,7 @@ public class GUI extends Activity {
 		findViewById(R.id.but_Go4).setOnClickListener(new OnClickListener() {
 			// OnClickListener für Go!
 			public void onClick(View v) {
-				Pathfinding pf = new Pathfinding(); // neue Instanz verschaffen
 				pf.compute_Path(RS1.getString(), RS2.getString()); // Pfad berechnen
-				route = new ArrayList<ArrayList<Node>>(pf.getPath()); // Route merken, falls App zwischendurch in den Hintergrund kommen sollte
 				launch_state_5(); // Routing Output (B6)
 			}
 		});
@@ -371,7 +373,7 @@ public class GUI extends Activity {
 	private void launch_state_5() { // Routing Output (B6)
 		activityState = 5;
 		output = new GraphicalOutput(getApplicationContext()); // neue Instanz verschaffen
-		output.set_state_path(route); // Route anzeigen
+		output.set_state_path(pf.getPath()); // Route anzeigen
 		output.setOnTouchListener(touch_single_multi);	
 		
 		setContentView(R.layout.state_5); // state_5.xml anzeigen
@@ -384,8 +386,13 @@ public class GUI extends Activity {
 		final Button campus = (Button) findViewById(R.id.but_Campus5);
 		final Button check = (Button) findViewById(R.id.but_Check5);
 		final TextView description = (TextView) findViewById(R.id.textView5);
+		final TextView house_floor = (TextView) findViewById(R.id.house_floor5);
 
 		backgroundView = output; // grafische Ausgabe als Hintergrund setzen
+		updateHouseFloor(house_floor); // Anzeige oben links aktualisieren
+		description.setText("Route:\n" + output.get_PathDescription()); // Routenbeschreibung einfügen
+		if (1 == pf.getPath().size()) // Nur eine Ebene anzuzeigen?
+			check.setEnabled(false); // disable Check-Button
 
 		// OnClickListener für die Buttons:
 		fminus.setOnClickListener(new OnClickListener() {
@@ -395,6 +402,7 @@ public class GUI extends Activity {
 				if (-1 == output.set_floor(0)) // wenn -1 returned wird, unterstes Stockwerk erreicht
 					fminus.setEnabled(false); // F- disabeln
 				output.invalidate(); // redraw
+				updateHouseFloor(house_floor); // Anzeige oben links aktualisieren
 			}
 		});
 
@@ -405,6 +413,7 @@ public class GUI extends Activity {
 				if (1 == output.set_floor(1)) // wenn 1 returned wird, oberstes Stockwerk erreicht
 					fplus.setEnabled(false); // F+ disabeln
 				output.invalidate(); // redraw
+				updateHouseFloor(house_floor); // Anzeige oben links aktualisieren
 			}
 		});
 
@@ -413,6 +422,7 @@ public class GUI extends Activity {
 			public void onClick(View v) {
 				output.set_floor(3);
 				output.invalidate(); // redraw
+				updateHouseFloor(house_floor); // Anzeige oben links aktualisieren
 			}
 		});
 
@@ -421,6 +431,7 @@ public class GUI extends Activity {
 			public void onClick(View v) {
 				output.set_floor(2);
 				output.invalidate(); // redraw
+				updateHouseFloor(house_floor); // Anzeige oben links aktualisieren
 			}
 		});
 		
@@ -430,11 +441,10 @@ public class GUI extends Activity {
 				if (0 == output.set_check()) // Click auf Check an output weiter geben; Sind noch weitere Ebenen abzuarbeiten?
 					check.setEnabled(false); // disable Check-Button
 				output.invalidate(); // redraw
+				updateHouseFloor(house_floor); // Anzeige oben links aktualisieren
+				description.setText("Route:\n" + output.get_PathDescription()); // Routenbeschreibung einfügen
 			}
 		});
-
-		if (1 == route.size()) // Nur eine Ebene anzuzeigen?
-			check.setEnabled(false); // disable Check-Button
 
 		rl.removeAllViews(); // zunüchst müssen alle Views entfernt werden, da sie sonst doppelt vorhanden sind
 		// danach "von hinten nach vorne" die geünderten Elemente wieder hinzufügen, ansonsten würde die Route über den Button dargestellt werden
@@ -445,6 +455,7 @@ public class GUI extends Activity {
 		rl.addView(campus);
 		rl.addView(description);
 		rl.addView(check);
+		rl.addView(house_floor);
 
 		cl.onResume(); // enable Lagesensor
 	}
@@ -471,6 +482,7 @@ public class GUI extends Activity {
 		final TextView house_floor = (TextView) findViewById(R.id.house_floor7);
 
 		backgroundView = output; // grafische Ausgabe als Hintergrund setzen
+		updateHouseFloor(house_floor); // Anzeige oben links aktualisieren
 
 		// OnClickListener für die Buttons:
 		fminus.setOnClickListener(new OnClickListener() {
@@ -480,7 +492,7 @@ public class GUI extends Activity {
 				if (-1 == output.set_floor(0)) // wenn -1 returned wird, unterstes Stockwerk erreicht
 					fminus.setEnabled(false); // F- disabeln
 				output.invalidate(); // redraw
-				house_floor.setText(output.get_HouseNumber(true) + "." + output.get_floorNumber(true) + ".");
+				updateHouseFloor(house_floor); // Anzeige oben links aktualisieren
 			}
 		});
 
@@ -491,7 +503,7 @@ public class GUI extends Activity {
 				if (1 == output.set_floor(1)) // wenn 1 returned wird, oberstes Stockwerk erreicht
 					fplus.setEnabled(false); // F+ disabeln
 				output.invalidate(); // redraw
-				house_floor.setText(" " + output.get_HouseNumber(true) + "." + output.get_floorNumber(true) + ". ");
+				updateHouseFloor(house_floor); // Anzeige oben links aktualisieren
 			}
 		});
 
@@ -500,7 +512,7 @@ public class GUI extends Activity {
 			public void onClick(View v) {
 				output.set_floor(2);
 				output.invalidate(); // redraw
-				house_floor.setText("Campus");
+				updateHouseFloor(house_floor); // Anzeige oben links aktualisieren
 			}
 		});
 
@@ -519,10 +531,8 @@ public class GUI extends Activity {
 		@Override        
 		public boolean onScale(ScaleGestureDetector detector) { //Skalierfunktion            
 			mScaleFactor *= detector.getScaleFactor();			//Skalierungsfaktor holen
-   
 			mScaleFactor = Math.max(0.5f, Math.min(mScaleFactor, 5.0f)); //Begrenzung des Zoomwertes                     
-			return true;         
-			
+			return true;
 		}
 	}
 
@@ -537,11 +547,11 @@ public class GUI extends Activity {
 			Magnet_Sensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION); // Lagesensor auswühlen
 		}
 
-		protected void onResume() { // enable Lagesensor
+		public void onResume() { // enable Lagesensor
 			mSensorManager.registerListener(this, Magnet_Sensor, SensorManager.SENSOR_DELAY_GAME);
 		}
 
-		protected void onStop() { // disable Lagesensor
+		public void onStop() { // disable Lagesensor
 			mSensorManager.unregisterListener(this);
 		}
 

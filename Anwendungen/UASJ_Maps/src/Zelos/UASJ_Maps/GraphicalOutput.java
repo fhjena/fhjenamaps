@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path.FillType;
+import android.graphics.Point;
 import android.hardware.Camera.Size;
 import android.view.View;
 
@@ -35,17 +36,53 @@ public class GraphicalOutput extends View {
 //		var_way = route;
 	}
 
+	/** Wird zur Zeit der Campus angezeigt?
+	 * @return true, wenn Campus angezeigt wird; ansonsten false
+	 */
 	public boolean isStateCampus(){
-		if(state==2)
+		if(0 == current_floor)
 			return true;
 		else return false;
 	}
 	
-	//TODO: mache diese Funktion
-	// berechnet ob unter angegebenen koordinaten Haus liegt. (welches)haus getroffen? und setzt current floor
-	public boolean performClickOnCampus(int X, int Y){
-		return true; // wenn Haus getroffen
+	/** Berechnet, ob unter angegebenen Koordinaten ein Haus liegt. Wenn ein Haus getroffen wurde, wird entsprechend set_floor ausgeführt.
+	 * @param X X-Koordinate vom Klick
+	 * @param Y Y-Koordinate vom Klick
+	 * @return true, wenn ein Haus getroffen wurde; ansonsten false
+	 */
+	public boolean performClickOnCampus(int X, int Y) { // TODO David: überarbeiten
+		// Umrechnung der View-Koordinaten in Canvas-Koordinaten
+		Point inputCoords = new Point((int) (X + mPosX), (int) (Y + mPosY)); // Verschub zu Koordinaten addieren
+		convertCartesianToPolar(inputCoords); // Kovertierung in Polarkoordinaten
+		inputCoords.set(inputCoords.x, (int) (inputCoords.y + degree)); // Drehwinkel hinzuaddieren
+		convertPolarToCartesian(inputCoords); // Zurückkonvertierung in Kartesische Koordinaten
+		
+		if (inputCoords.x>=-6 && inputCoords.x<=460 && inputCoords.y>=0 && inputCoords.y<=155)
+			set_floor(6); // Haus 5 getroffen
+		else if (inputCoords.x>=210 && inputCoords.x<=650 && inputCoords.y>=255 && inputCoords.y<=450)
+			set_floor(4); // Haus 1/2/3 getroffen
+		else if (inputCoords.x>=330 && inputCoords.x<=775 && inputCoords.y>=550 && inputCoords.y<=715)
+			set_floor(5); // Haus 4 getroffen
+		else return false; // kein Haus getroffen
+		return true; // irgendein Haus getroffen
 	}
+	
+	/** Konvertierung von Kartesischen Koordinaten in Polarkoordinaten 
+	 * @param P .x wird von x-Wert in Betrag der Polarkoordinaten gewandelt
+	 * @param P .y wird von y-Wert in Winkel der Polarkoordinaten gewandelt
+	 */
+	private void convertCartesianToPolar(Point P) {
+		P.set((int) Math.sqrt((P.x * P.x) + (P.y * P.y)), (int) Math.atan(P.y/P.x));
+	}
+	
+	/** Kovertierung von Polarkoordinaten in Kartesischen Koordinaten
+	 * @param P .x wird von Betrag in x-Wert der Kartesischen Koordinaten gewandelt
+	 * @param P .y wird von Winkel in y-Wert der Kartesischen Koordinaten gewandelt
+	 */
+	private void convertPolarToCartesian(Point P) {
+		P.set((int) (P.x * Math.cos(P.y)), (int) (P.x * Math.sin(P.y)));
+	}
+	
 	// Setzt den Status der Grafischen Ausgabe
 	public void set_graphical_output(boolean graphical_output_stat) {
 		graphical_output_status = graphical_output_stat;
@@ -178,19 +215,13 @@ public class GraphicalOutput extends View {
 			else if(state==1)
 				current_floor = (short) position.getFloorID(); // Current_floor aktualisieren (auf nächste abzuschreitende Ebene)
 			break;
-		case 4: // aus Campus Haus 1 anklicken
-			current_floor = 9; // haus 1 Ebene 0
+		case 4: // aus Campus Haus 1, 2 oder 3 anklicken
+			current_floor = 9; // haus 1,2,3 Ebene 0
 			break;
-		case 5: // aus Campus Haus 2 anklicken
-			current_floor = 15; // haus 2 Ebene 0
+		case 5: // aus Campus Haus 4 anklicken
+			current_floor = 14; // haus 4 Ebene 0
 			break;
-		case 6: // aus Campus Haus 3 anklicken
-			current_floor = 21; // haus 3 Ebene 0
-			break;
-		case 7: // aus Campus Haus 4 anklicken
-			current_floor = 26; // haus 4 Ebene 0
-			break;
-		case 8: // aus Campus Haus 5 anklicken
+		case 6: // aus Campus Haus 5 anklicken
 			current_floor = 3; // haus 5 Ebene 0
 			break;
 			
@@ -285,7 +316,6 @@ public class GraphicalOutput extends View {
 //		draw_house(canvas);
 //		draw_nodes(canvas);
 //		draw_p2p(canvas);
-		
 	}
 	
 	/**

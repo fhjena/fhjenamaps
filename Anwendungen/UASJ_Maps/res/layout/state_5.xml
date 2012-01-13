@@ -68,7 +68,7 @@
         android:layout_alignRight="@+id/but_floor_plus5"
         android:layout_below="@+id/but_floor_minus5"
         android:layout_marginTop="20dp"
-        android:text="Route:" />
+        android:textColor="@android:color/black" />
 
     <Button
         android:id="@+id/but_Check5"
@@ -80,5 +80,18 @@
         android:layout_alignRight="@+id/textView5"
         android:textSize="18dp"
         android:text="Check" />
+
+    <TextView
+        android:id="@+id/house_floor5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:textColor="@android:color/white"
+        android:background="@android:color/black"
+        android:textSize="18dp" />
+    
 
 </RelativeLayout>

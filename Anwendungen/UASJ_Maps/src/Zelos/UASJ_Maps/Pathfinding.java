@@ -19,13 +19,13 @@ public class Pathfinding {
 	private double h_factor = 1.0; // um Heuristik weniger oder stärker in die Wegfindung einzubeziehen
 	private float distance = 0; // Distanz der ermittelten Route
 	private DataBase myDB; // Datenbank zur Abfrage
-
-	public Pathfinding() {
-		
-	}
 	
 	public Pathfinding(Context c) {
 		myDB = new DataBase(c);
+	}
+	
+	public void closeDB() {
+		myDB.closeDB();
 	}
 	
 	/**
