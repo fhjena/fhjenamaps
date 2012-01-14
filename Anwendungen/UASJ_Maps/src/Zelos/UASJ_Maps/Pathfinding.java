@@ -24,10 +24,6 @@ public class Pathfinding {
 		myDB = new DataBase(c);
 	}
 	
-	public void closeDB() {
-		myDB.closeDB();
-	}
-	
 	/**
 	 * Berechnung der Strecke zwischen zwei Knoten
 	 * @params: Koordinaten

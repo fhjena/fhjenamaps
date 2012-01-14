@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
+	// Dieses xml legt die Anordnung der darzustellenden Elemente des Routing Menüs fest
 
     <TextView
         android:id="@+id/textView41"
@@ -13,6 +14,7 @@
         android:layout_marginTop="29dp"
         android:text="Routing"
         android:textAppearance="?android:attr/textAppearanceLarge" />
+    // Textausgabe Routing
 
     <LinearLayout
         android:id="@+id/linearLayout41"
@@ -21,6 +23,7 @@
         android:layout_below="@+id/textView41"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="24dp" >
+    // drei Textview und drei Spinner waagerecht anordnen; Beinhaltet eine Raumauswahl
 
         <TextView
             android:id="@+id/textView42"
@@ -28,6 +31,7 @@
             android:layout_height="wrap_content"
             android:text="Start:"
             android:textAppearance="?android:attr/textAppearanceMedium" />
+        // Textausgabe Start:
 
         <Spinner
             android:id="@+id/spinner411"
@@ -35,6 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
             android:prompt="@string/house" />
+        // Spinner für Haus
 
         <TextView
             android:id="@+id/dot411"
@@ -44,6 +49,7 @@
             android:layout_weight="1"
             android:text="."
             android:textSize="35dp" />
+        // Textausgabe Trennzeichen
 
         <Spinner
             android:id="@+id/spinner412"
@@ -51,6 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:prompt="@string/floor" />
+        // Spinner für Etage
 
         <TextView
             android:id="@+id/dot412"
@@ -60,6 +67,7 @@
             android:layout_weight="1"
             android:text="."
             android:textSize="35dp" />
+        // Textausgabe Trennzeichen
 
         <Spinner
             android:id="@+id/spinner413"
@@ -67,6 +75,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:prompt="@string/room" />
+        // Spinner für Raum
     </LinearLayout>
 
     <LinearLayout
@@ -76,6 +85,7 @@
         android:layout_alignLeft="@+id/linearLayout41"
         android:layout_below="@+id/linearLayout41"
         android:layout_marginTop="30dp" >
+    // drei Textview und drei Spinner waagerecht anordnen; Beinhaltet eine Raumauswahl
 
         <TextView
             android:id="@+id/TextView42"
@@ -83,6 +93,7 @@
             android:layout_height="wrap_content"
             android:text="Target:"
             android:textAppearance="?android:attr/textAppearanceMedium" />
+        // Textausgabe Target:
 
         <Spinner
             android:id="@+id/spinner421"
@@ -91,6 +102,7 @@
             android:layout_marginLeft="17dp"
             android:layout_weight="1"
             android:prompt="@string/house" />
+        // Spinner für Haus
 
         <TextView
             android:id="@+id/dot421"
@@ -100,6 +112,7 @@
             android:layout_weight="1"
             android:text="."
             android:textSize="35dp" />
+        // Textausgabe Trennzeichen
 
         <Spinner
             android:id="@+id/spinner422"
@@ -107,6 +120,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:prompt="@string/floor" />
+        // Spinner für Etage
 
         <TextView
             android:id="@+id/dot422"
@@ -116,6 +130,7 @@
             android:layout_weight="1"
             android:text="."
             android:textSize="35dp" />
+        // Textausgabe Trennzeichen
 
         <Spinner
             android:id="@+id/spinner423"
@@ -123,6 +138,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:prompt="@string/room" />
+        // Spinner für Raum
     </LinearLayout>
 
     <Button
@@ -136,5 +152,6 @@
         android:text="Go!"
         android:textSize="18dp"
         android:width="80dp" />
+    // Button Go um zum Routing Output zu kommen
 
 </RelativeLayout>

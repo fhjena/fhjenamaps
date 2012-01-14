@@ -37,10 +37,6 @@ public class DataBase {
 		openHelper = new DataBaseOpenHelper(this.context); // Instanz DataBaseOpenHelper
 
 	}
-	
-	public void closeDB() {
-		db.close();
-	}
 
 	// csv-File einlesen und Datenbank füllen
 	public String[] WriteCSVintoDataBase(InputStream sourcePath) {

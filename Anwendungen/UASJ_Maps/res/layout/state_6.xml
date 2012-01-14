@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
+	// Dieses xml legt die Anordnung der darzustellenden Elemente des Options Menü fest
 
     <TextView
         android:id="@+id/textView6"
@@ -11,15 +12,26 @@
         android:layout_marginTop="29dp"
         android:text="Options"
         android:textAppearance="?android:attr/textAppearanceLarge" />
+    // Textausgabe Options
 
-    <TextView
-        android:id="@+id/textView1"
+    <CheckBox
+        android:id="@+id/checkCompass6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView6"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="80dp"
-        android:text="not available in beta version"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:layout_marginTop="40dp"
+        android:text="automatic map alignment" />
+    // CheckBox zum aktivieren/deaktivieren des Kompass
+
+    <Button
+        android:id="@+id/but_refreshDB6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/checkCompass6"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="Refresh DataBase" />
+    // Button, der die Datenbank neu schreibt
 
 </RelativeLayout>

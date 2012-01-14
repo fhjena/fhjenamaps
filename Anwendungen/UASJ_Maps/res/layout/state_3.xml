@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/relativeLayout3"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="match_parent" >
+	// Dieses xml legt die Anordnung der darzustellenden Elemente des Look up Location Output fest
 
     <View
         android:id="@+id/view3"
@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true" />
+    // View als Hintergrund für grafische Ausgabe
 
     <Button
         android:id="@+id/but_floor_plus3"
@@ -24,6 +25,7 @@
         android:text="F +"
         android:textSize="18dp"
         android:width="50dp" />
+    // Etagenwechsel nach oben
 
     <Button
         android:id="@+id/but_floor_minus3"
@@ -37,6 +39,7 @@
         android:text="F -"
         android:textSize="18dp"
         android:width="50dp" />
+    // Etagenwechsel nach unten
 
     <Button
         android:id="@+id/but_ShowPosition3"
@@ -49,6 +52,7 @@
         android:text="Show Position"
         android:textSize="18dp"
         android:width="150dp" />
+    // zur Position zurück kehren
 
     <Button
         android:id="@+id/but_Campus3"
@@ -60,6 +64,7 @@
         android:text="Campus"
         android:textSize="18dp"
         android:width="150dp" />
+    // auf Campusansicht wechseln
 
     <TextView
         android:id="@+id/house_floor3"
@@ -72,6 +77,7 @@
         android:textColor="@android:color/white"
         android:background="@android:color/black"
         android:textSize="18dp" />
+    // Anzeige oben links welches Gebäude und welche Etage angezeigt werden
 
 
 </RelativeLayout>

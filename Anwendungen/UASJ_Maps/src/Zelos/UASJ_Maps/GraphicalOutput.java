@@ -82,16 +82,6 @@ public class GraphicalOutput extends View {
 	private void convertPolarToCartesian(Point P) {
 		P.set((int) (P.x * Math.cos(P.y)), (int) (P.x * Math.sin(P.y)));
 	}
-	
-	// Setzt den Status der Grafischen Ausgabe
-	public void set_graphical_output(boolean graphical_output_stat) {
-		graphical_output_status = graphical_output_stat;
-	}
-
-	// Liefert den Status der Grafischen Ausgabe
-	public boolean get_graphical_output() {
-		return graphical_output_status;
-	}
 
 	// Setzt den Wert der Gradzahl vom Sensor
 	public void set_degree(float f) {
@@ -155,7 +145,7 @@ public class GraphicalOutput extends View {
 		
 		if(((floorID) > 0) && ((floorID) <=7)) return "05";
 		else
-			if(((floorID) > 7) && ((floorID) <=13)) return "03;02;01";
+			if(((floorID) > 7) && ((floorID) <=13)) return "01/02/03";
 			else return "Campus";
 	}
 	
@@ -180,7 +170,7 @@ public class GraphicalOutput extends View {
 			case 6: return "03";
 			case 7: return "3Z";
 			case 8: return "-1";
-			case 9: return "0";
+			case 9: return "00";
 			case 10: return "01";
 			case 11: return "02";
 			case 12: return "03";

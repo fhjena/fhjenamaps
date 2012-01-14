@@ -3,6 +3,7 @@
     android:id="@+id/relativeLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
+	// Dieses xml legt die Anordnung der darzustellenden Elemente des Look up Location Menüs fest
 
     <TextView
         android:id="@+id/textView21"
@@ -13,6 +14,7 @@
         android:layout_marginTop="57dp"
         android:text="Look up Location"
         android:textAppearance="?android:attr/textAppearanceLarge" />
+    // Textausgabe Look up Location
 
     <Button
         android:id="@+id/but_Go2"
@@ -25,6 +27,7 @@
         android:text="Go!"
         android:textSize="18dp"
         android:width="80dp" />
+    // Button Go um zum Look up Location Output zu kommen
 
     <LinearLayout
         android:id="@+id/linearLayout2"
@@ -32,6 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true" >
+    // drei Textview und drei Spinner waagerecht anordnen; Beinhaltet eine Raumauswahl
 
         <TextView
             android:id="@+id/textView22"
@@ -39,6 +43,7 @@
             android:layout_height="wrap_content"
             android:text="Room:"
             android:textAppearance="?android:attr/textAppearanceMedium" />
+        // Textausgabe Room:
 
         <Spinner
             android:id="@+id/spinner21"
@@ -46,6 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
             android:prompt="@string/house" />
+        // Spinner für Haus
 
         <TextView
             android:id="@+id/dot21"
@@ -55,6 +61,7 @@
             android:text="."
             android:textSize="35dp"
             android:layout_gravity="bottom" />
+        // Textausgabe Trennzeichen
 
         <Spinner
             android:id="@+id/spinner22"
@@ -62,6 +69,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:prompt="@string/floor" />
+        // Spinner für Etage
 
         <TextView
             android:id="@+id/dot22"
@@ -71,6 +79,7 @@
             android:text="."
             android:textSize="35dp"
             android:layout_gravity="bottom" />
+        // Textausgabe Trennzeichen
 
         <Spinner
             android:id="@+id/spinner23"
@@ -78,6 +87,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:prompt="@string/room" />
+        // Spinner für Raum
     </LinearLayout>
 
 </RelativeLayout>
