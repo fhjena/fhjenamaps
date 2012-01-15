@@ -265,8 +265,10 @@ public class GUI extends Activity {
 			// On ClickListener für Go!
 			public void onClick(View v) {
 				String roomInput = new String(RS.getString()); // String des ausgewählten Raums holen
-				pf.compute_Path(roomInput,roomInput); // "Route berechnen"; wobei hier nur der Knoten mit der ID i ermittelt werden soll
-				launch_state_3(); // Look up Location Output (B4)
+				if (pf.compute_Path(roomInput,roomInput)) // "Route berechnen"; wobei hier nur der Knoten mit der ID i ermittelt werden soll; Location gefunden?
+					launch_state_3(); // Look up Location Output (B4)
+				else
+					Toast.makeText(getApplicationContext(), "Sorry, Location not found.", Toast.LENGTH_LONG).show(); // Errorausgabe
 			}
 		});
 	}
@@ -319,7 +321,7 @@ public class GUI extends Activity {
 		});
 
 		showlocation.setOnClickListener(new OnClickListener() {
-			// OnClickListener für Show Position
+			// OnClickListener für Show Location
 			public void onClick(View v) {
 				short merk = output.set_floor(3); // Anzeige auf aktuelle Position
 				if (1 == merk) // wenn 1 returned wird, oberstes Stockwerk erreicht
@@ -362,9 +364,10 @@ public class GUI extends Activity {
 		findViewById(R.id.but_Go4).setOnClickListener(new OnClickListener() {
 			// OnClickListener für Go!
 			public void onClick(View v) {
-				pf.compute_Path(RS1.getString(), RS2.getString()); // Pfad berechnen
-				Toast.makeText(getApplicationContext(), "Lorem ipsum Routing", Toast.LENGTH_LONG).show(); // TODO
-				launch_state_5(); // Routing Output (B6)
+				if (pf.compute_Path(RS1.getString(), RS2.getString())) // Pfad berechnen; Weg gefunden?
+					launch_state_5(); // Routing Output (B6)
+				else
+					Toast.makeText(getApplicationContext(), "Sorry, no Route found.", Toast.LENGTH_LONG).show(); // Errorausgabe 
 			}
 		});
 	}
