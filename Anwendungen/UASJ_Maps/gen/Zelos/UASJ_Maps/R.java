@@ -46,17 +46,17 @@ public final class R {
     public static final class id {
         public static final int LinearLayout42=0x7f060024;
         public static final int TextView42=0x7f060025;
-        public static final int but_Campus1=0x7f060009;
         public static final int but_Campus3=0x7f06001a;
         public static final int but_Campus5=0x7f060031;
         public static final int but_Campus7=0x7f06003c;
         public static final int but_Check5=0x7f060033;
+        public static final int but_FreeNavigation1=0x7f060009;
         public static final int but_Go2=0x7f06000d;
         public static final int but_Go4=0x7f06002b;
         public static final int but_LookupLocation1=0x7f060006;
         public static final int but_Routing1=0x7f060007;
         public static final int but_Routing5=0x7f060030;
-        public static final int but_ShowPosition3=0x7f060019;
+        public static final int but_ShowLocation3=0x7f060019;
         public static final int but_floor_minus3=0x7f060018;
         public static final int but_floor_minus5=0x7f06002f;
         public static final int but_floor_minus7=0x7f06003b;

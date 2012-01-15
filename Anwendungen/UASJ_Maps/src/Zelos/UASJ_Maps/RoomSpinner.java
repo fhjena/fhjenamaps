@@ -30,14 +30,14 @@ public class RoomSpinner {
 		spHouse.setOnItemSelectedListener(createHouseListener()); // Listener setzen
 	}
 
-	/**@return RaumID als String z.B. '%05.02.01%' 
+	/**@return RaumID als String z.B. '%05.02.01,%'
 	 */
 	public String getString() {
 		String shortenedRoom = (String) spRoom.getSelectedItem(); // kompletter angezeigter String des Raums
 		int x = shortenedRoom.indexOf(" "); // Index des Leerzeichens herausfinden; gibt -1 zurück, wenn kein Leerzeichen vorhanden
 		if (-1 != x) // wenn Leerzeichen vorhanden
 			shortenedRoom = shortenedRoom.substring(0, x); // Leerzeichen und alles dahinter abschneiden  
-		return "'%" + spHouse.getSelectedItem() + "." + spFloor.getSelectedItem() + "." + shortenedRoom + "%'"; // HausID.EtagenID.RaumID
+		return "'%" + spHouse.getSelectedItem() + "." + spFloor.getSelectedItem() + "." + shortenedRoom + ",%'"; // HausID.EtagenID.RaumID
 	}
 	
 	/** setzt grafische Darstellung und wählt String Array aus was angezeigt werden soll

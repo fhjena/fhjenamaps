@@ -42,13 +42,13 @@
     // beinhaltet die zwei Buttons der zweiten Zeile
 
         <Button
-            android:id="@+id/but_Campus1"
+            android:id="@+id/but_FreeNavigation1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
         	android:textSize="18dp"
-            android:text="Campus" />
-        // Button für Auswahl Campus Output
+            android:text="Free Navigation" />
+        // Button für Auswahl Free Navigation Output
 
         <Button
             android:id="@+id/but_options1"

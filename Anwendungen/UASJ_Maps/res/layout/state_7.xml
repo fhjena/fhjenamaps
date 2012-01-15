@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/relativeLayout7" >
-	// Dieses xml legt die Anordnung der darzustellenden Elemente des Campus Output fest
+	// Dieses xml legt die Anordnung der darzustellenden Elemente des Free Navigation Output fest
 
     <View
         android:id="@+id/view7"

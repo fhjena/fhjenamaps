@@ -111,7 +111,7 @@ public class GUI extends Activity {
 	 * state4: Routing (B5)
 	 * state5: Routing Output (B6)
 	 * state6: Options (B2)
-	 * state7: Campus Output (B7)
+	 * state7: Free Navigation Output (B7)
 	 * 
 	 * B1 bis B7 beziehen sich auf das Pflichtenheft Kapitel 7: Grafische Beschreibung der Produktfunktionen
 	 */
@@ -239,10 +239,10 @@ public class GUI extends Activity {
 			}
 		});
 		
-		findViewById(R.id.but_Campus1).setOnClickListener(new OnClickListener() {
-			// OnClickListener für Campus
+		findViewById(R.id.but_FreeNavigation1).setOnClickListener(new OnClickListener() {
+			// OnClickListener für Free Navigation
 			public void onClick(View v) {
-				launch_state_7(); // Campus Output (B7)
+				launch_state_7(); // Free Navigation Output (B7)
 			}
 		});
 		
@@ -283,7 +283,7 @@ public class GUI extends Activity {
 		View backgroundView = findViewById(R.id.view3);
 		final Button fminus = (Button) findViewById(R.id.but_floor_minus3);
 		final Button fplus = (Button) findViewById(R.id.but_floor_plus3);
-		final Button showposition = (Button) findViewById(R.id.but_ShowPosition3);
+		final Button showlocation = (Button) findViewById(R.id.but_ShowLocation3);
 		final Button campus = (Button) findViewById(R.id.but_Campus3);
 		final TextView house_floor = (TextView) findViewById(R.id.house_floor3);
 		
@@ -318,7 +318,7 @@ public class GUI extends Activity {
 			}
 		});
 
-		showposition.setOnClickListener(new OnClickListener() {
+		showlocation.setOnClickListener(new OnClickListener() {
 			// OnClickListener für Show Position
 			public void onClick(View v) {
 				short merk = output.set_floor(3); // Anzeige auf aktuelle Position
@@ -347,7 +347,7 @@ public class GUI extends Activity {
 		rl.addView(backgroundView);
 		rl.addView(fminus);
 		rl.addView(fplus);
-		rl.addView(showposition);
+		rl.addView(showlocation);
 		rl.addView(campus);
 		rl.addView(house_floor);
 
@@ -363,6 +363,7 @@ public class GUI extends Activity {
 			// OnClickListener für Go!
 			public void onClick(View v) {
 				pf.compute_Path(RS1.getString(), RS2.getString()); // Pfad berechnen
+				Toast.makeText(getApplicationContext(), "Lorem ipsum Routing", Toast.LENGTH_LONG).show(); // TODO
 				launch_state_5(); // Routing Output (B6)
 			}
 		});
@@ -425,16 +426,17 @@ public class GUI extends Activity {
 		routing.setOnClickListener(new OnClickListener() {
 			// OnClickListener für Routing
 			public void onClick(View v) {
-				short merk = output.set_floor(3); // Anzeige auf aktuelle Route
-				if (1 == merk) // wenn 1 returned wird, oberstes Stockwerk erreicht
-					fplus.setEnabled(false); // F+ disabeln
-				else if (-1 == merk) // wenn -1 returned wird, unterstes Stockwerk erreicht
-					fminus.setEnabled(false); // F- disabeln
+				short merk = output.set_floor(3); // Anzeige auf aktuelle Route; Rückgabewert merken
 				output.invalidate(); // redraw TODO initial zoom setzen
-				if (!updateHouseFloor(house_floor)) { // Anzeige oben links aktualisieren; Ist C
+				if (!updateHouseFloor(house_floor)) { // Anzeige oben links aktualisieren; Wird Campus angezeigt?
+					// Buttons zunächst einblenden
 					fminus.setEnabled(true); // F- Button anzeigen
 					fplus.setEnabled(true); // F+ Button anzeigen
 					campus.setEnabled(true); // Campus Button anzeigen
+					if (1 == merk) // wenn 1 returned wird, oberstes Stockwerk erreicht
+						fplus.setEnabled(false); // F+ disabeln
+					else if (-1 == merk) // wenn -1 returned wird, unterstes Stockwerk erreicht
+						fminus.setEnabled(false); // F- disabeln
 					description.setText("Route:\n" + output.get_PathDescription()); // Routenbeschreibung einfügen
 				}
 			}
@@ -541,7 +543,7 @@ public class GUI extends Activity {
 		});
 	}
 
-	private void launch_state_7() { // Campus Output (B7)
+	private void launch_state_7() { // Free Navigation Output (B7)
 		activityState = 7;
 		output = new GraphicalOutput(getApplicationContext()); // neue Instanz verschaffen
 		output.set_state_campus(); // freie Campusnavigation anzeigen

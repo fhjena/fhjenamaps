@@ -42,14 +42,14 @@
     // Etagenwechsel nach unten
 
     <Button
-        android:id="@+id/but_ShowPosition3"
+        android:id="@+id/but_ShowLocation3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_marginBottom="20dp"
         android:layout_marginLeft="20dp"
-        android:text="Show Position"
+        android:text="Show Location"
         android:textSize="18dp"
         android:width="150dp" />
     // zur Position zurück kehren
@@ -58,8 +58,8 @@
         android:id="@+id/but_Campus3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/but_ShowPosition3"
-        android:layout_toRightOf="@+id/but_ShowPosition3"
+        android:layout_alignBaseline="@+id/but_ShowLocation3"
+        android:layout_toRightOf="@+id/but_ShowLocation3"
         android:layout_marginLeft="20dp"
         android:text="Campus"
         android:textSize="18dp"
