@@ -72,7 +72,7 @@ public class Pathfinding {
 			Current_N = open_L.pollFirst(); 						// aktueller Knoten = Knoten mit niedrigstem f-Wert
 			closed_L.add(Current_N); 								// aktueller Knoten in geschlossene Liste hinzugefügt
 			for (int i = 0; i <= Current_N.getNeigbour_ID().size() - 1; i++) { // Für alle angrenzenden Knoten
-				if(Current_N.getNeigbour_ID().get(i) > -1){		// Wenn eingetragene NachbarID eine eine gültige ID ist
+				if(((Current_N.getNeigbour_ID().get(i) > -1) && (Current_N.getNeigbour_ID().get(i) != 120)  && (Current_N.getNeigbour_ID().get(i) != 108) && (Current_N.getNeigbour_ID().get(i) != 103) && (Current_N.getNeigbour_ID().get(i) != 98))||(Current_N.getNeigbour_ID().get(i)==DN.getID())){		// Wenn eingetragene NachbarID eine eine gültige ID ist
 					c = myDB.getDatafromNodeId(Current_N.getNeigbour_ID().get(i));	// Datenbankabfrage
 					n = new Node(c);								// Knoteninitialisierung
 					if (GetIndexOfElement(TotalList, n.getID()) == -1) // Wenn Knoten noch nicht in Gesamtliste
@@ -126,7 +126,7 @@ public class Pathfinding {
 		}
 		if(Path.size()>1){ // Löscht alle Ebenen, die nur einen Knoten beinhalten (außer, wenn es insgesamt nur eine abzuschreitende Ebene gibt)
 			for(int i=0;i<Path.size();i++){
-				if(Path.get(i).size()==1)		{	// Array-Länge vergleichen
+				if(Path.get(i).size()==1 && !(Path.get(i).get(0) == DN || Path.get(i).get(0) == SN))		{	// Array-Länge vergleichen
 					Path.remove(i--);				// Array löschen
 					
 				}
@@ -141,10 +141,10 @@ public class Pathfinding {
 	
 	/**
 	 * Gibt die Länge des Gesamtweges zurück (erst nach Durchführung einer Wegberechnung mit nützlichem Wert gefüllt)
-	 * @return Wegstrecke
+	 * @return Wegstrecke in m
 	 */
 	public float getDistance() { 
-		return distance;
+		return (distance*6.276f/20);
 	}
 
 	/**

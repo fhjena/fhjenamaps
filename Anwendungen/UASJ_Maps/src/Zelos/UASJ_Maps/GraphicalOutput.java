@@ -328,15 +328,16 @@ public class GraphicalOutput extends View {
 	 * @param list : Abzugehende Knoten auf einer Ebene (Bei Position nur ein Knoten)
 	 */
 	private void draw_route_or_position(Canvas c, ArrayList<Node> list){
-		var_paint.setColor(Color.BLUE); // Farbe setzen
+		var_paint.setColor(Color.GREEN); // Farbe setzen
 		c.drawLine(list.get(0).getX()+20, list.get(0).getY()+20, list.get(0).getX()-20, list.get(0).getY()-20, var_paint); // Startkreuz setzen(strich1)
 		c.drawLine(list.get(0).getX()+20, list.get(0).getY()-20, list.get(0).getX()-20, list.get(0).getY()+20, var_paint); // Startkreuz Strich2
 		
+		var_paint.setColor(Color.BLUE); // Farbe setzen
 		for (int i = 0; i < list.size() - 1; i++) {
 			c.drawLine(list.get(i).getX(),list.get(i).getY(),				// Startpunkt der Linie
 					list.get(i + 1).getX(), list.get(i + 1).getY(), var_paint); // Zielpunkt der Linie
 		}
-		
+		var_paint.setColor(Color.RED); // Farbe setzen
 		c.drawLine(list.get(list.size()-1).getX()+20, list.get(list.size()-1).getY()+20, list.get(list.size()-1).getX()-20, list.get(list.size()-1).getY()-20, var_paint); // Zielkreuz (strich1)
 		c.drawLine(list.get(list.size()-1).getX()+20, list.get(list.size()-1).getY()-20, list.get(list.size()-1).getX()-20, list.get(list.size()-1).getY()+20, var_paint); // Zielkreuz (strich2)
 		//TODO: eventuell noch Farben anpassen (Startkreuz z.b. andere Farbe als Zielkreuz usw)

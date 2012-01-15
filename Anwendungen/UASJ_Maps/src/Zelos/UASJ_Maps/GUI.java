@@ -406,6 +406,7 @@ public class GUI extends Activity {
 					fminus.setEnabled(false); // F- disabeln
 				output.invalidate(); // redraw
 				updateHouseFloor(house_floor); // Anzeige oben links aktualisieren
+				description.setText("Route:\n" + output.get_PathDescription()); // Routenbeschreibung einfügen
 			}
 		});
 
@@ -417,6 +418,7 @@ public class GUI extends Activity {
 					fplus.setEnabled(false); // F+ disabeln
 				output.invalidate(); // redraw
 				updateHouseFloor(house_floor); // Anzeige oben links aktualisieren
+				description.setText("Route:\n" + output.get_PathDescription()); // Routenbeschreibung einfügen
 			}
 		});
 
@@ -433,6 +435,7 @@ public class GUI extends Activity {
 					fminus.setEnabled(true); // F- Button anzeigen
 					fplus.setEnabled(true); // F+ Button anzeigen
 					campus.setEnabled(true); // Campus Button anzeigen
+					description.setText("Route:\n" + output.get_PathDescription()); // Routenbeschreibung einfügen
 				}
 			}
 		});
@@ -446,6 +449,7 @@ public class GUI extends Activity {
 				output.set_floor(2); // Campus anzeigen
 				output.invalidate(); // redraw
 				updateHouseFloor(house_floor); // Anzeige oben links aktualisieren
+				description.setText("Route:\n" + output.get_PathDescription()); // Routenbeschreibung einfügen
 			}
 		});
 		
