@@ -1,3 +1,20 @@
+/*
+This file is part of UASJ-Maps.
+
+UASJ-Maps is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+UASJ-Maps is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with UASJ-Maps. If not, see http://www.gnu.org/licenses/
+*/
+
 package Zelos.UASJ_Maps;
 
 import android.content.Context;
@@ -98,16 +115,19 @@ public class RoomSpinner {
 			public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				int floorID;
 				switch (arg2) { // Welches Element wurde ausgewählt?
-				case 1: // Etage 01
+				case 1: // Etage 00
+					floorID = R.array.house01_floor00;
+					break;
+				case 2: // Etage 01
 					floorID = R.array.house01_floor01;
 					break;
-				case 2: // Etage 02
+				case 3: // Etage 02
 					floorID = R.array.house01_floor02;
 					break;
-				case 3: // Etage 03
+				case 4: // Etage 03
 					floorID = R.array.house01_floor03;
 					break;
-				case 4: // Etage 04
+				case 5: // Etage 04
 					floorID = R.array.house01_floor04;
 					break;
 				default: // Etage -1
@@ -130,10 +150,23 @@ public class RoomSpinner {
 		return new OnItemSelectedListener() {
 			public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				int floorID;
-				if (1==arg2) // Etage 03
-					floorID = R.array.house02_floor03;
-				else // Etage 02
+				switch (arg2) { // Welches Element wurde ausgewählt?
+				case 1: // Etage 01
+					floorID = R.array.house02_floor01;
+					break;
+				case 2: // Etage 02
 					floorID = R.array.house02_floor02;
+					break;
+				case 3: // Etage 03
+					floorID = R.array.house02_floor03;
+					break;
+				case 4: // Etage 04
+					floorID = R.array.house02_floor04;
+					break;
+				default: // Etage 00
+					floorID = R.array.house02_floor00;
+					break;
+				}
 				
 				spRoom.setAdapter(createAdapter(floorID)); // Adapter für Räume setzen
 			}
@@ -151,17 +184,19 @@ public class RoomSpinner {
 			public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				int floorID;
 				switch (arg2) { // Welches Element wurde ausgewählt?
-				case 1: // Etage 01
+				case 1: // Etage 00
+					floorID = R.array.house03_floor00;
+					break;
+				case 2: // Etage 01
 					floorID = R.array.house03_floor01;
 					break;
-				case 2: // Etage 02
+				case 3: // Etage 02
 					floorID = R.array.house03_floor02;
 					break;
-				case 3: // Etage 03
+				case 4: // Etage 03
 					floorID = R.array.house03_floor03;
-					break;
-				default: // Etage 00
-					floorID = R.array.house03_floor00;
+				default: // Etage -1
+					floorID = R.array.house03_floor_1;
 					break;
 				}
 				

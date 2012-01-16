@@ -1,3 +1,20 @@
+/*
+This file is part of UASJ-Maps.
+
+UASJ-Maps is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+UASJ-Maps is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with UASJ-Maps. If not, see http://www.gnu.org/licenses/
+*/
+
 package Zelos.UASJ_Maps;
 
 import java.io.*;
@@ -268,7 +285,7 @@ public class GUI extends Activity {
 				if (pf.compute_Path(roomInput,roomInput)) // "Route berechnen"; wobei hier nur der Knoten mit der ID i ermittelt werden soll; Location gefunden?
 					launch_state_3(); // Look up Location Output (B4)
 				else
-					Toast.makeText(getApplicationContext(), "Sorry, Location not found.", Toast.LENGTH_LONG).show(); // Errorausgabe
+					Toast.makeText(getApplicationContext(), "Sorry, room not available in this version.", Toast.LENGTH_LONG).show(); // Errorausgabe
 			}
 		});
 	}
@@ -367,7 +384,7 @@ public class GUI extends Activity {
 				if (pf.compute_Path(RS1.getString(), RS2.getString())) // Pfad berechnen; Weg gefunden?
 					launch_state_5(); // Routing Output (B6)
 				else
-					Toast.makeText(getApplicationContext(), "Sorry, no Route found.", Toast.LENGTH_LONG).show(); // Errorausgabe 
+					Toast.makeText(getApplicationContext(), "Sorry, no route found.", Toast.LENGTH_LONG).show(); // Errorausgabe 
 			}
 		});
 	}
