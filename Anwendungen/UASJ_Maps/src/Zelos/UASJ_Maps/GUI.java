@@ -58,30 +58,24 @@ public class GUI extends Activity {
 	private InputStream Dateiname = null;
 	
 	private OnTouchListener touch_single_multi = new OnTouchListener() {
-	    public boolean onTouch(View v, MotionEvent event) {if (output.isStateCampus()) { // Wird momentan der Campus dargestellt?
-    		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-    			mPosX = (int) event.getX();
-    			mPosY = (int) event.getY();
-    		} else {
-    			if (event.getAction() == MotionEvent.ACTION_UP && Math.abs(event.getX()-mPosX)<10 && Math.abs(event.getY()-mPosY)<10)
-    				if (mPosY < metrics.heightPixels/3) { // Ist möglicherweise Haus 05 getroffen?
-    					if (mPosX > metrics.widthPixels/6 && mPosX < metrics.widthPixels/2) // Wurde Haus 05 getroffen?
-    						System.out.println("Haus 05"); // Haus 05 wurde getroffen! 
-    				} else if (mPosY > (metrics.heightPixels*2)/3) { // Ist möglicherweise Haus 04 getroffen?
-    					if (mPosX > (metrics.widthPixels*2)/5 && mPosX < (metrics.widthPixels*3)/4) // Wurde Haus 04 getroffen?
-    						System.out.println("Haus 04"); // Haus 04 wurde getroffen!
-    				} else // ansonsten möglicherweise Haus 01/02/03 getroffen
-    					if (mPosX > metrics.widthPixels/3 && mPosX < (metrics.widthPixels*2)/3) // Wurde Haus 01/02/03 getroffen?
-    						System.out.println("Haus 01/02/03"); // Haus 01/02/03 wurde getroffen!
-    		}
-//    		DisplayMetrics metrics = new DisplayMetrics();
-//    		getWindowManager().getDefaultDisplay().getMetrics(metrics);
-//    		output.set_zoom(((float) (metrics.heightPixels))/((float) (850)), 0, metrics.heightPixels/2);
-//    		
-////			TODO mal mit thomas drüber reden, dass die nich im anschluss an eine verschiebnung ausgeführt wurde
-////			if (event.getAction() == MotionEvent.ACTION_UP)
-////				if (output.isStateCampus()) // Wird Campus angezeigt?
-////					output.performClickOnCampus((int) event.getX(), (int) event.getY()); // x und y Werte übergeben
+	    public boolean onTouch(View v, MotionEvent event) {
+	    	if (output.isStateCampus()) { // Wird momentan der Campus dargestellt?
+	    		if (event.getAction() == MotionEvent.ACTION_DOWN) {
+	    			mPosX = (int) event.getX();
+	    			mPosY = (int) event.getY();
+	    		} else {
+	    			if (event.getAction() == MotionEvent.ACTION_UP && Math.abs(event.getX()-mPosX)<10 && Math.abs(event.getY()-mPosY)<10)
+	    				if (mPosY < metrics.heightPixels/3) { // Ist möglicherweise Haus 05 getroffen?
+	    					if (mPosX > metrics.widthPixels/6 && mPosX < metrics.widthPixels/2) // Wurde Haus 05 getroffen?
+	    						performClickOnCampus(6); // Haus 05 wurde getroffen!
+	    				} else if (mPosY > (metrics.heightPixels*2)/3) { // Ist möglicherweise Haus 04 getroffen?
+	    					if (mPosX > (metrics.widthPixels*2)/5 && mPosX < (metrics.widthPixels*3)/4) // Wurde Haus 04 getroffen?
+	    						if (!performClickOnCampus(5)) // Haus 04 wurde getroffen!
+	    							Toast.makeText(getApplicationContext(), "Sorry, building 04 is not available in this version.", Toast.LENGTH_LONG).show(); // Haus 04 nicht verfügbar
+	    				} else // ansonsten möglicherweise Haus 01/02/03 getroffen
+	    					if (mPosX > metrics.widthPixels/3 && mPosX < (metrics.widthPixels*2)/3) // Wurde Haus 01/02/03 getroffen?
+	    						performClickOnCampus(4); // Haus 01/02/03 wurde getroffen!
+	    		}
     	} else { // es wird eine Ebene dargestellt
 		        float x_z0 = 0;
 		        float y_z0 = 0;
@@ -119,10 +113,12 @@ public class GUI extends Activity {
 		            if (mode == DRAG) {                //Modus "Verschieben" aktiv
 		                final float dx = x - mLastTouchX;   //Differenz dx berechnen
 		                final float dy = y - mLastTouchY; 	//Differenz dy berechnen
-	
-		                mPosX += dx;                 	//Differenz dx speichern
-		                mPosY += dy; 					//Differenz dy speichern
-	
+		                
+		                String housenumber = output.get_HouseNumber(true);
+		        		
+		       		    mPosX += dx;                 	//Differenz dx speichern
+			            mPosY += dy; 					//Differenz dy speichern       
+		            	
 		                mLastTouchX = x;            	//neuen x-Wert speichern
 		                mLastTouchY = y; 				//neuen y-Wert speichern
 	
@@ -137,7 +133,8 @@ public class GUI extends Activity {
 		                output.set_position(mPosX, mPosY);	//Positionswerte an GO weiterreichen
 		                output.invalidate();
 		            } else if (mode == ZOOMM) {			//Modus "Zoom"
-		                output.set_zoom(mScaleFactor, x_z, y_z); //Skalierungsfaktor und Mittelpunkte an GO weiterreichen
+		            	output.set_zoom(mScaleFactor, MidX, MidY); //Skalierungsfaktor und Mittelpunkte an GO weiterreichen
+		             //   output.set_zoom(mScaleFactor, x_z, y_z); //Skalierungsfaktor und Mittelpunkte an GO weiterreichen
 		            	System.out.println("zoom: "+ mScaleFactor +"  \n");
 		                output.invalidate();
 		            }
@@ -260,6 +257,36 @@ public class GUI extends Activity {
 			}
 	}
 	
+	private boolean performClickOnCampus(int HouseID) {
+		if (5 == HouseID) // Haus 4 wurde ausgewählt
+			return false; // Haus 4 nicht verfügbar		
+		output.set_floor(HouseID);
+		cl.setEnabled(true);
+		setInitZoom();
+		output.invalidate();	
+		switch(activityState) {
+		case 3:
+			findViewById(R.id.but_floor_minus3).setEnabled(true);
+			findViewById(R.id.but_floor_plus3).setEnabled(true);
+			findViewById(R.id.but_Campus3).setEnabled(true);
+			updateHouseFloor((TextView) findViewById(R.id.house_floor3));
+			break;
+		case 5:
+			findViewById(R.id.but_floor_minus5).setEnabled(true);
+			findViewById(R.id.but_floor_plus5).setEnabled(true);
+			findViewById(R.id.but_Campus5).setEnabled(true);
+			updateHouseFloor((TextView) findViewById(R.id.house_floor5));
+			break;
+		default:
+			findViewById(R.id.but_floor_minus7).setEnabled(true);
+			findViewById(R.id.but_floor_plus7).setEnabled(true);
+			findViewById(R.id.but_Campus7).setEnabled(true);
+			updateHouseFloor((TextView) findViewById(R.id.house_floor7));
+			break;
+		}
+		return true;
+	}
+	
 	/**
 	 * @param house_floor aktualisiert Ausgabetext von house_floor
 	 * @return true wenn Campus angezeigt wird, ansonsten false
@@ -272,6 +299,30 @@ public class GUI extends Activity {
 			house_floor.setText("Campus"); // es wird gerade der Campus angezeigt
 			return true; // Campus wird angezeigt
 		}
+	}
+	
+	private void setInitZoom(){
+		String housenumber = output.get_HouseNumber(true);
+		
+		if(housenumber == "05"){
+			mPosX = 150.f;    //x Wert für Verschiebung GraphicalOutput  
+			mPosY = 160.f;
+			MidX = 200;
+			MidY = 130;
+			mScaleFactor = 1.5f;
+			}	
+			else if(housenumber == "01/02/03"){
+			mPosX = -150.f;    //x Wert für Verschiebung GraphicalOutput  
+			mPosY = -115.f;
+			MidX = 500;
+			MidY = 420;
+			mScaleFactor = 0.5f;
+			}
+		
+			output.set_position(mPosX, mPosY);
+			output.set_midpoint(MidX, MidY);
+//				output.set_zoom(mScaleFactor, x_z, y_z);
+			output.set_zoom(mScaleFactor, MidX, MidY);
 	}
 	
 	private void launch_state_1() { // Main menu (B1)
@@ -333,16 +384,8 @@ public class GUI extends Activity {
 		output = new GraphicalOutput(getApplicationContext()); // neue Instanz verschaffen
 		output.set_state_location(pf.getRoute().get(0).get(0)); // Location anzeigen
 		output.setOnTouchListener(touch_single_multi);	
-		String housenumber = output.get_HouseNumber(true);	
-	
-		mPosX = 280.f;    //x Wert für Verschiebung GraphicalOutput  
-		mPosY = 170.f;
-		MidX = 150;
-		MidY = 130;
-		mScaleFactor = 1.5f;
-		output.set_position(mPosX, mPosY);
-		output.set_midpoint(MidX, MidY);
-		output.set_zoom(mScaleFactor, x_z, y_z);
+		
+		setInitZoom();
 		
 		setContentView(R.layout.state_3); // state_3.xml anzeigen
 		// Elemente der Anzeige holen, damit sie bearbeitet werden können:
@@ -388,10 +431,19 @@ public class GUI extends Activity {
 		showlocation.setOnClickListener(new OnClickListener() {
 			// OnClickListener für Show Location
 			public void onClick(View v) {
+				campus.setEnabled(true); // Campus enabeln
+				fplus.setEnabled(true); // F+ enabeln
+				fminus.setEnabled(true); // F- enabeln
+												
 				short merk = output.set_floor(3); // Anzeige auf aktuelle Position
 				if (1 == merk) // wenn 1 returned wird, oberstes Stockwerk erreicht
 					fplus.setEnabled(false); // F+ disabeln
 				else if (-1 == merk) // wenn -1 returned wird, unterstes Stockwerk erreicht
+					fminus.setEnabled(false); // F- disabeln
+				cl.setEnabled(true);
+				
+				setInitZoom();
+					
 				output.invalidate(); // redraw TODO initial zoom setzen
 				updateHouseFloor(house_floor); // Anzeige oben links aktualisieren
 			}
@@ -404,8 +456,11 @@ public class GUI extends Activity {
 				fplus.setEnabled(false); // F+ Button ausgrauen
 				campus.setEnabled(false); // Campus Button ausgrauen
 				output.set_floor(2); // Campus anzeigen
-				output.invalidate(); // redraw
 				updateHouseFloor(house_floor); // Anzeige oben links aktualisieren
+				output.set_zoom(((float) (metrics.heightPixels))/((float) (850)), 0, (metrics.heightPixels*2)/3);
+				cl.setEnabled(false);
+				output.set_position(250, -130);
+				output.invalidate(); // redraw
 			}
 		});
 
@@ -419,6 +474,7 @@ public class GUI extends Activity {
 		rl.addView(house_floor);
 
 		cl.onResume(); // enable Lagesensor
+		cl.setEnabled(true);
 	}
 
 	private void launch_state_4() { // Routing (B5)
@@ -441,7 +497,9 @@ public class GUI extends Activity {
 		activityState = 5;
 		output = new GraphicalOutput(getApplicationContext()); // neue Instanz verschaffen
 		output.set_state_routing(pf.getRoute()); // Route anzeigen
-		output.setOnTouchListener(touch_single_multi);	
+		output.setOnTouchListener(touch_single_multi);
+		
+		setInitZoom();
 		
 		setContentView(R.layout.state_5); // state_5.xml anzeigen
 		// Elemente der Anzeige holen, damit sie bearbeitet werden können:
@@ -495,6 +553,7 @@ public class GUI extends Activity {
 			// OnClickListener für Routing
 			public void onClick(View v) {
 				short merk = output.set_floor(3); // Anzeige auf aktuelle Route; Rückgabewert merken
+				setInitZoom();
 				output.invalidate(); // redraw TODO initial zoom setzen
 				if (!updateHouseFloor(house_floor)) { // Anzeige oben links aktualisieren; Wird Campus angezeigt?
 					// Buttons zunächst einblenden
@@ -506,6 +565,7 @@ public class GUI extends Activity {
 					else if (-1 == merk) // wenn -1 returned wird, unterstes Stockwerk erreicht
 						fminus.setEnabled(false); // F- disabeln
 					description.setText("Route:\n" + output.get_RouteDescription()); // Routenbeschreibung einfügen
+					cl.setEnabled(true);
 				}
 			}
 		});
@@ -516,10 +576,14 @@ public class GUI extends Activity {
 				fminus.setEnabled(false); // F- Button ausgrauen
 				fplus.setEnabled(false); // F+ Button ausgrauen
 				campus.setEnabled(false); // Campus Button ausgrauen
+							
 				output.set_floor(2); // Campus anzeigen
-				output.invalidate(); // redraw
 				updateHouseFloor(house_floor); // Anzeige oben links aktualisieren
 				description.setText("Route:\n" + output.get_RouteDescription()); // Routenbeschreibung einfügen
+				output.set_zoom(((float) (metrics.heightPixels))/((float) (850)), 0, (metrics.heightPixels*2)/3);
+				cl.setEnabled(false);
+				output.set_position(250, -130);
+				output.invalidate(); // redraw
 			}
 		});
 		
@@ -551,6 +615,7 @@ public class GUI extends Activity {
 		rl.addView(house_floor);
 
 		cl.onResume(); // enable Lagesensor
+		cl.setEnabled(true);
 	}
 
 	private void launch_state_6() { // Options (B2)
@@ -632,7 +697,7 @@ public class GUI extends Activity {
 		campus.setEnabled(false); // Campus Button ausgrauen
 		updateHouseFloor(house_floor); // Anzeige oben links aktualisieren
 		
-		output.set_zoom(((float) (metrics.heightPixels))/((float) (850)), 0, metrics.heightPixels/2);
+		output.set_zoom(((float) (metrics.heightPixels))/((float) (850)), 0, (metrics.heightPixels*2)/3);
 
 		// OnClickListener für die Buttons:
 		fminus.setOnClickListener(new OnClickListener() {
@@ -664,12 +729,14 @@ public class GUI extends Activity {
 				fplus.setEnabled(false); // F+ Button ausgrauen
 				campus.setEnabled(false); // Campus Button ausgrauen
 				output.set_floor(2); // Campus anzeigen
-				output.invalidate(); // redraw
 				updateHouseFloor(house_floor); // Anzeige oben links aktualisieren
 
 	    		DisplayMetrics metrics = new DisplayMetrics();
 	    		getWindowManager().getDefaultDisplay().getMetrics(metrics);
-	    		output.set_zoom(((float) (metrics.heightPixels))/((float) (850)), 0, metrics.heightPixels/2);
+				output.set_zoom(((float) (metrics.heightPixels))/((float) (850)), 0, (metrics.heightPixels*2)/3);
+				cl.setEnabled(false);
+				output.set_position(250, -130);
+				output.invalidate(); // redraw
 			}
 		});
 
@@ -718,8 +785,7 @@ public class GUI extends Activity {
 		}
 		
 		public void onResume() { // enable Lagesensor
-			if (enabled) // Ist CompassListener aktiviert?
-				mSensorManager.registerListener(this, Magnet_Sensor, SensorManager.SENSOR_DELAY_GAME);
+			mSensorManager.registerListener(this, Magnet_Sensor, SensorManager.SENSOR_DELAY_GAME);
 		}
 
 		public void onStop() { // disable Lagesensor
@@ -727,15 +793,17 @@ public class GUI extends Activity {
 		}
 
 		public void onSensorChanged(SensorEvent event) {
-			float f_new = -event.values[0]; // Sensor auslesen
-			if (Math.abs(f_new - f_old) > 3.5) { // Hysterese, damit Bild an der Schaltschwelle nicht hin- und herdreht
-				if ((f_new % 5) > 2.5) // Sensor auf 5% Schritte auf bzw. abrunden
-					f_new += 5;
-				f_old = f_new - (f_new % 5); // neuen Winkel merken
-				
-				if (output!=null) {
-					output.set_degree(f_old); // neuen Winkel an Ausgabe übergeben
-					output.invalidate(); // Bild neu zeichnen
+			if (enabled) {
+				float f_new = -event.values[0]; // Sensor auslesen
+				if (Math.abs(f_new - f_old) > 3.5) { // Hysterese, damit Bild an der Schaltschwelle nicht hin- und herdreht
+					if ((f_new % 5) > 2.5) // Sensor auf 5% Schritte auf bzw. abrunden
+						f_new += 5;
+					f_old = f_new - (f_new % 5); // neuen Winkel merken
+					
+					if (output!=null) {
+						output.set_degree(f_old); // neuen Winkel an Ausgabe übergeben
+						output.invalidate(); // Bild neu zeichnen
+					}
 				}
 			}
 		}
