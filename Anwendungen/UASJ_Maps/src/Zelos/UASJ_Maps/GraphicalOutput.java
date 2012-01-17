@@ -23,16 +23,13 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path.FillType;
 import android.graphics.Point;
-import android.hardware.Camera.Size;
 import android.view.View;
 
 public class GraphicalOutput extends View {
 	private Paint var_paint;
-	private ArrayList<ArrayList<Node>> var_way;		
+	private ArrayList<ArrayList<Node>> route;		
 	private Node position;
-	private boolean graphical_output_status = false;
 	private float degree = 0;
 	private int x_ref = 150;
 	private int y_ref = -160;
@@ -44,6 +41,8 @@ public class GraphicalOutput extends View {
 	private float y_zoom = 0.f;	//Zoompunkt y
 	private float mPosX = 250.f;	//Canvasposition x (für Singletouch)     
 	private float mPosY = -130.f;	//Canvasposition y (für Singletouch)
+	private float MidX = 150.f;     		//Mittelpunkt x (für rotate)
+	private float MidY = 130.f;      		//Mittelpunkt y (für rotate)
 	
 	//TODO: x_ref & y_ref entferen, dafür Canvas.Translate(x,y) nutzen
 	// Konstruktor
@@ -110,23 +109,27 @@ public class GraphicalOutput extends View {
 		zoom = z;
 		x_zoom = x;
 		y_zoom = y;
-	}//*************************************
+	}
 	
 	// Setzt Wert für Verschiebung
 	public void set_position(float x, float y) {
 		mPosX = x;
 		mPosY = y;
-	}//*************************************
-	
+	}
+	// Setzt Wert für Mittelpunkt Rotation
+		public void set_midpoint(float x, float y) {
+			MidX = x;
+			MidY = y;
+				}
 	/**
 	 * Gibt die Pfadbeschreibung zurück. Muss nach jedem Ebenenwechsel neu abgefragt werden.
 	 * @return
 	 */
-	public String get_PathDescription(){
+	public String get_RouteDescription(){
 		if(state==0){					// gibt nur gültigen String aus, wenn in Status Routenberechnung
 			String str;
-			if(var_way.get(check_counter).get(0).getFloorID() == current_floor){			// wenn die aktuelle Ebene des Pfades angezeigt wird
-				if((var_way.size()-(check_counter+1)) == 0){// wenn auf letzter Ebene{
+			if(route.get(check_counter).get(0).getFloorID() == current_floor){			// wenn die aktuelle Ebene des Pfades angezeigt wird
+				if((route.size()-(check_counter+1)) == 0){// wenn auf letzter Ebene{
 					return "Follow path to the final destination";
 				}
 				else{
@@ -158,7 +161,7 @@ public class GraphicalOutput extends View {
 		if(current == true)
 			floorID = current_floor;		// Ausgabe für freie Navigation
 		else
-			floorID = var_way.get(check_counter+1).get(0).getFloorID(); //Ausgabe für Textausgabe in Wegbeschreibung
+			floorID = route.get(check_counter+1).get(0).getFloorID(); //Ausgabe für Textausgabe in Wegbeschreibung
 		
 		if(((floorID) > 0) && ((floorID) <=7)) return "05";
 		else
@@ -176,7 +179,7 @@ public class GraphicalOutput extends View {
 		if(current == true)
 			floorID = current_floor;
 		else
-			floorID = var_way.get(check_counter+1).get(0).getFloorID();
+			floorID = route.get(check_counter+1).get(0).getFloorID();
 
 		switch(floorID){
 			case 1: return "-2";
@@ -218,7 +221,7 @@ public class GraphicalOutput extends View {
 			break;
 		case 3: // Anzeige wieder auf aktuelle Route/Position setzen
 			if(state==0) 
-				current_floor = (short) var_way.get(check_counter).get(0).getFloorID(); // Current_floor aktualisieren (auf nächste abzuschreitende Ebene)
+				current_floor = (short) route.get(check_counter).get(0).getFloorID(); // Current_floor aktualisieren (auf nächste abzuschreitende Ebene)
 			else if(state==1)
 				current_floor = (short) position.getFloorID(); // Current_floor aktualisieren (auf nächste abzuschreitende Ebene)
 			break;
@@ -247,18 +250,18 @@ public class GraphicalOutput extends View {
 	 */
 	public short set_check(){
 		check_counter ++;				// Checkcounter erhöhen
-		current_floor = (short) var_way.get(check_counter).get(0).getFloorID(); // Current_floor aktualisieren (auf nächste abzuschreitende Ebene)
-		return (short) (var_way.size()-(check_counter+1));		// restliche Ebendenanzahl zurückgeben 
+		current_floor = (short) route.get(check_counter).get(0).getFloorID(); // Current_floor aktualisieren (auf nächste abzuschreitende Ebene)
+		return (short) (route.size()-(check_counter+1));		// restliche Ebendenanzahl zurückgeben 
 	}
 	
 	/**
 	 * Setzt Status auf Routenanzeige
 	 * @param list : 2D-Array mit abzuschreitenden Ebenen und Knoten
 	 */
-	public void set_state_path(ArrayList<ArrayList<Node>> list){
+	public void set_state_routing(ArrayList<ArrayList<Node>> list){
 		state = 0;						// Status auf Routenanzeige setzen
 		check_counter = 0;				// Check_Counter resetten
-		var_way = list;					// Route speicher/aktualisieren
+		route = list;					// Route speicher/aktualisieren
 		current_floor = (short) list.get(0).get(0).getFloorID();		// erste Ebene ermitteln
 	}
 	
@@ -266,7 +269,7 @@ public class GraphicalOutput extends View {
 	 * Setzt Status auf Positionsanzeige
 	 * @param n : Knoten, der angezeigt werden soll
 	 */
-	public void set_state_position(Node n){
+	public void set_state_location(Node n){
 		state = 1;						// Status auf Positionsanzeige setzen
 		position = n;
 		current_floor = (short) position.getFloorID(); // EbenenID für Postion holen
@@ -275,7 +278,7 @@ public class GraphicalOutput extends View {
 	/**
 	 * Setzt Status auf Campusanzeige(freie Navigation)
 	 */
-	public void set_state_campus(){
+	public void set_state_free_navigation(){
 		state = 2;						// Status auf freie Navigation setzen
 		current_floor = 0;	// = CampusID
 	}
@@ -288,24 +291,24 @@ public class GraphicalOutput extends View {
 
 	// Um wieviel Grad rotiert das Canvas ?
 	private void draw_rotate(Canvas canvas) {
-		canvas.rotate(degree, 250 + x_ref, 350 + y_ref);
+		canvas.rotate(degree, MidX, MidY);
 		canvas.drawPaint(var_paint);
 	}
-
 	/**
 	 * onDraw wird von der Klasse View überschrieben,zeichnet im Endeffekt aus das Canvas
 	 */
 	protected void onDraw(Canvas canvas) {
-		canvas.scale( zoom, zoom, x_zoom, y_zoom);	//Skalierung
-		canvas.translate(mPosX, mPosY);   			//Verschiebung
 		
+		canvas.save();	
+		canvas.translate(mPosX, mPosY);   			//Verschiebung
+		draw_rotate(canvas);						//Rotation
+		canvas.scale( zoom, zoom, x_zoom, y_zoom);	//Skalierung
 		draw_background(canvas);
-		draw_rotate(canvas);
 		draw_floor(current_floor, canvas); // aktuelle Ebene zeichnen. Egal in welchem Zustand man ist.
 		switch(state){ // jenachdem in welchem Zustand und auf welcher Ebene man sich befindet wird nun noch eine Route oder eine Position in die Ebene gezeichnet
 		case 0:			// Wenn in Routenberechnung, dann soll Weg angezeigt werden, falls dieser in aktueller Ebene vorhanden
 			if(var_way_contains_floor(current_floor)!=-1){ // Wenn auf aktueller Ebene Route vorhanden
-				draw_route_or_position(canvas, var_way.get(var_way_contains_floor(current_floor))); // zeichen Route für folgenden 
+				draw_route_or_position(canvas, route.get(var_way_contains_floor(current_floor))); // zeichen Route für folgenden 
 			}
 //			draw_route(ArrayList<Node>);
 			break;
@@ -316,13 +319,9 @@ public class GraphicalOutput extends View {
 				draw_route_or_position(canvas, list);
 			}
 			break;
-		case 2:	// Wenn in Campusanzeige(keine Routenanzeige & keine Positionsanzeige
-			//TODO: überlegen, ob hier noch etwas rein soll. Theoretisch wäre ansonsten alles abgedeckt. brauch man den Case-Fall überhaupt?
-			break;
-		}		
-//		draw_house(canvas);
-//		draw_nodes(canvas);
-//		draw_p2p(canvas);
+		default: break;
+		}
+		canvas.restore();
 	}
 	
 	/**
@@ -332,8 +331,8 @@ public class GraphicalOutput extends View {
 	 * 			Index, im array, wenn enthalten
 	 */
 	private int var_way_contains_floor(int floorID){
-		for(int i =0; i < var_way.size();i++){
-			if(var_way.get(i).get(0).getFloorID() == floorID)
+		for(int i =0; i < route.size();i++){
+			if(route.get(i).get(0).getFloorID() == floorID)
 				return i;
 		}
 		return -1;
@@ -345,19 +344,30 @@ public class GraphicalOutput extends View {
 	 * @param list : Abzugehende Knoten auf einer Ebene (Bei Position nur ein Knoten)
 	 */
 	private void draw_route_or_position(Canvas c, ArrayList<Node> list){
+		int x_offset, y_offset;				// Offset errechnen, weil bestimmte Häuser auf Basis eines neues Koordinatensystems gezeichnet werden
+		if((list.get(0).getFloorID() >= 8) && (list.get(0).getFloorID() <= 13)){
+			x_offset = 210;
+			y_offset = 254;
+		}
+		else{
+			x_offset = 0;
+			y_offset = 0;
+		}
+			
 		var_paint.setColor(Color.GREEN); // Farbe setzen
-		c.drawLine(list.get(0).getX()+20, list.get(0).getY()+20, list.get(0).getX()-20, list.get(0).getY()-20, var_paint); // Startkreuz setzen(strich1)
-		c.drawLine(list.get(0).getX()+20, list.get(0).getY()-20, list.get(0).getX()-20, list.get(0).getY()+20, var_paint); // Startkreuz Strich2
+		var_paint.setStrokeWidth(2);
+		c.drawLine(list.get(0).getX()+10-x_offset, list.get(0).getY()+10-y_offset, list.get(0).getX()-10-x_offset, list.get(0).getY()-10-y_offset, var_paint); // Startkreuz setzen(strich1)
+		c.drawLine(list.get(0).getX()+10-x_offset, list.get(0).getY()-10-y_offset, list.get(0).getX()-10-x_offset, list.get(0).getY()+10-y_offset, var_paint); // Startkreuz Strich2
 		
 		var_paint.setColor(Color.BLUE); // Farbe setzen
 		for (int i = 0; i < list.size() - 1; i++) {
-			c.drawLine(list.get(i).getX(),list.get(i).getY(),				// Startpunkt der Linie
-					list.get(i + 1).getX(), list.get(i + 1).getY(), var_paint); // Zielpunkt der Linie
+			c.drawLine(list.get(i).getX()-x_offset,list.get(i).getY()-y_offset,				// Startpunkt der Linie
+					list.get(i + 1).getX()-x_offset, list.get(i + 1).getY()-y_offset, var_paint); // Zielpunkt der Linie
 		}
 		var_paint.setColor(Color.RED); // Farbe setzen
-		c.drawLine(list.get(list.size()-1).getX()+20, list.get(list.size()-1).getY()+20, list.get(list.size()-1).getX()-20, list.get(list.size()-1).getY()-20, var_paint); // Zielkreuz (strich1)
-		c.drawLine(list.get(list.size()-1).getX()+20, list.get(list.size()-1).getY()-20, list.get(list.size()-1).getX()-20, list.get(list.size()-1).getY()+20, var_paint); // Zielkreuz (strich2)
-		//TODO: eventuell noch Farben anpassen (Startkreuz z.b. andere Farbe als Zielkreuz usw)
+		c.drawLine(list.get(list.size()-1).getX()+10-x_offset, list.get(list.size()-1).getY()+10-y_offset, list.get(list.size()-1).getX()-10-x_offset, list.get(list.size()-1).getY()-10-y_offset, var_paint); // Zielkreuz (strich1)
+		c.drawLine(list.get(list.size()-1).getX()+10-x_offset, list.get(list.size()-1).getY()-10-y_offset, list.get(list.size()-1).getX()-10-x_offset, list.get(list.size()-1).getY()+10-y_offset, var_paint); // Zielkreuz (strich2)
+		//TODO: Farben & Größe anpassen (Startkreuz z.b. andere Farbe als Zielkreuz usw)
 	}
 	
 	/**
@@ -1037,6 +1047,609 @@ public class GraphicalOutput extends View {
 //		canvas.drawLine(383,54,403,54,var_paint);
 	}
 	
+	
+	private void haus123_blanko(Canvas canvas){
+		// Dicke der Umrandung = 2
+		var_paint.setStrokeWidth(2);		
+		var_paint.setStyle(Paint.Style.STROKE);
+		var_paint.setColor(Color.BLACK);
+		// Umrandung Haus 1
+		canvas.drawLine(0,0,0,372,var_paint);
+		canvas.drawLine(0,372,50,372,var_paint);
+		canvas.drawLine(134,372,134,12,var_paint);
+		canvas.drawLine(134,12,42,12,var_paint);
+		canvas.drawLine(42,76,42,0,var_paint);	
+		canvas.drawLine(0,0,42,0,var_paint);
+		canvas.drawLine(0,76,42,76,var_paint);
+		canvas.drawLine(66,372,134,372,var_paint);		
+		// Treppe Haus 1
+		// ----------------------------------------------
+		// ----------------------------------------------
+		// Eigene Farbe (Braun) definieren
+		int braun = Color.argb(127, 175, 112, 48);
+		// Farbe = Braun
+		var_paint.setColor(braun);
+		// Treppe Eingang von Haus 5 aus gesehen
+		for(int i=0;i<=76;i=i+4){
+			canvas.drawLine(0,i,42,i,var_paint);
+		}
+		// Haus 2
+		var_paint.setColor(Color.BLACK);
+		canvas.drawRect(410, 470, 134, 372, var_paint);
+		canvas.drawLine(50,372,134,470, var_paint);
+		canvas.drawLine(134,470,134,482, var_paint);
+		canvas.drawLine(134,482,392,549, var_paint);
+		canvas.drawLine(392,549,404,503, var_paint);
+		canvas.drawLine(404,503,338,485, var_paint);
+		canvas.drawLine(338,470,338,485, var_paint);
+		// Haus 3		
+		canvas.drawRect(410, 490, 1270, 334, var_paint);
+		canvas.drawRect(640, 334, 510, 39, var_paint);
+		var_paint.setStrokeWidth(0);		
+	}
+	
+	
+	// Haus 123 Etage 1
+	private void haus123_f1(Canvas canvas){
+		haus123_blanko(canvas);
+		var_paint.setStrokeWidth(0);
+		var_paint.setColor(Color.BLACK);
+		var_paint.setTextSize(8);			
+		// Haus 1
+		// Raum 41
+		canvas.drawRect(0,102,43,76,var_paint);
+		// Raum 10
+		canvas.drawRect(0,158,43,174,var_paint);
+		// Raum 09	
+		canvas.drawRect(0,174,43,206,var_paint);
+		canvas.drawText("09",10 ,185,var_paint);
+		// Raum 08
+		canvas.drawRect(0,206,43,240,var_paint);
+		canvas.drawText("08",10 ,217,var_paint);
+		// Raum 07
+		canvas.drawRect(0,240,43,272,var_paint);
+		canvas.drawText("07",10 ,251,var_paint);
+		// Raum 06/05 RudisResteRampe
+		canvas.drawRect(0,272,43,306,var_paint);
+		canvas.drawLine(0,289,43,289,var_paint);		
+		// Raum WC
+		canvas.drawRect(0,306,43,372,var_paint);
+		canvas.drawLine(0,339,43,339,var_paint);
+		// Raum 13	
+		canvas.drawRect(66,174,134,206,var_paint);
+		canvas.drawText("13",76 ,185,var_paint);
+		// Raum 14
+		canvas.drawRect(66,206,134,240,var_paint);
+		canvas.drawText("14",76 ,217,var_paint);
+		// Raum 15
+		canvas.drawRect(66,240,134,272,var_paint);
+		canvas.drawText("15",76 ,251,var_paint);		
+		// Raum 12
+		canvas.drawRect(66,174,134,77,var_paint);
+		canvas.drawText("12",76 ,120,var_paint);
+		// Raum 11
+		canvas.drawLine(66,77,42,77,var_paint);
+		canvas.drawText("11",76,30,var_paint);
+		// Raum 16
+		canvas.drawRect(66,272,134,372,var_paint);
+		canvas.drawText("16",76 ,350,var_paint);
+		// Haus 2		
+		// Raum 01
+		canvas.drawRect(134,432,176,372,var_paint);
+		canvas.drawText("1",144,420,var_paint);
+		// Raum 02
+		canvas.drawRect(176,432,208,372,var_paint);
+		canvas.drawText("2",186,420,var_paint);
+		// Freier Blick auf die Etage darunter
+		canvas.drawRect(227,432,294,372,var_paint);
+		// Raum 03
+		canvas.drawRect(314,432,348,372,var_paint);
+		canvas.drawText("3",324,420,var_paint);
+		// Raum 04
+		canvas.drawRect(348,432,380,372,var_paint);
+		canvas.drawText("4",358,420,var_paint);
+		// Raum 05
+		canvas.drawRect(380,432,410,372,var_paint);
+		canvas.drawText("5",390,420,var_paint);
+		// Cleaner
+		// -------------------------------
+		var_paint.setColor(Color.WHITE);
+		var_paint.setStrokeWidth(2);		
+		canvas.drawLine(134, 433, 134, 468, var_paint);
+		canvas.drawLine(581, 334, 603, 334, var_paint);
+		var_paint.setStrokeWidth(0);		
+		var_paint.setColor(Color.BLACK);
+		// Haus 3
+		// Raum 1
+		canvas.drawRect(410,334,444,392,var_paint);
+		canvas.drawText("1",420,360,var_paint);
+		// Raum 2		
+		canvas.drawRect(444,334,542,392,var_paint);
+		canvas.drawText("2",454,360,var_paint);		
+		// Raum 3		
+		canvas.drawRect(542,334,580,392,var_paint);		
+		canvas.drawText("3",552,360,var_paint);		
+		// Raum 9				
+		canvas.drawRect(604,334,704,392,var_paint);		
+		canvas.drawText("9",614,360,var_paint);
+		// Raum 10
+		canvas.drawRect(704,334,740,384,var_paint);		
+		canvas.drawText("10",714,360,var_paint);		
+		// Raum 11
+		canvas.drawRect(740,334,772,384,var_paint);		
+		canvas.drawText("11",750,360,var_paint);	
+		// Raum 12
+		canvas.drawRect(772,334,872,392,var_paint);		
+		canvas.drawText("12",782,360,var_paint);
+		// Raum 13
+		canvas.drawRect(872,334,970,392,var_paint);		
+		canvas.drawText("13",882,360,var_paint);
+		// Raum 14
+		canvas.drawRect(970,334,998,392,var_paint);		
+		canvas.drawText("14",980,360,var_paint);
+		// Raum 15
+		canvas.drawRect(998,334,1102,392,var_paint);		
+		canvas.drawText("15",1008,360,var_paint);		
+		// Raum 16
+		canvas.drawRect(1102,334,1134,392,var_paint);		
+		canvas.drawText("16",1112,360,var_paint);
+		// Raum 17
+		canvas.drawRect(1134,334,1170,392,var_paint);		
+		canvas.drawText("17",1144,360,var_paint);
+		// Raum 18
+		canvas.drawRect(1170,334,1204,392,var_paint);		
+		canvas.drawText("18",1180,360,var_paint);
+		// Raum 19
+		canvas.drawRect(1204,334,1238,392,var_paint);		
+		canvas.drawText("19",1214,360,var_paint);
+		// Raum 20
+		canvas.drawRect(1238,334,1270,392,var_paint);		
+		canvas.drawText("20",1248,360,var_paint);		
+		// Raum 21
+		canvas.drawRect(1238,424,1270,490,var_paint);		
+		canvas.drawText("21",1248,460,var_paint);		
+		// Raum 22
+		canvas.drawRect(1238,424,1204,490,var_paint);		
+		canvas.drawText("22",1214,460,var_paint);
+		// Raum 23/24/25/26 WC
+		canvas.drawRect(1204,414,1170,490,var_paint);		
+		// Raum 29
+		canvas.drawRect(1128,424,1028,490,var_paint);		
+		canvas.drawText("29",1038,460,var_paint);
+		// Raum 30
+		canvas.drawRect(1028,424,998,490,var_paint);		
+		canvas.drawText("30",1008,460,var_paint);
+		// Raum 31
+		canvas.drawRect(998,424,936,490,var_paint);		
+		canvas.drawText("31",946,460,var_paint);
+		// Raum 32/33/34 RudisResteRampe
+		canvas.drawRect(936,414,896,490,var_paint);
+		// Raum 35
+		canvas.drawRect(872,424,772,490,var_paint);		
+		canvas.drawText("35",782,460,var_paint);
+		// Raum 36
+		canvas.drawRect(772,424,740,490,var_paint);		
+		canvas.drawText("36",750,460,var_paint);
+		// Raum 37
+		canvas.drawRect(740,424,704,490,var_paint);		
+		canvas.drawText("37",714,460,var_paint);
+		// Raum 38
+		canvas.drawRect(704,424,682,490,var_paint);		
+		canvas.drawText("38",692,460,var_paint);
+		// Raum 39
+		canvas.drawRect(682,424,576,490,var_paint);		
+		canvas.drawText("39",586,460,var_paint);
+		// Raum 40
+		canvas.drawRect(576,424,544,490,var_paint);		
+		canvas.drawText("40",554,460,var_paint);
+		// Raum 41
+		canvas.drawRect(544,424,450,490,var_paint);		
+		canvas.drawText("41",460,460,var_paint);
+		// Sporthalle
+		// Raum 4/5/6/7/8
+		canvas.drawRect(580,334,510,264,var_paint);		
+		// Treppenhaus
+		canvas.drawRect(640,334,580,264,var_paint);		
+	
+	}	
+	
+	// Haus 123 Etage 2
+	private void haus123_f2(Canvas canvas){
+		haus123_blanko(canvas);		
+		var_paint.setStrokeWidth(0);
+		var_paint.setColor(Color.BLACK);
+		var_paint.setTextSize(8);			
+		// Obergeschoss 1
+		// Haus 1
+		// Raum 41
+		canvas.drawRect(0,102,43,76,var_paint);
+		// Raum 10
+		canvas.drawRect(0,158,43,174,var_paint);
+		// Raum 09	
+		canvas.drawRect(0,174,43,206,var_paint);
+		canvas.drawText("09",10 ,185,var_paint);
+		// Raum 08
+		canvas.drawRect(0,206,43,240,var_paint);
+		canvas.drawText("08",10 ,217,var_paint);
+		// Raum 07
+		canvas.drawRect(0,240,43,272,var_paint);
+		canvas.drawText("07",10 ,251,var_paint);
+		// Raum 06/05 RudisResteRampe
+		canvas.drawRect(0,272,43,306,var_paint);
+		canvas.drawLine(0,289,43,289,var_paint);		
+		// Raum WC
+		canvas.drawRect(0,306,43,372,var_paint);
+		canvas.drawLine(0,339,43,339,var_paint);
+		// Raum 12
+		canvas.drawRect(66,223,134,372,var_paint);
+		canvas.drawText("12",76,300,var_paint);		
+		// Raum 13
+		canvas.drawRect(66,223,134,77,var_paint);
+		canvas.drawText("13",76,150,var_paint);
+		// Haus 2
+		// Raum 01
+		canvas.drawRect(134,432,238,372,var_paint);
+		canvas.drawText("1",180,400,var_paint);
+		// Raum 02
+		canvas.drawRect(238,432,270,372,var_paint);
+		canvas.drawText("2",248,400,var_paint);
+		// Raum 3
+		canvas.drawRect(270,406,310,372,var_paint);
+		canvas.drawText("3",290,389,var_paint);
+		// Raum 4
+		canvas.drawRect(270,432,310,406,var_paint);
+		canvas.drawText("4",290,419,var_paint);		
+		// Raum 5
+		canvas.drawRect(310,432,410,372,var_paint);
+		canvas.drawText("5",360,400,var_paint);
+		// Haus 3
+		// Raum 1
+		canvas.drawRect(410,334,478,392,var_paint);
+		canvas.drawText("1",420,360,var_paint);
+		// Raum 2
+		canvas.drawRect(478,334,580,392,var_paint);
+		canvas.drawText("2",488,360,var_paint);
+		// Raum 8
+		canvas.drawRect(604,334,638,392,var_paint);
+		canvas.drawText("8",614,360,var_paint);
+		// Raum 9
+		canvas.drawRect(638,334,672,392,var_paint);
+		canvas.drawText("9",648,360,var_paint);
+		// Raum 10
+		canvas.drawRect(672,334,704,392,var_paint);
+		canvas.drawText("10",682,360,var_paint);
+		// Raum 11
+		canvas.drawRect(704,334,772,392,var_paint);
+		canvas.drawText("11",714,360,var_paint);
+		// Raum 12
+		canvas.drawRect(772,334,804,392,var_paint);
+		canvas.drawText("12",782,360,var_paint);
+		// Raum 13
+		canvas.drawRect(804,334,872,392,var_paint);
+		canvas.drawText("13",814,360,var_paint);
+		// Raum 14
+		canvas.drawRect(872,334,906,392,var_paint);
+		canvas.drawText("14",882,360,var_paint);
+		// Raum 15
+		canvas.drawRect(906,334,970,392,var_paint);
+		canvas.drawText("15",916,360,var_paint);
+		// Raum 16
+		canvas.drawRect(970,334,998,392,var_paint);
+		canvas.drawText("16",980,360,var_paint);
+		// Raum 17
+		canvas.drawRect(998,334,1134,392,var_paint);
+		canvas.drawText("17",1008,360,var_paint);
+		// Raum 18
+		canvas.drawRect(1134,334,1170,392,var_paint);		
+		canvas.drawText("18",1144,360,var_paint);
+		// Raum 19
+		canvas.drawRect(1170,334,1204,392,var_paint);		
+		canvas.drawText("19",1180,360,var_paint);
+		// Raum 20
+		canvas.drawRect(1204,334,1238,392,var_paint);		
+		canvas.drawText("20",1214,360,var_paint);
+		// Raum 21
+		canvas.drawRect(1238,334,1270,392,var_paint);		
+		canvas.drawText("21",1248,360,var_paint);
+		// Raum 22
+		canvas.drawRect(1238,424,1270,490,var_paint);		
+		canvas.drawText("22",1248,460,var_paint);		
+		// Raum 23
+		canvas.drawRect(1238,424,1204,490,var_paint);		
+		canvas.drawText("23",1214,460,var_paint);
+		// Raum 24/25/26/27 WC
+		canvas.drawRect(1204,414,1170,490,var_paint);		
+		// Raum 30
+		canvas.drawRect(1128,424,1064,490,var_paint);		
+		canvas.drawText("30",1074,460,var_paint);
+		// Raum 31
+		canvas.drawRect(1064,424,1028,490,var_paint);		
+		canvas.drawText("31",1038,460,var_paint);
+		// Raum 32
+		canvas.drawRect(1028,424,998,490,var_paint);		
+		canvas.drawText("32",1008,460,var_paint);
+		// Raum 33
+		canvas.drawRect(998,424,936,490,var_paint);		
+		canvas.drawText("33",946,460,var_paint);
+		// Raum 34/35/36 RudisResteRampe
+		canvas.drawRect(936,414,896,490,var_paint);
+		// Raum 37
+		canvas.drawRect(872,424,772,490,var_paint);		
+		canvas.drawText("37",782,460,var_paint);
+		// Raum 38
+		canvas.drawRect(772,424,740,490,var_paint);		
+		canvas.drawText("38",750,460,var_paint);	
+		// Raum 39
+		canvas.drawRect(740,424,704,490,var_paint);		
+		canvas.drawText("39",714,460,var_paint);		
+		// Raum 40
+		canvas.drawRect(704,424,672,490,var_paint);		
+		canvas.drawText("40",692,460,var_paint);
+		// Raum 41
+		canvas.drawRect(638,424,672,490,var_paint);
+		canvas.drawText("41",648,460,var_paint);
+		// Raum 42
+		canvas.drawRect(604,424,638,490,var_paint);
+		canvas.drawText("42",614,460,var_paint);
+		// Raum 43
+		canvas.drawRect(604,424,574,490,var_paint);		
+		canvas.drawText("43",584,460,var_paint);
+		// Raum 44
+		canvas.drawRect(574,424,540,490,var_paint);		
+		canvas.drawText("44",550,460,var_paint);			
+		// Raum 45
+		canvas.drawRect(540,424,510,490,var_paint);		
+		canvas.drawText("45",520,460,var_paint);	
+		// Raum 43
+		canvas.drawRect(510,424,478,490,var_paint);		
+		canvas.drawText("46",488,460,var_paint);		
+		// Raum 47
+		canvas.drawRect(478,424,450,490,var_paint);		
+		canvas.drawText("47",460,460,var_paint);	
+		// Sporthalle
+		// Raum 3/4/5/6/7/48
+		canvas.drawRect(580,334,510,264,var_paint);		
+		// Treppenhaus
+		canvas.drawRect(640,334,580,264,var_paint);		
+		// Cleaner
+		// -------------------------------
+		var_paint.setColor(Color.WHITE);
+		var_paint.setStrokeWidth(2);		
+		canvas.drawLine(134, 433, 134, 468, var_paint);
+		canvas.drawLine(581, 334, 603, 334, var_paint);
+		var_paint.setStrokeWidth(0);		
+		var_paint.setColor(Color.BLACK);	
+	
+	}	
+	
+	// Haus 123 Etage 3
+	private void haus123_f3(Canvas canvas){
+		haus123_blanko(canvas);		
+		var_paint.setStrokeWidth(0);
+		var_paint.setColor(Color.BLACK);
+		var_paint.setTextSize(8);			
+		// Obergeschoss 1
+		// Haus 1
+		// Raum 41
+		canvas.drawRect(0,102,43,76,var_paint);
+		// Raum 10
+		canvas.drawRect(0,158,43,174,var_paint);
+		// Raum 09	
+		canvas.drawRect(0,174,43,206,var_paint);
+		canvas.drawText("09",10 ,185,var_paint);
+		// Raum 08
+		canvas.drawRect(0,206,43,240,var_paint);
+		canvas.drawText("08",10 ,217,var_paint);
+		// Raum 07
+		canvas.drawRect(0,240,43,272,var_paint);
+		canvas.drawText("07",10 ,251,var_paint);
+		// Raum 06/05 RudisResteRampe
+		canvas.drawRect(0,272,43,306,var_paint);
+		canvas.drawLine(0,289,43,289,var_paint);		
+		// Raum WC
+		canvas.drawRect(0,306,43,372,var_paint);
+		canvas.drawLine(0,339,43,339,var_paint);
+		// Raum 14
+		canvas.drawRect(66,272,134,372,var_paint);
+		canvas.drawText("14",76 ,350,var_paint);
+		// Raum 13
+		canvas.drawRect(66,272,134,158,var_paint);
+		canvas.drawText("13",76 ,170,var_paint);
+		// Raum 12
+		canvas.drawRect(66,77,134,158,var_paint);
+		canvas.drawText("12",77 ,120,var_paint);
+		// Raum 11
+		canvas.drawLine(66,77,42,77,var_paint);
+		canvas.drawText("11",76,30,var_paint);	
+		// Haus 2
+		// Raum 01
+		canvas.drawRect(134,432,238,372,var_paint);
+		canvas.drawText("1",180,400,var_paint);
+		// Raum 02
+		canvas.drawRect(238,432,270,372,var_paint);
+		canvas.drawText("2",248,400,var_paint);
+		// Raum 03
+		canvas.drawRect(270,432,374,372,var_paint);
+		canvas.drawText("3",320,400,var_paint);
+		// Raum 04
+		canvas.drawRect(374,432,410,372,var_paint);
+		canvas.drawText("4",395,400,var_paint);		
+		// Cleaner
+		// -------------------------------
+		var_paint.setColor(Color.WHITE);
+		var_paint.setStrokeWidth(2);		
+		canvas.drawLine(134, 433, 134, 468, var_paint);
+		canvas.drawLine(581, 334, 603, 334, var_paint);
+		var_paint.setStrokeWidth(0);		
+		var_paint.setColor(Color.BLACK);
+		// Haus 3
+		// Raum 1
+		canvas.drawRect(410,334,518,420,var_paint);
+		canvas.drawText("HS - 1",460,360,var_paint);
+		// Raum 2
+		canvas.drawRect(518,334,564,392,var_paint);
+		canvas.drawText("2",530,360,var_paint);
+		// Raum 10		
+		canvas.drawRect(603,334,804,392,var_paint);
+		canvas.drawText("10",704,360,var_paint);
+		// Raum 11
+		canvas.drawRect(804,334,838,392,var_paint);
+		canvas.drawText("11",816,360,var_paint);
+		// Raum 12
+		canvas.drawRect(838,334,872,392,var_paint);
+		canvas.drawText("12",856,360,var_paint);
+		// Raum 13
+		canvas.drawRect(872,334,904,392,var_paint);
+		canvas.drawText("13",888,360,var_paint);
+		// Raum 14
+		canvas.drawRect(904,334,936,392,var_paint);
+		canvas.drawText("14",920,360,var_paint);
+		// Raum 15
+		canvas.drawRect(936,334,970,392,var_paint);
+		canvas.drawText("15",950,360,var_paint);
+		// Raum 16
+		canvas.drawRect(970,334,998,392,var_paint);
+		canvas.drawText("16",980,360,var_paint);
+		// Raum 17
+		canvas.drawRect(998,334,1030,392,var_paint);
+		canvas.drawText("17",1014,360,var_paint);
+		// Raum 18
+		canvas.drawRect(1030,334,1062,392,var_paint);
+		canvas.drawText("18",1045,360,var_paint);
+		// Raum 19
+		canvas.drawRect(1062,334,1094,392,var_paint);
+		canvas.drawText("19",1076,360,var_paint);		
+		// Raum 20
+		canvas.drawRect(1094,334,1134,392,var_paint);
+		canvas.drawText("20",1114,360,var_paint);		
+		// Raum 21
+		canvas.drawRect(1134,334,1170,392,var_paint);		
+		canvas.drawText("21",1144,360,var_paint);
+		// Raum 22
+		canvas.drawRect(1170,334,1204,392,var_paint);		
+		canvas.drawText("22",1180,360,var_paint);
+		// Raum 23
+		canvas.drawRect(1204,334,1238,392,var_paint);		
+		canvas.drawText("23",1214,360,var_paint);
+		// Raum 24
+		canvas.drawRect(1238,334,1270,392,var_paint);		
+		canvas.drawText("24",1248,360,var_paint);
+		// Raum 25
+		canvas.drawRect(1238,424,1270,490,var_paint);		
+		canvas.drawText("25",1248,460,var_paint);		
+		// Raum 26
+		canvas.drawRect(1238,424,1204,490,var_paint);		
+		canvas.drawText("26",1214,460,var_paint);
+		// Raum 27/28/29/30 WC
+		canvas.drawRect(1204,414,1170,490,var_paint);	
+		// Raum 33
+		canvas.drawRect(1128,424,970,490,var_paint);		
+		canvas.drawText("33",1074,460,var_paint);		
+		// Raum 34
+		canvas.drawRect(936,424,970,490,var_paint);
+		canvas.drawText("34",950,460,var_paint);
+		// Raum 35/36/37 RudisResteRampe
+		canvas.drawRect(936,424,896,490,var_paint);
+		// Raum 38
+		canvas.drawRect(838,424,872,490,var_paint);
+		canvas.drawText("38",855,460,var_paint);		
+		// Raum 39
+		canvas.drawRect(804,424,838,490,var_paint);
+		canvas.drawText("39",821,460,var_paint);
+		// Raum 40
+		canvas.drawRect(772,424,838,490,var_paint);		
+		canvas.drawText("40",780,460,var_paint);	
+		// Raum 41
+		canvas.drawRect(772,424,740,490,var_paint);		
+		canvas.drawText("41",750,460,var_paint);	
+		// Raum 42
+		canvas.drawRect(740,424,540,490,var_paint);		
+		canvas.drawText("42",640,460,var_paint);			
+		// Sporthalle
+		// Raum 3/4/5/6/7/48
+		canvas.drawRect(580,334,510,264,var_paint);		
+		// Treppenhaus
+		canvas.drawRect(640,334,580,264,var_paint);		
+			
+	}
+	
+	// Haus 123 Etage 0	
+	private void haus123_f0(Canvas canvas){
+		haus123_blanko(canvas);		
+		var_paint.setStrokeWidth(0);
+		var_paint.setColor(Color.BLACK);
+		var_paint.setTextSize(8);			
+		// Haus 1
+		// Raum 41
+		canvas.drawRect(0,102,43,76,var_paint);
+		// Raum 08
+		canvas.drawRect(0,158,43,174,var_paint);
+		canvas.drawText("8",10,170,var_paint);		
+		// Raum 09
+		canvas.drawRect(0,158,43,102,var_paint);
+		canvas.drawText("9",10,125,var_paint);		
+		// Raum 07
+		canvas.drawRect(0,158,43,240,var_paint);
+		canvas.drawText("7 / 2",10 ,217,var_paint);		
+		// Raum 07
+		canvas.drawRect(0,240,43,272,var_paint);
+		canvas.drawText("7 / 1",10 ,251,var_paint);
+		// Raum 06/05 RudisResteRampe
+		canvas.drawRect(0,272,43,306,var_paint);
+		canvas.drawLine(0,289,43,289,var_paint);		
+		// Raum WC
+		canvas.drawRect(0,306,43,372,var_paint);
+		canvas.drawLine(0,339,43,339,var_paint);
+		// Raum 19
+		canvas.drawLine(66,339,134,339,var_paint);
+		canvas.drawText("19",76,350,var_paint);
+		// Raum 18/2
+		canvas.drawRect(66,306,134,372,var_paint);
+		canvas.drawText("18 / 2",76,330,var_paint);
+		// Raum 18/1
+		canvas.drawRect(66,306,134,272,var_paint);
+		canvas.drawText("18 / 1",76,285,var_paint);
+		// Raum 17
+		canvas.drawRect(66,240,134,272,var_paint);
+		canvas.drawText("17",76,251,var_paint);		
+		// Raum 16
+		canvas.drawRect(66,206,134,240,var_paint);
+		canvas.drawText("16",76,217,var_paint);
+ 		// Raum 15	
+		canvas.drawRect(66,174,134,206,var_paint);
+		canvas.drawText("15",76,185,var_paint);
+ 		// Raum 14	
+		canvas.drawRect(66,174,134,142,var_paint);
+		canvas.drawText("14",76,152,var_paint);
+ 		// Raum 13	
+		canvas.drawRect(66,142,134,102,var_paint);
+		canvas.drawText("13",76,120,var_paint);
+ 		// Raum 12	
+		canvas.drawRect(66,102,134,77,var_paint);
+		canvas.drawText("12",76,90,var_paint);
+		// Raum 11
+		canvas.drawLine(66,77,43,77,var_paint);
+		canvas.drawText("11",86,30,var_paint);
+		// Raum 10	
+		canvas.drawLine(66,77,66,12,var_paint);
+		canvas.drawText("10",45,30,var_paint);
+		// Haus 2
+		// Cleaner
+		// -------------------------------
+		var_paint.setColor(Color.WHITE);
+		var_paint.setStrokeWidth(2);		
+		canvas.drawLine(134, 433, 134, 468, var_paint);
+		canvas.drawLine(581, 334, 603, 334, var_paint);
+		canvas.drawLine(202, 470, 310, 470, var_paint);		
+		var_paint.setStrokeWidth(0);		
+		var_paint.setColor(Color.BLACK);
+		var_paint.setStrokeWidth(2);	
+		canvas.drawRect(208,372,312,322,var_paint);		
+		var_paint.setStrokeWidth(0);
+		canvas.drawRect(410,470,346,438,var_paint);		
+		// Haus 3
+	}
+	
 	private void draw_floor_05(Canvas canvas){ 		// Zeichnet 5.02
 
 			haus5_blanko(canvas);
@@ -1179,6 +1792,9 @@ public class GraphicalOutput extends View {
 			canvas.drawRect(54,106,30,126,var_paint);
 			// Raum 48
 			canvas.drawText("48",404,40,var_paint);		
+			
+			
+			
 			
 			// Treppen
 			// ----------------------------------------------
@@ -1591,19 +2207,23 @@ public class GraphicalOutput extends View {
 	}
 	
 	private void draw_floor_09(Canvas c){ 		// Zeichnet 1.00
-		c.drawText("Haus:1,2,3 Ebene: 00", 300, 200, new Paint());
+		//c.drawText("Haus:1,2,3 Ebene: 00", 300, 200, new Paint());
+		haus123_f0(c);		
 	}
 	
 	private void draw_floor_10(Canvas c){ 		// Zeichnet 1.01
-		c.drawText("Haus:1,2,3 Ebene: 01", 300, 200, new Paint());
+		//c.drawText("Haus:1,2,3 Ebene: 01", 300, 200, new Paint());
+		haus123_f1(c);
 	}
 	
 	private void draw_floor_11(Canvas c){ 		// Zeichnet 1.02
-		c.drawText("Haus:1,2,3 Ebene: 02", 300, 200, new Paint());
+		//c.drawText("Haus:1,2,3 Ebene: 02", 300, 200, new Paint());
+		haus123_f2(c);		
 	}
 	
 	private void draw_floor_12(Canvas c){ 		// Zeichnet 1.03
-		c.drawText("Haus:1,2,3 Ebene: 03", 300, 200, new Paint());
+		//c.drawText("Haus:1,2,3 Ebene: 03", 300, 200, new Paint());
+		haus123_f3(c);		
 	}
 	
 	private void draw_floor_13(Canvas c){ 		// Zeichnet 1.04

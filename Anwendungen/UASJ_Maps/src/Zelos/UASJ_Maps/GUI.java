@@ -25,6 +25,7 @@ import android.content.res.AssetManager;
 import android.hardware.*;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.*;
 import android.view.View.*;
 import android.widget.*;
@@ -34,6 +35,7 @@ public class GUI extends Activity {
 	
 	private GraphicalOutput output; // beinhaltet grafische Darstellung
 	private DataBase myDB;			// Datenbank
+	private DisplayMetrics metrics; // beinhaltet Displayabmessungen
 	private CompassListener cl; // beinhaltet Lagesensor
 	private boolean DBcreated = false; // Wurde Datenbank erstellt?
 	private int activityState = 0; // Nummer des momentan/zu letzt aktiven Status; siehe State-übersicht
@@ -41,7 +43,9 @@ public class GUI extends Activity {
 	private float mPosX = 250.f;    //x Wert für Verschiebung GraphicalOutput  
 	private float mPosY = -130.f;   //y Wert für Verschiebung GraphicalOutput        
 	private float mLastTouchX;     	//x Koordinate bei TouchEvent
-	private float mLastTouchY;      //y Koordinate bei TouchEvent     
+	private float mLastTouchY;      //y Koordinate bei TouchEvent 
+	private float MidX = 150.f;     		//Mittelpunkt x (für rotate)
+	private float MidY = 130.f;      		//Mittelpunkt y (für rotate)
 	private ScaleGestureDetector mScaleDetector; //Skalierungsdetektor
 	private float mScaleFactor = 1.f;	//Skalierungsfaktor Canvas         
 	private float x_z = 420.f;			//x Koordinate um die gezoomt wird
@@ -54,69 +58,100 @@ public class GUI extends Activity {
 	private InputStream Dateiname = null;
 	
 	private OnTouchListener touch_single_multi = new OnTouchListener() {
-	    public boolean onTouch(View v, MotionEvent event) {
-	        float x_z0 = 0;
-	        float y_z0 = 0;
-	        float x_z1 = 0;
-	        float y_z1 = 0;
-	        mScaleDetector.onTouchEvent(event); //Skalierungsdetektor überwacht alle Events
-//				TODO mal mit thomas drüber reden, dass die nich im anschluss an eine verschiebnung ausgeführt wurde
-//				if (event.getAction() == MotionEvent.ACTION_UP)
-//					if (output.isStateCampus()) // Wird Campus angezeigt?
-//						output.performClickOnCampus((int) event.getX(), (int) event.getY()); // x und y Werte übergeben
-	        final int action = event.getAction();
-	        switch (action & MotionEvent.ACTION_MASK) {
-	        case MotionEvent.ACTION_DOWN: {    	//Ein Finger auf Touchscreen
-	            final float x = event.getX();   //x-Koordinate holen
-	            final float y = event.getY(); 	//y-Koordinate holen
-
-	            mLastTouchX = x;             	//x-Koordinate speichern
-	            mLastTouchY = y;             	//y-Koordinate speichern
-	            mode = DRAG;					//Modus "Verschieben" setzen
-	            break;
-	        }
-	        case MotionEvent.ACTION_POINTER_DOWN:	//zwei Finger auf Touchscreen
-	            x_z0 = event.getX(0);
-	            y_z0 = event.getY(0);
-	            x_z1 = event.getX(1);
-	            y_z1 = event.getY(1);
-	            x_z = (x_z1+x_z0)/2;				//x Mittelpunkt berechnen
-	            y_z = (y_z1+y_z0)/2;				//y Mittelpunkt berechnen
-	            mode = ZOOMM;						// Modus "Zoom" setzen
-	            break;
-	        case MotionEvent.ACTION_MOVE: {
-	            final float x = event.getX();       //aktuelle x Koordinate
-	            final float y = event.getY();       //aktuelle y Koordinate
-
-	            if (mode == DRAG) {                //Modus "Verschieben" aktiv
-	                final float dx = x - mLastTouchX;   //Differenz dx berechnen
-	                final float dy = y - mLastTouchY; 	//Differenz dy berechnen
-
-	                mPosX += dx;                 	//Differenz dx speichern
-	                mPosY += dy; 					//Differenz dy speichern
-
-	                mLastTouchX = x;            	//neuen x-Wert speichern
-	                mLastTouchY = y; 				//neuen y-Wert speichern
-
-	                //	go.moveX(dx);
-	                //	go.moveY(dy);
-
-	                output.set_position(mPosX, mPosY);	//Positionswerte an GO weiterreichen
-	                output.invalidate();
-	            } else if (mode == ZOOMM) {			//Modus "Zoom"
-	                output.set_zoom(mScaleFactor, x_z, y_z); //Skalierungsfaktor und Mittelpunkte an GO weiterreichen
-	                output.invalidate();
-	            }
-	            break;
-	        }
-	        case MotionEvent.ACTION_POINTER_UP: {	//zweiter Finger verlässt Touchscreen
-	            mode = NONE;						//kein Modus mehr aktiv --> verhindert springen
-	            x_z = 420.f;						//Mittelpunkt x auf Touchscreenmitte setzen
-	            y_z = 130.f;						//Mittelpunkt y auf Touchscreenmitte setzen
-	            break;
-	        }
-	        }
-	        return true;
+	    public boolean onTouch(View v, MotionEvent event) {if (output.isStateCampus()) { // Wird momentan der Campus dargestellt?
+    		if (event.getAction() == MotionEvent.ACTION_DOWN) {
+    			mPosX = (int) event.getX();
+    			mPosY = (int) event.getY();
+    		} else {
+    			if (event.getAction() == MotionEvent.ACTION_UP && Math.abs(event.getX()-mPosX)<10 && Math.abs(event.getY()-mPosY)<10)
+    				if (mPosY < metrics.heightPixels/3) { // Ist möglicherweise Haus 05 getroffen?
+    					if (mPosX > metrics.widthPixels/6 && mPosX < metrics.widthPixels/2) // Wurde Haus 05 getroffen?
+    						System.out.println("Haus 05"); // Haus 05 wurde getroffen! 
+    				} else if (mPosY > (metrics.heightPixels*2)/3) { // Ist möglicherweise Haus 04 getroffen?
+    					if (mPosX > (metrics.widthPixels*2)/5 && mPosX < (metrics.widthPixels*3)/4) // Wurde Haus 04 getroffen?
+    						System.out.println("Haus 04"); // Haus 04 wurde getroffen!
+    				} else // ansonsten möglicherweise Haus 01/02/03 getroffen
+    					if (mPosX > metrics.widthPixels/3 && mPosX < (metrics.widthPixels*2)/3) // Wurde Haus 01/02/03 getroffen?
+    						System.out.println("Haus 01/02/03"); // Haus 01/02/03 wurde getroffen!
+    		}
+//    		DisplayMetrics metrics = new DisplayMetrics();
+//    		getWindowManager().getDefaultDisplay().getMetrics(metrics);
+//    		output.set_zoom(((float) (metrics.heightPixels))/((float) (850)), 0, metrics.heightPixels/2);
+//    		
+////			TODO mal mit thomas drüber reden, dass die nich im anschluss an eine verschiebnung ausgeführt wurde
+////			if (event.getAction() == MotionEvent.ACTION_UP)
+////				if (output.isStateCampus()) // Wird Campus angezeigt?
+////					output.performClickOnCampus((int) event.getX(), (int) event.getY()); // x und y Werte übergeben
+    	} else { // es wird eine Ebene dargestellt
+		        float x_z0 = 0;
+		        float y_z0 = 0;
+		        float x_z1 = 0;
+		        float y_z1 = 0;
+		        mScaleDetector.onTouchEvent(event); //Skalierungsdetektor überwacht alle Events
+	//				TODO mal mit thomas drüber reden, dass die nich im anschluss an eine verschiebnung ausgeführt wurde
+	//				if (event.getAction() == MotionEvent.ACTION_UP)
+	//					if (output.isStateCampus()) // Wird Campus angezeigt?
+	//						output.performClickOnCampus((int) event.getX(), (int) event.getY()); // x und y Werte übergeben
+		        final int action = event.getAction();
+		        switch (action & MotionEvent.ACTION_MASK) {
+		        case MotionEvent.ACTION_DOWN: {    	//Ein Finger auf Touchscreen
+		            final float x = event.getX();   //x-Koordinate holen
+		            final float y = event.getY(); 	//y-Koordinate holen
+	
+		            mLastTouchX = x;             	//x-Koordinate speichern
+		            mLastTouchY = y;             	//y-Koordinate speichern
+		            mode = DRAG;					//Modus "Verschieben" setzen
+		            break;
+		        }
+		        case MotionEvent.ACTION_POINTER_DOWN:	//zwei Finger auf Touchscreen
+		            x_z0 = event.getX(0);
+		            y_z0 = event.getY(0);
+		            x_z1 = event.getX(1);
+		            y_z1 = event.getY(1);
+	//	            x_z = ((x_z1+x_z0)/2)-mPosX;				//x Mittelpunkt berechnen
+	//	            y_z = ((y_z1+y_z0)/2)-mPosY;				//y Mittelpunkt berechnen
+		            mode = ZOOMM;						// Modus "Zoom" setzen
+		            break;
+		        case MotionEvent.ACTION_MOVE: {
+		            final float x = event.getX();       //aktuelle x Koordinate
+		            final float y = event.getY();       //aktuelle y Koordinate
+	
+		            if (mode == DRAG) {                //Modus "Verschieben" aktiv
+		                final float dx = x - mLastTouchX;   //Differenz dx berechnen
+		                final float dy = y - mLastTouchY; 	//Differenz dy berechnen
+	
+		                mPosX += dx;                 	//Differenz dx speichern
+		                mPosY += dy; 					//Differenz dy speichern
+	
+		                mLastTouchX = x;            	//neuen x-Wert speichern
+		                mLastTouchY = y; 				//neuen y-Wert speichern
+	
+		            //	MidX -= dx;
+					//	MidY -= dy;
+		                
+		                //	go.moveX(dx);
+		                //	go.moveY(dy);
+		                System.out.println("posx: "+ mPosX +" posy:"+ mPosY +" \n");
+					
+						output.set_midpoint(MidX, MidY);
+		                output.set_position(mPosX, mPosY);	//Positionswerte an GO weiterreichen
+		                output.invalidate();
+		            } else if (mode == ZOOMM) {			//Modus "Zoom"
+		                output.set_zoom(mScaleFactor, x_z, y_z); //Skalierungsfaktor und Mittelpunkte an GO weiterreichen
+		            	System.out.println("zoom: "+ mScaleFactor +"  \n");
+		                output.invalidate();
+		            }
+		            break;
+		        }
+		        case MotionEvent.ACTION_POINTER_UP: {	//zweiter Finger verlässt Touchscreen
+		            mode = NONE;						//kein Modus mehr aktiv --> verhindert springen
+		         //   x_z = 420.f;						//Mittelpunkt x auf Touchscreenmitte setzen
+		         //   y_z = 130.f;						//Mittelpunkt y auf Touchscreenmitte setzen
+		            break;
+		        }
+		        }
+    	}
+	    return true;
 	    }
 	};
 
@@ -137,6 +172,8 @@ public class GUI extends Activity {
 		super.onCreate(savedInstanceState); // onCreate von Activity
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD); // Tastensperre deaktivieren
 		setContentView(R.layout.splashscreen); // SplashScreen anzeigen
+		metrics = new DisplayMetrics(); // neue Instanz verschaffen
+		getWindowManager().getDefaultDisplay().getMetrics(metrics); // Displayabmessungen ermitteln
 		cl = new CompassListener(); // neue Instanz zur Initialisierung des Sensors
 		mScaleDetector = new ScaleGestureDetector(this, new ScaleListener());  //neue Instanz Skalierungsdetektor
 		myDB = new DataBase(getApplicationContext());
@@ -275,6 +312,7 @@ public class GUI extends Activity {
 		activityState = 2;
 		setContentView(R.layout.state_2); // state_2.xml anzeigen
 		
+		
 		final Button go = (Button) findViewById(R.id.but_Go2); // Button holen zur Bearbeitung
 		final RoomSpinner RS = new RoomSpinner(getApplicationContext(), (Spinner) findViewById(R.id.spinner21), (Spinner) findViewById(R.id.spinner22), (Spinner) findViewById(R.id.spinner23)); // neue Verwaltung für die Spinner instanziieren
 		
@@ -282,7 +320,7 @@ public class GUI extends Activity {
 			// On ClickListener für Go!
 			public void onClick(View v) {
 				String roomInput = new String(RS.getString()); // String des ausgewählten Raums holen
-				if (pf.compute_Path(roomInput,roomInput)) // "Route berechnen"; wobei hier nur der Knoten mit der ID i ermittelt werden soll; Location gefunden?
+				if (pf.compute_route(roomInput,roomInput)) // "Route berechnen"; wobei hier nur der Knoten mit der ID i ermittelt werden soll; Location gefunden?
 					launch_state_3(); // Look up Location Output (B4)
 				else
 					Toast.makeText(getApplicationContext(), "Sorry, room not available in this version.", Toast.LENGTH_LONG).show(); // Errorausgabe
@@ -293,9 +331,19 @@ public class GUI extends Activity {
 	private void launch_state_3() { // Look up Location Output (B4)
 		activityState = 3;
 		output = new GraphicalOutput(getApplicationContext()); // neue Instanz verschaffen
-		output.set_state_position(pf.getPath().get(0).get(0)); // Location anzeigen
+		output.set_state_location(pf.getRoute().get(0).get(0)); // Location anzeigen
 		output.setOnTouchListener(touch_single_multi);	
-
+		String housenumber = output.get_HouseNumber(true);	
+	
+		mPosX = 280.f;    //x Wert für Verschiebung GraphicalOutput  
+		mPosY = 170.f;
+		MidX = 150;
+		MidY = 130;
+		mScaleFactor = 1.5f;
+		output.set_position(mPosX, mPosY);
+		output.set_midpoint(MidX, MidY);
+		output.set_zoom(mScaleFactor, x_z, y_z);
+		
 		setContentView(R.layout.state_3); // state_3.xml anzeigen
 		// Elemente der Anzeige holen, damit sie bearbeitet werden können:
 		final RelativeLayout rl = (RelativeLayout) findViewById(R.id.relativeLayout3);
@@ -381,7 +429,7 @@ public class GUI extends Activity {
 		findViewById(R.id.but_Go4).setOnClickListener(new OnClickListener() {
 			// OnClickListener für Go!
 			public void onClick(View v) {
-				if (pf.compute_Path(RS1.getString(), RS2.getString())) // Pfad berechnen; Weg gefunden?
+				if (pf.compute_route(RS1.getString(), RS2.getString())) // Pfad berechnen; Weg gefunden?
 					launch_state_5(); // Routing Output (B6)
 				else
 					Toast.makeText(getApplicationContext(), "Sorry, no route found.", Toast.LENGTH_LONG).show(); // Errorausgabe 
@@ -392,7 +440,7 @@ public class GUI extends Activity {
 	private void launch_state_5() { // Routing Output (B6)
 		activityState = 5;
 		output = new GraphicalOutput(getApplicationContext()); // neue Instanz verschaffen
-		output.set_state_path(pf.getPath()); // Route anzeigen
+		output.set_state_routing(pf.getRoute()); // Route anzeigen
 		output.setOnTouchListener(touch_single_multi);	
 		
 		setContentView(R.layout.state_5); // state_5.xml anzeigen
@@ -409,8 +457,8 @@ public class GUI extends Activity {
 
 		backgroundView = output; // grafische Ausgabe als Hintergrund setzen
 		updateHouseFloor(house_floor); // Anzeige oben links aktualisieren
-		description.setText("Route:\n" + output.get_PathDescription()); // Routenbeschreibung einfügen
-		if (1 == pf.getPath().size()) // Nur eine Ebene anzuzeigen?
+		description.setText("Route:\n" + output.get_RouteDescription()); // Routenbeschreibung einfügen
+		if (1 == pf.getRoute().size()) // Nur eine Ebene anzuzeigen?
 			check.setEnabled(false); // disable Check-Button
 		short merk = output.set_floor(3); // Anzeige auf aktuelle Route
 		if (1 == merk) // wenn 1 returned wird, oberstes Stockwerk erreicht
@@ -427,7 +475,7 @@ public class GUI extends Activity {
 					fminus.setEnabled(false); // F- disabeln
 				output.invalidate(); // redraw
 				updateHouseFloor(house_floor); // Anzeige oben links aktualisieren
-				description.setText("Route:\n" + output.get_PathDescription()); // Routenbeschreibung einfügen
+				description.setText("Route:\n" + output.get_RouteDescription()); // Routenbeschreibung einfügen
 			}
 		});
 
@@ -439,7 +487,7 @@ public class GUI extends Activity {
 					fplus.setEnabled(false); // F+ disabeln
 				output.invalidate(); // redraw
 				updateHouseFloor(house_floor); // Anzeige oben links aktualisieren
-				description.setText("Route:\n" + output.get_PathDescription()); // Routenbeschreibung einfügen
+				description.setText("Route:\n" + output.get_RouteDescription()); // Routenbeschreibung einfügen
 			}
 		});
 
@@ -457,7 +505,7 @@ public class GUI extends Activity {
 						fplus.setEnabled(false); // F+ disabeln
 					else if (-1 == merk) // wenn -1 returned wird, unterstes Stockwerk erreicht
 						fminus.setEnabled(false); // F- disabeln
-					description.setText("Route:\n" + output.get_PathDescription()); // Routenbeschreibung einfügen
+					description.setText("Route:\n" + output.get_RouteDescription()); // Routenbeschreibung einfügen
 				}
 			}
 		});
@@ -471,7 +519,7 @@ public class GUI extends Activity {
 				output.set_floor(2); // Campus anzeigen
 				output.invalidate(); // redraw
 				updateHouseFloor(house_floor); // Anzeige oben links aktualisieren
-				description.setText("Route:\n" + output.get_PathDescription()); // Routenbeschreibung einfügen
+				description.setText("Route:\n" + output.get_RouteDescription()); // Routenbeschreibung einfügen
 			}
 		});
 		
@@ -487,7 +535,7 @@ public class GUI extends Activity {
 					check.setEnabled(false); // disable Check-Button
 				output.invalidate(); // redraw
 				updateHouseFloor(house_floor); // Anzeige oben links aktualisieren
-				description.setText("Route:\n" + output.get_PathDescription()); // Routenbeschreibung einfügen
+				description.setText("Route:\n" + output.get_RouteDescription()); // Routenbeschreibung einfügen
 			}
 		});
 
@@ -566,8 +614,8 @@ public class GUI extends Activity {
 	private void launch_state_7() { // Free Navigation Output (B7)
 		activityState = 7;
 		output = new GraphicalOutput(getApplicationContext()); // neue Instanz verschaffen
-		output.set_state_campus(); // freie Campusnavigation anzeigen
-		output.setOnTouchListener(touch_single_multi);	
+		output.set_state_free_navigation(); // freie Campusnavigation anzeigen
+		output.setOnTouchListener(touch_single_multi);
 		
 		setContentView(R.layout.state_7); // state_7.xml anzeigen
 		// Elemente der Anzeige holen, damit sie bearbeitet werden können:
@@ -583,6 +631,8 @@ public class GUI extends Activity {
 		fplus.setEnabled(false); // F+ Button ausgrauen
 		campus.setEnabled(false); // Campus Button ausgrauen
 		updateHouseFloor(house_floor); // Anzeige oben links aktualisieren
+		
+		output.set_zoom(((float) (metrics.heightPixels))/((float) (850)), 0, metrics.heightPixels/2);
 
 		// OnClickListener für die Buttons:
 		fminus.setOnClickListener(new OnClickListener() {
@@ -616,6 +666,10 @@ public class GUI extends Activity {
 				output.set_floor(2); // Campus anzeigen
 				output.invalidate(); // redraw
 				updateHouseFloor(house_floor); // Anzeige oben links aktualisieren
+
+	    		DisplayMetrics metrics = new DisplayMetrics();
+	    		getWindowManager().getDefaultDisplay().getMetrics(metrics);
+	    		output.set_zoom(((float) (metrics.heightPixels))/((float) (850)), 0, metrics.heightPixels/2);
 			}
 		});
 
@@ -627,7 +681,8 @@ public class GUI extends Activity {
 		rl.addView(campus);
 		rl.addView(house_floor);
 
-		cl.onResume(); // enable Lagesensor
+		cl.setEnabled(false);
+		cl.onResume();
 	}
 	
 	private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener { //innere Klasse
@@ -657,6 +712,9 @@ public class GUI extends Activity {
 
 		public void setEnabled(boolean b) {
 			enabled = b;
+			f_old = 0;
+			if (!enabled && output!=null)
+				output.set_degree(f_old);
 		}
 		
 		public void onResume() { // enable Lagesensor

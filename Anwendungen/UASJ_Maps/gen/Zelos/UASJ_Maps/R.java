@@ -123,6 +123,21 @@ public final class R {
         public static final int state_7=0x7f030007;
     }
     public static final class string {
+        /**  This file is part of UASJ-Maps.
+	
+	UASJ-Maps is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	UASJ-Maps is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with UASJ-Maps. If not, see http://www.gnu.org/licenses/ 
+         */
         public static final int app_name=0x7f040000;
         public static final int floor=0x7f040002;
         public static final int house=0x7f040001;

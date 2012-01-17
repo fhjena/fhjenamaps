@@ -66,8 +66,7 @@ public class Pathfinding {
 	 * @param Start_ID
 	 * @param Ziel_ID
 	 */
-	public boolean compute_Path(String Start, String Destination) {
-		//TODO: noch Rückgabewert einfügen? Z.b. ob Datenbankarbeit geklappt hat etc.
+	public boolean compute_route(String Start, String Destination) {
 		Node n;						// Knoten für Eintrag in Gesamtliste
 		Cursor c;					// Cursor zum Datenbankzugriff
 		
@@ -174,7 +173,7 @@ public class Pathfinding {
 	 * Gibt den gefundenen Weg als 2D-Array zurück
 	 * @return Weg
 	 */
-	public ArrayList<ArrayList<Node>> getPath() {		
+	public ArrayList<ArrayList<Node>> getRoute() {		
 		return Path;
 	}
 
