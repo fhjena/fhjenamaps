@@ -48,8 +48,6 @@ public class GUI extends Activity {
 	private float MidY = 130.f;      		//Mittelpunkt y (für rotate)
 	private ScaleGestureDetector mScaleDetector; //Skalierungsdetektor
 	private float mScaleFactor = 1.f;	//Skalierungsfaktor Canvas         
-	private float x_z = 420.f;			//x Koordinate um die gezoomt wird
-	private float y_z = 130.f;			//y Koordinate um die gezoomt wird
 	private int NONE;
 	private static final int DRAG = 1;			//Modus Verschieben (Singletouch)
 	private static final int ZOOMM = 2;			//Modus Zoomen (Multitouch
@@ -77,10 +75,7 @@ public class GUI extends Activity {
 	    						performClickOnCampus(4); // Haus 01/02/03 wurde getroffen!
 	    		}
     	} else { // es wird eine Ebene dargestellt
-		        float x_z0 = 0;
-		        float y_z0 = 0;
-		        float x_z1 = 0;
-		        float y_z1 = 0;
+		     
 		        mScaleDetector.onTouchEvent(event); //Skalierungsdetektor überwacht alle Events
 	//				TODO mal mit thomas drüber reden, dass die nich im anschluss an eine verschiebnung ausgeführt wurde
 	//				if (event.getAction() == MotionEvent.ACTION_UP)
@@ -98,14 +93,9 @@ public class GUI extends Activity {
 		            break;
 		        }
 		        case MotionEvent.ACTION_POINTER_DOWN:	//zwei Finger auf Touchscreen
-		            x_z0 = event.getX(0);
-		            y_z0 = event.getY(0);
-		            x_z1 = event.getX(1);
-		            y_z1 = event.getY(1);
-	//	            x_z = ((x_z1+x_z0)/2)-mPosX;				//x Mittelpunkt berechnen
-	//	            y_z = ((y_z1+y_z0)/2)-mPosY;				//y Mittelpunkt berechnen
 		            mode = ZOOMM;						// Modus "Zoom" setzen
 		            break;
+		            
 		        case MotionEvent.ACTION_MOVE: {
 		            final float x = event.getX();       //aktuelle x Koordinate
 		            final float y = event.getY();       //aktuelle y Koordinate
@@ -122,28 +112,19 @@ public class GUI extends Activity {
 		                mLastTouchX = x;            	//neuen x-Wert speichern
 		                mLastTouchY = y; 				//neuen y-Wert speichern
 	
-		            //	MidX -= dx;
-					//	MidY -= dy;
-		                
-		                //	go.moveX(dx);
-		                //	go.moveY(dy);
 		                System.out.println("posx: "+ mPosX +" posy:"+ mPosY +" \n");
 					
-						output.set_midpoint(MidX, MidY);
+						output.set_midpoint(MidX, MidY);	//Mittelpunk für Zoom übergeben
 		                output.set_position(mPosX, mPosY);	//Positionswerte an GO weiterreichen
 		                output.invalidate();
-		            } else if (mode == ZOOMM) {			//Modus "Zoom"
+		            } else if (mode == ZOOMM) {				//Modus "Zoom"
 		            	output.set_zoom(mScaleFactor, MidX, MidY); //Skalierungsfaktor und Mittelpunkte an GO weiterreichen
-		             //   output.set_zoom(mScaleFactor, x_z, y_z); //Skalierungsfaktor und Mittelpunkte an GO weiterreichen
-		            	System.out.println("zoom: "+ mScaleFactor +"  \n");
 		                output.invalidate();
 		            }
 		            break;
 		        }
 		        case MotionEvent.ACTION_POINTER_UP: {	//zweiter Finger verlässt Touchscreen
 		            mode = NONE;						//kein Modus mehr aktiv --> verhindert springen
-		         //   x_z = 420.f;						//Mittelpunkt x auf Touchscreenmitte setzen
-		         //   y_z = 130.f;						//Mittelpunkt y auf Touchscreenmitte setzen
 		            break;
 		        }
 		        }
@@ -262,7 +243,7 @@ public class GUI extends Activity {
 			return false; // Haus 4 nicht verfügbar		
 		output.set_floor(HouseID);
 		cl.setEnabled(true);
-		setInitZoom();
+		setInitZoom();	//Initialzoom setzen
 		output.invalidate();	
 		switch(activityState) {
 		case 3:
@@ -302,26 +283,16 @@ public class GUI extends Activity {
 	}
 	
 	private void setInitZoom(){
-		String housenumber = output.get_HouseNumber(true);
+
+			mPosX = 150.f;   		//x Wert für Verschiebung GraphicalOutput  
+			mPosY = 160.f;	 		//yWert für Verschiebung GraphicalOutput
+			MidX = 200;		 		//x Wert für Mittelpunkt Zoom 
+			MidY = 130;				//y Wert für Mittelpunkt Zoom 
+			mScaleFactor = 1.5f;	//Zoomfaktor
 		
-		if(housenumber == "05"){
-			mPosX = 150.f;    //x Wert für Verschiebung GraphicalOutput  
-			mPosY = 160.f;
-			MidX = 200;
-			MidY = 130;
-			mScaleFactor = 1.5f;
-			}	
-			else if(housenumber == "01/02/03"){
-			mPosX = -150.f;    //x Wert für Verschiebung GraphicalOutput  
-			mPosY = -115.f;
-			MidX = 500;
-			MidY = 420;
-			mScaleFactor = 0.5f;
-			}
-		
-			output.set_position(mPosX, mPosY);
+			//Werte der GO übergeben
+			output.set_position(mPosX, mPosY);				
 			output.set_midpoint(MidX, MidY);
-//				output.set_zoom(mScaleFactor, x_z, y_z);
 			output.set_zoom(mScaleFactor, MidX, MidY);
 	}
 	
@@ -385,7 +356,7 @@ public class GUI extends Activity {
 		output.set_state_location(pf.getRoute().get(0).get(0)); // Location anzeigen
 		output.setOnTouchListener(touch_single_multi);	
 		
-		setInitZoom();
+		setInitZoom();	//Initialzoom setzen
 		
 		setContentView(R.layout.state_3); // state_3.xml anzeigen
 		// Elemente der Anzeige holen, damit sie bearbeitet werden können:
@@ -442,7 +413,7 @@ public class GUI extends Activity {
 					fminus.setEnabled(false); // F- disabeln
 				cl.setEnabled(true);
 				
-				setInitZoom();
+				setInitZoom();	//Initialzoom setzen
 					
 				output.invalidate(); // redraw TODO initial zoom setzen
 				updateHouseFloor(house_floor); // Anzeige oben links aktualisieren
@@ -499,7 +470,7 @@ public class GUI extends Activity {
 		output.set_state_routing(pf.getRoute()); // Route anzeigen
 		output.setOnTouchListener(touch_single_multi);
 		
-		setInitZoom();
+		setInitZoom();	//Initialzoom setzen
 		
 		setContentView(R.layout.state_5); // state_5.xml anzeigen
 		// Elemente der Anzeige holen, damit sie bearbeitet werden können:
@@ -553,7 +524,7 @@ public class GUI extends Activity {
 			// OnClickListener für Routing
 			public void onClick(View v) {
 				short merk = output.set_floor(3); // Anzeige auf aktuelle Route; Rückgabewert merken
-				setInitZoom();
+				setInitZoom();	//Initialzoom setzen
 				output.invalidate(); // redraw TODO initial zoom setzen
 				if (!updateHouseFloor(house_floor)) { // Anzeige oben links aktualisieren; Wird Campus angezeigt?
 					// Buttons zunächst einblenden
