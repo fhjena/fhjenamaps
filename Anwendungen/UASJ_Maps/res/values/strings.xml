@@ -132,7 +132,7 @@
 	        
 	        <string-array name="house02_floor00">
 	            <item>01 (Terminal)</item>
-	            <item>62 ()</item>
+	            <item>62</item>
 	        </string-array>
 	        
 	        <string-array name="house02_floor01">

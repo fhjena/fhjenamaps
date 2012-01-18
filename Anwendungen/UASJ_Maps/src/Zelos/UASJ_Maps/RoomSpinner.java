@@ -195,6 +195,7 @@ public class RoomSpinner {
 					break;
 				case 4: // Etage 03
 					floorID = R.array.house03_floor03;
+					break;
 				default: // Etage -1
 					floorID = R.array.house03_floor_1;
 					break;
