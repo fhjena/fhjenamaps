@@ -91,7 +91,8 @@
         android:layout_alignRight="@+id/but_floor_plus5"
         android:layout_below="@+id/but_floor_minus5"
         android:layout_marginTop="20dp"
-        android:textColor="@android:color/black" />
+        android:textColor="@android:color/black"
+        android:background="@android:color/white" />
     // verbale Ausgabe des Routenteils
 
     <Button
@@ -114,8 +115,8 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="20dp"
-        android:textColor="@android:color/white"
-        android:background="@android:color/black"
+        android:textColor="@android:color/black"
+        android:background="@android:color/white"
         android:textSize="18dp" />
     // Anzeige oben links welches Gebäude und welche Etage angezeigt werden
     

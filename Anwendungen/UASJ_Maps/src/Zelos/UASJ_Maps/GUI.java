@@ -590,13 +590,16 @@ public class GUI extends Activity {
 		check.setOnClickListener(new OnClickListener() {
 			// OnClickListener für Check
 			public void onClick(View v) {
-				short merk = output.set_check(); // Click auf Check an output weiter geben
+				fminus.setEnabled(true); // F- Button ausgrauen
+				fplus.setEnabled(true); // F+ Button ausgrauen
+				if (0 == output.set_check()) // Click auf Check an output weiter geben
+					check.setEnabled(false); // disable Check-Button
+				short merk = output.set_floor(-1); // -1 ändert Anzeige nicht; hier ist nur der Rückgabewert entscheident
 				if (1 == merk) // wenn 1 returned wird, oberstes Stockwerk erreicht
 					fplus.setEnabled(false); // F+ disabeln
 				else if (-1 == merk) // wenn -1 returned wird, unterstes Stockwerk erreicht
 					fminus.setEnabled(false); // F- disabeln
-				else if (0 == merk) // wenn 0 returned wird, letzten Routenteil erreicht
-					check.setEnabled(false); // disable Check-Button
+				setInitZoom();
 				output.invalidate(); // redraw
 				updateHouseFloor(house_floor); // Anzeige oben links aktualisieren
 				description.setText("Route:\n" + output.get_RouteDescription()); // Routenbeschreibung einfügen
