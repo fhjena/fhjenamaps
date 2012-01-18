@@ -597,12 +597,12 @@ public class GUI extends Activity {
 		setContentView(R.layout.state_6); // state_6.xml anzeigen
 		final CheckBox checkCompass = (CheckBox) findViewById(R.id.checkCompass6); // CheckBox holen zur Bearbeitung
 		
-		checkCompass.setChecked(cl.getEnabled()); // setzt Hacken, wenn CompassListener enabled
+		checkCompass.setChecked(cl.getEnabledByOptions()); // setzt Hacken, wenn CompassListener enabled
 		
 		checkCompass.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			// OnCheckListener für CheckButton
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				cl.setEnabled(isChecked); // setzt enable, wenn Hacken gesetzt
+				cl.setEnabledByOptions(isChecked); // setzt enable, wenn Hacken gesetzt
 			}
 		});
 		
@@ -741,18 +741,26 @@ public class GUI extends Activity {
 		private Sensor Magnet_Sensor; // nur Lagesensor
 		private float f_old = 0; // Winkel merken
 		private boolean enabled = true; // Ist CompassListener aktiviert?
+		private boolean enabledByOptions = true; // Ist CompassListener über die Options aktiviert? (höherwertig als Variable enabled)
 
 		public CompassListener() { // Konstruktor
 			mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE); // SensorManager holen
 			Magnet_Sensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION); // Lagesensor auswühlen
 		}
 		
-		public boolean getEnabled() {
-			return enabled;
+		public boolean getEnabledByOptions() {
+			return enabledByOptions;
 		}
 
 		public void setEnabled(boolean b) {
 			enabled = b;
+			f_old = 0;
+			if (!enabled && output!=null)
+				output.set_degree(f_old);
+		}
+		
+		public void setEnabledByOptions(boolean b) {
+			enabledByOptions = b;
 			f_old = 0;
 			if (!enabled && output!=null)
 				output.set_degree(f_old);
@@ -767,7 +775,7 @@ public class GUI extends Activity {
 		}
 
 		public void onSensorChanged(SensorEvent event) {
-			if (enabled) {
+			if (enabledByOptions && enabled) {
 				float f_new = -event.values[0]; // Sensor auslesen
 				if (Math.abs(f_new - f_old) > 3.5) { // Hysterese, damit Bild an der Schaltschwelle nicht hin- und herdreht
 					if ((f_new % 5) > 2.5) // Sensor auf 5% Schritte auf bzw. abrunden
