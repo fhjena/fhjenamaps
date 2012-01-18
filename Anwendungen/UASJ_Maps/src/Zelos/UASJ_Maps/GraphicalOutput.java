@@ -23,6 +23,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Paint.Style;
 import android.graphics.Point;
 import android.view.View;
 
@@ -44,6 +45,7 @@ public class GraphicalOutput extends View {
 	private float MidX = 150.f;     		//Mittelpunkt x (für rotate)
 	private float MidY = 130.f;      		//Mittelpunkt y (für rotate)
 	private float factor = 0.347222f;
+	private int dotSize = 4;			// Größe der Markierung
 	
 	//TODO: x_ref & y_ref entferen, dafür Canvas.Translate(x,y) nutzen
 	// Konstruktor
@@ -266,6 +268,7 @@ public class GraphicalOutput extends View {
 		check_counter = 0;				// Check_Counter resetten
 		route = list;					// Route speicher/aktualisieren
 		current_floor = (short) list.get(0).get(0).getFloorID();		// erste Ebene ermitteln
+		dotSize = 2;
 	}
 	
 	/**
@@ -276,6 +279,7 @@ public class GraphicalOutput extends View {
 		state = 1;						// Status auf Positionsanzeige setzen
 		position = n;
 		current_floor = (short) position.getFloorID(); // EbenenID für Postion holen
+		dotSize = 4;
 	}
 	
 	/**
@@ -357,19 +361,29 @@ public class GraphicalOutput extends View {
 			y_offset = 0;
 		}
 			
-		var_paint.setColor(Color.GREEN); // Farbe setzen
+		var_paint.setColor(Color.BLUE); // Farbe setzen
 		var_paint.setStrokeWidth(2);
+		/*
 		c.drawLine(list.get(0).getX()+10-x_offset, list.get(0).getY()+10-y_offset, list.get(0).getX()-10-x_offset, list.get(0).getY()-10-y_offset, var_paint); // Startkreuz setzen(strich1)
 		c.drawLine(list.get(0).getX()+10-x_offset, list.get(0).getY()-10-y_offset, list.get(0).getX()-10-x_offset, list.get(0).getY()+10-y_offset, var_paint); // Startkreuz Strich2
+		*/
+		var_paint.setStyle(Style.FILL);
+		c.drawCircle(list.get(0).getX()-x_offset, list.get(0).getY()-y_offset, dotSize, var_paint);
+		var_paint.setStyle(Style.STROKE);		
 		
 		var_paint.setColor(Color.BLUE); // Farbe setzen
 		for (int i = 0; i < list.size() - 1; i++) {
 			c.drawLine(list.get(i).getX()-x_offset,list.get(i).getY()-y_offset,				// Startpunkt der Linie
 					list.get(i + 1).getX()-x_offset, list.get(i + 1).getY()-y_offset, var_paint); // Zielpunkt der Linie
 		}
-		var_paint.setColor(Color.RED); // Farbe setzen
+		var_paint.setColor(Color.BLUE); // Farbe setzen
+		/*
 		c.drawLine(list.get(list.size()-1).getX()+10-x_offset, list.get(list.size()-1).getY()+10-y_offset, list.get(list.size()-1).getX()-10-x_offset, list.get(list.size()-1).getY()-10-y_offset, var_paint); // Zielkreuz (strich1)
 		c.drawLine(list.get(list.size()-1).getX()+10-x_offset, list.get(list.size()-1).getY()-10-y_offset, list.get(list.size()-1).getX()-10-x_offset, list.get(list.size()-1).getY()+10-y_offset, var_paint); // Zielkreuz (strich2)
+		*/
+		var_paint.setStyle(Style.FILL);		
+		c.drawCircle(list.get(list.size()-1).getX()-x_offset, list.get(list.size()-1).getY()-y_offset, dotSize, var_paint);
+		var_paint.setStyle(Style.STROKE);		
 		//TODO: Farben & Größe anpassen (Startkreuz z.b. andere Farbe als Zielkreuz usw)
 	}
 	
@@ -442,7 +456,7 @@ public class GraphicalOutput extends View {
        	// Dicke der Umrandung = 0
 		var_paint.setStrokeWidth(0);
 		// Textgroesse
-		var_paint.setTextSize(7);			
+		var_paint.setTextSize(5);			
      }
     
     // Nachbereitung zum Zeichen
@@ -455,11 +469,11 @@ public class GraphicalOutput extends View {
         // Dicke der Umrandung = 0
 		var_paint.setStrokeWidth(0);
 		// Textgroesse
-		var_paint.setTextSize(7);			
+		var_paint.setTextSize(5);			
     }
     	
-    // Rahmen fuer Haus 5
-	private void shape_house5(Canvas canvas){
+    	// Rahmen fuer Haus 5
+		private void shape_house5(Canvas canvas){
 		// Vorbereitung
         preparation(canvas);
 		// Treppe
@@ -529,8 +543,8 @@ public class GraphicalOutput extends View {
         postprocessing(canvas);
 }
     
-	// Rahmen fuer Haus 123
-    private void shape_house123(Canvas canvas){
+		// Rahmen fuer Haus 123
+		private void shape_house123(Canvas canvas){
         // Vorbereitung
         preparation(canvas);
     	// Dicke der Umrandung = 2
@@ -566,11 +580,11 @@ public class GraphicalOutput extends View {
         postprocessing(canvas);   	
     }
     
-	//---------------------------------------------------------------------
-	//---------------------------------------------------------------------    
+		//---------------------------------------------------------------------
+		//---------------------------------------------------------------------    
     
-    // Zeichnet Campus
-	private void draw_floor_00(Canvas canvas){ 		
+    	// Zeichnet Campus
+		private void draw_floor_00(Canvas canvas){ 		
 		// Vorbereitung
 		preparation(canvas);
 		// Dicke der Umrandung = 0
@@ -586,8 +600,15 @@ public class GraphicalOutput extends View {
 		canvas.drawRect(380, 55, 425, 25, var_paint);
 		var_paint.setStrokeWidth(0);
 		canvas.drawRect(450,95,405,55,var_paint);
+	
+		/*
 		var_paint.setStrokeWidth(2);
-		var_paint.setColor(Color.WHITE);
+		canvas.drawLine(-100, 180, 600, 180, var_paint);
+		var_paint.setStrokeWidth(2);
+		canvas.drawLine(-100, 230, 600, 230, var_paint);
+		*/
+		
+		var_paint.setColor(Color.WHITE);		
 		canvas.drawLine(21,50,39,50,var_paint);
 		canvas.drawLine(21,75,39,75,var_paint);
 		canvas.drawLine(-5,95,39,95,var_paint);	
@@ -677,13 +698,49 @@ public class GraphicalOutput extends View {
 		postprocessing(canvas);
 	}
 
-	// Zeichnet Haus 5 Etage -2
-	private void draw_floor_01(Canvas canvas){
+		// Zeichnet Haus 5 Etage -2
+		private void draw_floor_01(Canvas canvas){
 		
-		// Vorbereitung
-		preparation(canvas);
+		
+		// Farbe
+		// ----------------------------------------------
+		// ----------------------------------------------
+		//  Farbe definieren (Grau)
+		int gray = Color.rgb(0, 151, 143);
+		// Farbe setzten
+		var_paint.setColor(gray);
+		// Style setzten
+		var_paint.setStyle(Paint.Style.FILL);		
+		//Element_01 ausfuellen
+		canvas.drawRect(0,0,48,48,var_paint);
+		//Element_02 ausfuellen
+		canvas.drawRect(18,48,40,94,var_paint);
+		//Element_03 ausfuellen
+		canvas.drawRect(-6,94,462,152,var_paint);
+		//Element_04 ausfuellen	
+		canvas.drawRect(200,46,222,94,var_paint);
+		//Element_05 ausfuellen		
+		canvas.drawRect(382,54,404,94,var_paint);
+		//Element_06 ausfuellen
+		canvas.drawRect(382,24,424,54,var_paint);
+		// Technikhaus fuellen
+		canvas.drawRect(-6,74,18,94,var_paint);
+		// ResteRampeFuellen
+		canvas.drawRect(404,54,462,94,var_paint);			
 		// Schablone Haus 5
 		shape_house5(canvas);
+		// Vorbereitung
+		preparation(canvas);			
+		var_paint.setStrokeWidth(2);
+		// Technikhaus
+		canvas.drawRect(-6,74,18,152,var_paint);
+		
+		
+		
+		
+		
+		
+		
 		/*
 
 				canvas.drawText("Haus:5 Ebene: -2", 300, 200, new Paint());
@@ -762,7 +819,7 @@ public class GraphicalOutput extends View {
 			// ----------------------------------------------
 			// ----------------------------------------------
 			//  Farbe definieren (Grau)
-			int gray = Color.argb(127, 200, 200, 200);
+			int gray = Color.rgb(0, 151, 143);
 			// Farbe setzten
 			var_paint.setColor(gray);
 			// Style setzten
@@ -894,17 +951,13 @@ public class GraphicalOutput extends View {
 			postprocessing(canvas);
 	}
 
-	
-	
-	
-		
 		// Zeichnet Haus 5 Etage 0		
 		private void draw_floor_03(Canvas canvas){
 		// Farbe
 		// ----------------------------------------------
 		// ----------------------------------------------
-		//  Farbe definieren (Grau)
-		int gray = Color.argb(127, 200, 200, 200);
+		//  Farbe definieren
+		int gray = Color.rgb(0, 151, 143);
 		// Farbe setzten
 		var_paint.setColor(gray);
 		// Style setzten
@@ -1007,14 +1060,9 @@ public class GraphicalOutput extends View {
 		postprocessing(canvas);
 	}
 			
-		
-		
 		// Zeichnet Haus 5 Etage 1	
 		private void draw_floor_04(Canvas canvas){
-			// Eigene Farbe (Orange	) definieren
-			int orange = Color.argb(127,245,219,31);
-			// Farbe = Orange
-			var_paint.setColor(orange);
+			var_paint.setColor(Color.rgb(247, 61, 41));
 			var_paint.setStyle(Paint.Style.FILL);
 			//Element_01
 			canvas.drawRect(0,0,48,48,var_paint);
@@ -1022,8 +1070,7 @@ public class GraphicalOutput extends View {
 			canvas.drawRect(18,48,40,94,var_paint);
 			//Element_03
 			canvas.drawRect(-6,94,201,152,var_paint);
-			int something_like_red = Color.argb(127,235,118,215);		
-			var_paint.setColor(something_like_red);
+			var_paint.setColor(Color.rgb(247, 218, 22));
 			var_paint.setStyle(Paint.Style.FILL);
 			//Element_03
 			canvas.drawRect(221,94,462,152,var_paint);
@@ -1237,15 +1284,11 @@ public class GraphicalOutput extends View {
 		}
 
 		// Zeichnet Haus 5 Etage 2
-
 		private void draw_floor_05(Canvas canvas){
 			// Farbe
 			// ----------------------------------------------
 			// ----------------------------------------------
-			// Farbe definieren (Grau-Transparent)
-			int gray = Color.argb(127, 255, 111, 111);
-			// Farbe setzten
-			var_paint.setColor(gray);
+			var_paint.setColor(Color.rgb(179, 87, 113));
 			// Style auf ausgefuellt setzten
 			var_paint.setStyle(Paint.Style.FILL);		
 			//Element_01 ausfuellen
@@ -1421,10 +1464,29 @@ public class GraphicalOutput extends View {
 		}
 	
 		// Zeichnet Haus 5 Etage 3
-
 		private void draw_floor_06(Canvas canvas){
 		    // Vorbereitung
 		    preparation(canvas);
+			// Farbe
+			// ----------------------------------------------
+			// ----------------------------------------------
+			// Farbe setzten
+			var_paint.setColor(Color.rgb(0, 151, 147));
+			// Style setzten
+			var_paint.setStyle(Paint.Style.FILL);		
+			//Element_01 ausfuellen
+			canvas.drawRect(0,0,48,48,var_paint);
+			//Element_02 ausfuellen
+			canvas.drawRect(18,48,40,94,var_paint);
+			//Element_03 ausfuellen
+			canvas.drawRect(-6,94,462,152,var_paint);
+			//Element_04 ausfuellen	
+			canvas.drawRect(200,46,222,94,var_paint);
+			//Element_05 ausfuellen		
+			canvas.drawRect(382,54,404,94,var_paint);
+			//Element_06 ausfuellen
+			canvas.drawRect(382,24,424,54,var_paint);
+		    
 		    // Schablone von Haus 5 zeichnen
 		    shape_house5(canvas);		
 		    // Treppen
@@ -1570,14 +1632,20 @@ public class GraphicalOutput extends View {
 			canvas.drawText("29",404,40,var_paint);	
 			// Raum 28
 			canvas.drawText("28",385,40,var_paint);	
+			// Nachbereitung
+		   	postprocessing(canvas);
+	}
+	
+		// Zeichnet Haus 5 Etage 3Z
+		private void draw_floor_07(Canvas canvas){
+
+		    // Vorbereitung
+		    preparation(canvas);
 			// Farbe
 			// ----------------------------------------------
 			// ----------------------------------------------
-			//  Farbe definieren (Grau)
-			int gray = Color.argb(127, 200, 200, 200);
-			// Farbe setzten
-			var_paint.setColor(gray);
-			// Style setzten
+			// Farbe definieren
+			var_paint.setColor(Color.rgb(0, 151, 147));
 			var_paint.setStyle(Paint.Style.FILL);		
 			//Element_01 ausfuellen
 			canvas.drawRect(0,0,48,48,var_paint);
@@ -1591,17 +1659,21 @@ public class GraphicalOutput extends View {
 			canvas.drawRect(382,54,404,94,var_paint);
 			//Element_06 ausfuellen
 			canvas.drawRect(382,24,424,54,var_paint);
-			// Nachbereitung
-		   	postprocessing(canvas);
-	}
-	
-		// Zeichnet Haus 5 Etage 3Z
-
-		private void draw_floor_07(Canvas canvas){
+			// Cleaner
+			// ----------------------------------------------
+			// ----------------------------------------------
+			// Farbe setzen
+			var_paint.setColor(Color.WHITE);
+			// ausfuellen
+			canvas.drawRect(175,95,117,107,var_paint);
+			// ausfuellen
+			canvas.drawRect(223,95,265,107,var_paint);
+			// ausfuellen
+			canvas.drawRect(267,95,333,107,var_paint);	
+			// ausfuellen
+			canvas.drawRect(335,95,373,107 ,var_paint);	
 		    // Schablone von Haus 5 zeichnen
-			shape_house5(canvas);
-		    // Vorbereitung
-		    preparation(canvas);
+			shape_house5(canvas);		    
 		    // Treppen
 			// ----------------------------------------------
 			// ----------------------------------------------
@@ -1737,62 +1809,25 @@ public class GraphicalOutput extends View {
 			canvas.drawLine(2,94,2,108,var_paint);
 			// Gelaender
 			canvas.drawLine(2,116,2,124,var_paint);
-			// Farbe
-			// ----------------------------------------------
-			// ----------------------------------------------
-			// Farbe definieren (Grau)
-			int gray = Color.argb(127, 200, 200, 200);
-			// Farbe setzten
-			var_paint.setColor(gray);
-			// Style setzten
-			var_paint.setStyle(Paint.Style.FILL);		
-			//Element_01 ausfuellen
-			canvas.drawRect(0,0,48,48,var_paint);
-			//Element_02 ausfuellen
-			canvas.drawRect(18,48,40,94,var_paint);
-			//Element_03 ausfuellen
-			canvas.drawRect(-6,94,462,152,var_paint);
-			//Element_04 ausfuellen	
-			canvas.drawRect(200,46,222,94,var_paint);
-			//Element_05 ausfuellen		
-			canvas.drawRect(382,54,404,94,var_paint);
-			//Element_06 ausfuellen
-			canvas.drawRect(382,24,424,54,var_paint);
-			// Cleaner
-			// ----------------------------------------------
-			// ----------------------------------------------
-			// Farbe setzen
-			var_paint.setColor(Color.WHITE);
-			// ausfuellen
-			canvas.drawRect(175,95,117,107,var_paint);
-			// ausfuellen
-			canvas.drawRect(223,95,265,107,var_paint);
-			// ausfuellen
-			canvas.drawRect(267,95,333,107,var_paint);	
-			// ausfuellen
-			canvas.drawRect(335,95,373,107 ,var_paint);	
 			// Nachbereitung
 			postprocessing(canvas);
 	}
 			
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-	
-
+		// Zeichnet Haus 123 Etage Minus 1		
 		private void draw_floor_08(Canvas canvas){
-
-			preparation(canvas);
+			// Farbe setzen
+			// Haus 1 fuellen
+			// --------------------------------------
+			// --------------------------------------	
+			var_paint.setStyle(Style.FILL);			
+			var_paint.setColor(Color.rgb(99, 112, 133));			
+			canvas.drawRect(0, 0, 48, 130, var_paint);
+			var_paint.setStyle(Style.STROKE);	
+			var_paint.setStrokeWidth(0);
+			var_paint.setColor(Color.BLACK);			
+			canvas.drawRect(410*factor,470*factor,346*factor,438*factor,var_paint);	
 			shape_house123(canvas);
-			// Haus 1
+			// Haus 1 zeichnen
 			// --------------------------------------
 			// --------------------------------------		
 			// Raum 41
@@ -1836,16 +1871,15 @@ public class GraphicalOutput extends View {
 			// Raum 14	
 			canvas.drawRect(66*factor,174*factor,134*factor,142*factor,var_paint);
 			canvas.drawText("14",76*factor,152*factor,var_paint);
-				// Raum 13	
+			// Raum 13	
 			canvas.drawRect(66*factor,142*factor,134*factor,77*factor,var_paint);
 			canvas.drawText("13",76*factor,120*factor,var_paint);
 			// Raum 11
 			canvas.drawLine(66*factor,77*factor,43*factor,77*factor,var_paint);
 			canvas.drawText("11",86*factor,30*factor,var_paint);
+			// Haus 2
 			// --------------------------------------
 			// --------------------------------------	
-			
-			// Haus 2
 			for(float i= 48 ;i<=142 ;i=i+7){
 				canvas.drawLine(i,163, i,130,var_paint);
 			}
@@ -1888,15 +1922,32 @@ public class GraphicalOutput extends View {
 			
 			
 	}
-	
-		
-		
-		// Zeichnet Haus 123 Etage 0
 
+		// Zeichnet Haus 123 Etage 0
 		private void draw_floor_09(Canvas canvas){
+			preparation(canvas);
+			// Farbe setzen
+			// Haus 2 fuellen
+			//----------------------------------------
+			//----------------------------------------			
+			var_paint.setColor(Color.rgb(0, 151, 143));		
+			var_paint.setStyle(Style.FILL);
+			canvas.drawRect(142, 163, 47, 130, var_paint);
+			//----------------------------------------
+			//----------------------------------------			
+			// Haus 1 fuellen
+			var_paint.setColor(Color.rgb(99, 112, 133));			
+			canvas.drawRect(0, 0, 48, 130, var_paint);
+			// Haus 3 fuellen
+			// --------------------------------------
+			// --------------------------------------
+			canvas.drawRect(factor*410,factor*490, factor*1270,factor*334, var_paint);
+			canvas.drawRect(factor*640,factor*334,factor*510,factor*39, var_paint);
+			var_paint.setStyle(Style.STROKE);	
+			var_paint.setStrokeWidth(0);
+			var_paint.setColor(Color.BLACK);			
+			canvas.drawRect(410*factor,470*factor,346*factor,438*factor,var_paint);	
 			shape_house123(canvas);
-			
-			preparation(canvas);		
 			var_paint.setStrokeWidth(0);
 			var_paint.setColor(Color.BLACK);
 			var_paint.setTextSize(8);			
@@ -1936,16 +1987,16 @@ public class GraphicalOutput extends View {
 			// Raum 16
 			canvas.drawRect(66*factor,206*factor,134*factor,240*factor,var_paint);
 			canvas.drawText("16",76*factor,217*factor,var_paint);
-				// Raum 15	
+			// Raum 15	
 			canvas.drawRect(66*factor,174*factor,134*factor,206*factor,var_paint);
 			canvas.drawText("15",76*factor,185*factor,var_paint);
-				// Raum 14	
+			// Raum 14	
 			canvas.drawRect(66*factor,174*factor,134*factor,142*factor,var_paint);
 			canvas.drawText("14",76*factor,152*factor,var_paint);
-				// Raum 13	
+			// Raum 13	
 			canvas.drawRect(66*factor,142*factor,134*factor,102*factor,var_paint);
 			canvas.drawText("13",76*factor,120*factor,var_paint);
-				// Raum 12	
+			// Raum 12	
 			canvas.drawRect(66*factor,102*factor,134*factor,77*factor,var_paint);
 			canvas.drawText("12",76*factor,90*factor,var_paint);
 			// Raum 11
@@ -1956,20 +2007,16 @@ public class GraphicalOutput extends View {
 			canvas.drawText("10",45*factor,30*factor,var_paint);
 			// Haus 2
 			// Cleaner
-			// -------------------------------
+			// ------------------------------
 			var_paint.setColor(Color.WHITE);
-			var_paint.setStrokeWidth(2);		
-			canvas.drawLine(134*factor, 433*factor, 134*factor, 468*factor, var_paint);
-			canvas.drawLine(581*factor, 334*factor, 603*factor, 334*factor, var_paint);
-			canvas.drawLine(202*factor, 470*factor, 310*factor, 470*factor, var_paint);		
-			var_paint.setStrokeWidth(0);		
-			var_paint.setColor(Color.BLACK);
 			var_paint.setStrokeWidth(2);	
-			canvas.drawRect(208*factor,372*factor,312*factor,322*factor,var_paint);		
-			var_paint.setStrokeWidth(0);
-			canvas.drawRect(410*factor,470*factor,346*factor,438*factor,var_paint);		
+			// Line Haus 3 zu Haus 2
+			canvas.drawLine(134*factor, 433*factor, 134*factor, 468*factor, var_paint);
+			// Line innerhalb von Haus 2
+			canvas.drawLine(202*factor, 470*factor, 310*factor, 470*factor, var_paint);		
+			var_paint.setColor(Color.BLACK);
+			var_paint.setStrokeWidth(0);			
 			// Haus 3
-			 
 			// ---------------------------------------
 			// ---------------------------------------		
 			canvas.drawRect(410*factor,334*factor,444*factor,392*factor,var_paint);
@@ -1982,41 +2029,49 @@ public class GraphicalOutput extends View {
 			// ---------------------------------------
 			// ---------------------------------------
 			canvas.drawRect(672*factor,334*factor,1270*factor,392*factor,var_paint);
-		
 			for(int i=(int)(672*factor);i<=(int)(1270*factor);i=i+7){
 				canvas.drawLine(i,334*factor, i, 392*factor,var_paint);
 			}
-			
-			// ---------------------------------------
-			// ---------------------------------------
 			canvas.drawRect(478*factor,424*factor,410*factor,490*factor,var_paint);		
 			canvas.drawRect(478*factor,424*factor,546*factor,490*factor,var_paint);		
 			canvas.drawRect(546*factor,424*factor,672*factor,490*factor,var_paint);		
 			canvas.drawRect(672*factor,424*factor,1270*factor,490*factor,var_paint);
-		
 			for(int i=(int)(672*factor);i<=(int)(1270*factor);i=i+7){
 				canvas.drawLine(i,424*factor, i, 490*factor,var_paint);
 			}
-			
 			// Sporthalle
 			// Raum 3/4/5/6/7/48
 			canvas.drawRect(580*factor,334*factor,510*factor,264*factor,var_paint);		
 			// Treppenhaus
 			canvas.drawRect(640*factor,334*factor,580*factor,264*factor,var_paint);		
 			postprocessing(canvas);			
-			
-			
-				
 		}
 	
 		// Zeichnet Haus 123 Etage 1
-
 		private void draw_floor_10(Canvas canvas){
-	    	// Schablone Haus 123
-	    	shape_house123(canvas);
-	   		// Vorbereitung
-	    	preparation(canvas);
-	    	var_paint.setStrokeWidth(0);
+			preparation(canvas);
+			// Farbe setzen
+			// Haus 2 fuellen
+			//----------------------------------------
+			//----------------------------------------			
+			var_paint.setColor(Color.rgb(95, 171, 92));		
+			var_paint.setStyle(Style.FILL);
+			canvas.drawRect(142, 163, 47, 130, var_paint);
+			//----------------------------------------
+			//----------------------------------------			
+			// Haus 1 fuellen
+			canvas.drawRect(0, 0, 48, 130, var_paint);
+			// Haus 3 fuellen
+			// --------------------------------------
+			// --------------------------------------
+			canvas.drawRect(factor*410,factor*490, factor*1270,factor*334, var_paint);
+			canvas.drawRect(factor*640,factor*334,factor*510,factor*39, var_paint);
+			var_paint.setStyle(Style.STROKE);	
+			var_paint.setStrokeWidth(0);
+			var_paint.setColor(Color.BLACK);			
+			canvas.drawRect(410*factor,470*factor,346*factor,438*factor,var_paint);	
+			shape_house123(canvas);
+			var_paint.setStrokeWidth(0);
 	    	var_paint.setColor(Color.BLACK);
 	    	var_paint.setTextSize(5);
 		   	// Haus 1
@@ -2186,14 +2241,38 @@ public class GraphicalOutput extends View {
 	}
 		
 		// Zeichnet Haus 123 Etage 2
-
 		private void draw_floor_11(Canvas canvas){
-	    	// Schablone Haus 123
-	    	shape_house123(canvas);
 	    	// Vorbereitung
 	    	preparation(canvas);
-	    	// Textgroesse setzen
-	    	var_paint.setTextSize(5);			
+			// Haus 1 fuellen
+			//----------------------------------------
+			//----------------------------------------	
+	    	var_paint.setStyle(Style.FILL);	    	
+			var_paint.setColor(Color.rgb(247, 201, 126));			
+			canvas.drawRect(0, 0, 48, 130, var_paint);
+			//----------------------------------------
+			//----------------------------------------			
+ 			// Haus 2 fuellen
+			//----------------------------------------
+			//----------------------------------------			
+			var_paint.setColor(Color.rgb(95, 171, 92));		
+			canvas.drawRect(142, 163, 47, 130, var_paint);
+			// Haus 3 fuellen
+			// --------------------------------------
+			// --------------------------------------
+			var_paint.setColor(Color.rgb(172, 222, 221));		
+			canvas.drawRect(factor*410,factor*490, factor*1270,factor*334, var_paint);
+			canvas.drawRect(factor*640,factor*334,factor*510,factor*39, var_paint);
+			var_paint.setStyle(Style.STROKE);	
+			var_paint.setStrokeWidth(0);
+			var_paint.setColor(Color.BLACK);			
+			canvas.drawRect(410*factor,470*factor,346*factor,438*factor,var_paint);	
+			shape_house123(canvas);
+			var_paint.setStrokeWidth(0);
+	    	var_paint.setColor(Color.BLACK);
+	    	var_paint.setTextSize(5);
+	    	// Schablone Haus 123
+	    	shape_house123(canvas);
 			// Haus 1
 	    	// ----------------------------------------
 	    	// ----------------------------------------        
@@ -2365,9 +2444,43 @@ public class GraphicalOutput extends View {
 	}
 	
 		// Zeichnet Haus 123 Etage 3
-
 		private void draw_floor_12(Canvas canvas){
-	    	// Schablone Haus 123
+	
+			preparation(canvas);
+			// Farbe setzen
+			// Haus 1 fuellen
+			//----------------------------------------
+			//----------------------------------------	
+	    	var_paint.setStyle(Style.FILL);	    	
+			var_paint.setColor(Color.rgb(110, 169, 1));			
+			canvas.drawRect(0, 0, 48, 130, var_paint);
+			
+			// Haus 2 fuellen
+			//----------------------------------------
+			//----------------------------------------			
+			var_paint.setColor(Color.rgb(95, 171, 92));		
+			canvas.drawRect(142, 163, 47, 130, var_paint);
+			
+			
+			// Haus 3 fuellen
+			// --------------------------------------
+			// --------------------------------------
+			var_paint.setColor(Color.rgb(110, 169, 1));		
+			canvas.drawRect(factor*410,factor*490, factor*1270,factor*334, var_paint);
+			canvas.drawRect(factor*640,factor*334,factor*510,factor*39, var_paint);
+			var_paint.setStyle(Style.STROKE);	
+			var_paint.setStrokeWidth(0);
+			var_paint.setColor(Color.BLACK);			
+			canvas.drawRect(410*factor,470*factor,346*factor,438*factor,var_paint);	
+			var_paint.setStyle(Style.STROKE);	
+			var_paint.setStrokeWidth(0);
+			var_paint.setColor(Color.BLACK);			
+			canvas.drawRect(410*factor,470*factor,346*factor,438*factor,var_paint);	
+			shape_house123(canvas);
+			var_paint.setStrokeWidth(0);
+			var_paint.setColor(Color.BLACK);
+			var_paint.setTextSize(8);			
+			// Schablone Haus 123
 	    	shape_house123(canvas);
 	    	// Vorbereitung
 	        preparation(canvas);
@@ -2526,10 +2639,15 @@ public class GraphicalOutput extends View {
 	}
 	
 		// Zeichnet Haus 123 Etage 4
-
 		private void draw_floor_13(Canvas canvas){
 	
 			preparation(canvas);
+			// Farbe setzen
+			var_paint.setColor(Color.rgb(0, 151, 143));		
+			var_paint.setStyle(Style.FILL);
+			canvas.drawRect(142, 163, 47, 130, var_paint);
+			var_paint.setStyle(Style.STROKE);
+			var_paint.setColor(Color.BLACK);			
 			shape_house123(canvas);
 			// Haus 1
 			// ------------------------------------
@@ -2598,21 +2716,6 @@ public class GraphicalOutput extends View {
 			
 		}
 	
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-
-	
-		
-
-
 
 }
 	

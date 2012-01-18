@@ -570,7 +570,16 @@ public class GUI extends Activity {
 					fplus.setEnabled(false); // F+ disabeln
 				else if (-1 == merk) // wenn -1 returned wird, unterstes Stockwerk erreicht
 					fminus.setEnabled(false); // F- disabeln
+				String housenumber = output.get_HouseNumber(true);
+				if(housenumber == "Campus"){
+				output.set_zoom(((float) (metrics.heightPixels))/((float) (850)), 0, (metrics.heightPixels*2)/3);
+				cl.setEnabled(false);
+				output.set_position(250, -130);
+				}
+				else{
 				setInitZoom();
+				cl.setEnabled(true);
+				}
 				output.invalidate(); // redraw
 				updateHouseFloor(house_floor); // Anzeige oben links aktualisieren
 				description.setText("Route:\n" + output.get_RouteDescription()); // Routenbeschreibung einfügen
