@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 import android.database.Cursor;
 
-public class Node {
+public class Node implements Comparable<Node> {
     private int ID;					// Knoten-ID
     private float F;					// F-Wert
     private float G;					// G-Wert (Distanz zwischen zwei Knoten)
@@ -118,5 +118,15 @@ public class Node {
 
     public void setParent(Node P) {			// setzt Vorgängerknoten
         Parent = P;
+    }
+    
+    /* compare-Funktions damit Tree Set geornet werden kann */
+    public int compareTo(Node another) {
+    	if (this.F < another.F)
+    		return -1;
+    	else if (this.F > another.F)
+    		return 1;
+    	else
+    		return -1; // nicht 0, damit unterschiedliche Knoten auch den gleichen F-WErt haben können
     }
 }
