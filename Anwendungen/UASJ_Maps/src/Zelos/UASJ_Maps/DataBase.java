@@ -15,6 +15,9 @@ You should have received a copy of the GNU General Public License
 along with UASJ-Maps. If not, see http://www.gnu.org/licenses/
 */
 
+
+/* mainly responsible: Thomas Hensel */ 
+
 package Zelos.UASJ_Maps;
 
 import static android.provider.BaseColumns._ID;
@@ -149,7 +152,10 @@ public class DataBase {
     // -------------------------------------------------------------------------------------------
     // OpenHelper-Klasse
     // -------------------------------------------------------------------------------------------
-
+    
+    
+    /* mainly responsible: Thomas Hensel */
+    
     private class DataBaseOpenHelper extends SQLiteOpenHelper {
 
         public DataBaseOpenHelper(Context context) {

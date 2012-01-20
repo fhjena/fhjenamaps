@@ -15,6 +15,9 @@ You should have received a copy of the GNU General Public License
 along with UASJ-Maps. If not, see http://www.gnu.org/licenses/
 */
 
+
+/* mainly responsible: David Golz */
+
 package Zelos.UASJ_Maps;
 
 import android.content.Context;

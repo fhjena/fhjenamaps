@@ -15,6 +15,9 @@ You should have received a copy of the GNU General Public License
 along with UASJ-Maps. If not, see http://www.gnu.org/licenses/
 */
 
+
+/* mainly responsible: David Golz, Thomas Hensel */
+
 package Zelos.UASJ_Maps;
 
 import java.io.*;
@@ -734,6 +737,12 @@ public class GUI extends Activity {
         cl.setEnabled(false); // Compass deaktivieren
     }
 
+    // -------------------------------------------------------------------------------------------
+    // CompassListener-Klasse
+    // -------------------------------------------------------------------------------------------
+    
+    /* mainly responsible: Thomas Hensel */
+    
     private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener { //innere Klasse
         @Override
         public boolean onScale(ScaleGestureDetector detector) { //Skalierfunktion
@@ -742,6 +751,12 @@ public class GUI extends Activity {
             return true;
         }
     }
+    
+    // -------------------------------------------------------------------------------------------
+    // CompassListener-Klasse
+    // -------------------------------------------------------------------------------------------
+    
+    /* mainly responsible: David Golz */
 
     private class CompassListener implements SensorEventListener { // innere Klasse
 
