@@ -1896,8 +1896,8 @@ public class GraphicalOutput extends View {
 			canvas.drawOval(ovalBounds, var_paint);
 			var_paint.setColor(Color.WHITE);
 			var_paint.setStyle(Style.FILL);
-			canvas.drawRect(200*factor, 370*factor, 0, 0, var_paint);
-			canvas.drawRect(300*factor, 480*factor, 134*factor, 0, var_paint);
+			canvas.drawRect(220*factor, 370*factor, 0*factor, 260*factor, var_paint);
+			//canvas.drawRect(200*factor, 370*factor, 0, 0, var_paint);
 			var_paint.setStyle(Style.STROKE);			
 			var_paint.setColor(Color.BLACK);			   
 			// Haus 1 fuellen
@@ -1920,6 +1920,9 @@ public class GraphicalOutput extends View {
 			for(int i=0;i<=26;i=i+2){
 				canvas.drawLine(0,i,15,i,var_paint);
 			}
+			var_paint.setColor(Color.WHITE);
+			var_paint.setStyle(Style.FILL);			
+			canvas.drawRect(78, 163, 47, 130, var_paint);
 			shape_house123(canvas);
 			// Haus 1 / Raueme
 			// --------------------------------------
@@ -2037,8 +2040,8 @@ public class GraphicalOutput extends View {
 			canvas.drawOval(ovalBounds, var_paint);
 			var_paint.setColor(Color.WHITE);
 			var_paint.setStyle(Style.FILL);
-			canvas.drawRect(200*factor, 370*factor, 0, 0, var_paint);
-			canvas.drawRect(300*factor, 480*factor, 134*factor, 0, var_paint);
+			canvas.drawRect(220*factor, 370*factor, 0*factor, 260*factor, var_paint);
+			//canvas.drawRect(200*factor, 370*factor, 0, 0, var_paint);
 			var_paint.setStyle(Style.STROKE);			
 			var_paint.setColor(Color.BLACK);			   
 			// Haus 1 fuellen
@@ -2225,8 +2228,8 @@ public class GraphicalOutput extends View {
 			canvas.drawOval(ovalBounds, var_paint);
 			var_paint.setColor(Color.WHITE);
 			var_paint.setStyle(Style.FILL);
-			canvas.drawRect(200*factor, 370*factor, 0, 0, var_paint);
-			canvas.drawRect(300*factor, 480*factor, 134*factor, 0, var_paint);
+			canvas.drawRect(220*factor, 370*factor, 0*factor, 260*factor, var_paint);
+			//canvas.drawRect(200*factor, 370*factor, 0, 0, var_paint);
 			var_paint.setStyle(Style.STROKE);			
 			var_paint.setColor(Color.BLACK);			   
 			// Haus 1 fuellen
@@ -2465,8 +2468,8 @@ public class GraphicalOutput extends View {
 			canvas.drawOval(ovalBounds, var_paint);
 			var_paint.setColor(Color.WHITE);
 			var_paint.setStyle(Style.FILL);
-			canvas.drawRect(200*factor, 370*factor, 0, 0, var_paint);
-			canvas.drawRect(300*factor, 480*factor, 134*factor, 0, var_paint);
+			canvas.drawRect(220*factor, 370*factor, 0*factor, 260*factor, var_paint);
+			//canvas.drawRect(200*factor, 370*factor, 0, 0, var_paint);
 			var_paint.setStyle(Style.STROKE);			
 			var_paint.setColor(Color.BLACK);			   
 			// Haus 1 fuellen
@@ -2716,8 +2719,8 @@ public class GraphicalOutput extends View {
 			canvas.drawOval(ovalBounds, var_paint);
 			var_paint.setColor(Color.WHITE);
 			var_paint.setStyle(Style.FILL);
-			canvas.drawRect(200*factor, 370*factor, 0, 0, var_paint);
-			canvas.drawRect(300*factor, 480*factor, 134*factor, 0, var_paint);
+			canvas.drawRect(220*factor, 370*factor, 0*factor, 260*factor, var_paint);
+			//canvas.drawRect(200*factor, 370*factor, 0, 0, var_paint);
 			var_paint.setStyle(Style.STROKE);			
 			var_paint.setColor(Color.BLACK);			   
 			// Haus 1 fuellen
@@ -2953,8 +2956,8 @@ public class GraphicalOutput extends View {
 			canvas.drawOval(ovalBounds, var_paint);
 			var_paint.setColor(Color.WHITE);
 			var_paint.setStyle(Style.FILL);
-			canvas.drawRect(200*factor, 370*factor, 0, 0, var_paint);
-			canvas.drawRect(300*factor, 480*factor, 134*factor, 0, var_paint);
+			canvas.drawRect(220*factor, 370*factor, 0*factor, 260*factor, var_paint);
+			//canvas.drawRect(200*factor, 370*factor, 0, 0, var_paint);
 			var_paint.setStyle(Style.STROKE);			
 			var_paint.setColor(Color.WHITE);
 			// Haus 1 Treppe

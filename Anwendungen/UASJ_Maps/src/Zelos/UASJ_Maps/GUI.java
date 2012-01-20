@@ -764,7 +764,7 @@ public class GUI extends Activity {
         private Sensor Magnet_Sensor; // nur Lagesensor
         private float f_old = 0; // Winkel merken
         private boolean enabled = true; // Ist CompassListener aktiviert?
-        private boolean enabledByOptions = true; // Ist CompassListener über die Options aktiviert? (höherwertig als Variable enabled)
+        private boolean enabledByOptions = false; // Ist CompassListener über die Options aktiviert? (höherwertig als Variable enabled)
 
         public CompassListener() { // Konstruktor
             mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE); // SensorManager holen
