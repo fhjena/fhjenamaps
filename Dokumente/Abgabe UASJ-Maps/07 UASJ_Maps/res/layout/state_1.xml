@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="5dip"
+    android:id="@+id/tableLayout1" >
+	// Dieses xml legt die Anordnung der darzustellenden Elemente des Hauptmenüs fest
+	
+	/*
+	This file is part of UASJ-Maps.
+	
+	UASJ-Maps is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	UASJ-Maps is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with UASJ-Maps. If not, see http://www.gnu.org/licenses/
+	*/
+    
+    <LinearLayout
+        android:id="@+id/linearLayout11"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" >
+    // beinhaltet die zwei Buttons der ersten Zeile
+
+        <Button
+            android:id="@+id/but_LookupLocation1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+        	android:textSize="18dp"
+            android:text="Look up Location" />
+        // Button für Auswahl Look up Location Menü
+
+        <Button
+            android:id="@+id/but_Routing1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:onClick="launch_state_4"
+        	android:textSize="18dp"
+            android:text="Routing" />
+        // Button für Auswahl Routing Menü
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout12"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" >
+    // beinhaltet die zwei Buttons der zweiten Zeile
+
+        <Button
+            android:id="@+id/but_FreeNavigation1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+        	android:textSize="18dp"
+            android:text="Free Navigation" />
+        // Button für Auswahl Free Navigation Output
+
+        <Button
+            android:id="@+id/but_options1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+        	android:textSize="18dp"
+            android:text="Options" />
+        // Button für Auswahl Options Menü
+    </LinearLayout>
+</TableLayout>
