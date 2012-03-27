@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relativeLayout5"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+	// Dieses xml legt die Anordnung der darzustellenden Elemente des Routing Output fest
+	
+	/*
+	This file is part of UASJ-Maps.
+	
+	UASJ-Maps is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	UASJ-Maps is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with UASJ-Maps. If not, see http://www.gnu.org/licenses/
+	*/
+
+    <View
+        android:id="@+id/view5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" />
+    // View als Hintergrund für grafische Ausgabe
+    
+    <Button
+        android:id="@+id/but_floor_plus5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:height="50dp"
+        android:text="F +"
+        android:textSize="18dp"
+        android:width="50dp" />
+    // Etagenwechsel nach oben
+
+    <Button
+        android:id="@+id/but_floor_minus5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/but_floor_plus5"
+        android:layout_alignBottom="@+id/but_floor_plus5"
+        android:layout_marginRight="20dp"
+        android:layout_toLeftOf="@+id/but_floor_plus5"
+        android:height="50dp"
+        android:text="F -"
+        android:textSize="18dp"
+        android:width="50dp" />
+    // Etagenwechsel nach unten
+
+    <Button
+        android:id="@+id/but_Routing5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="20dp"
+        android:text="Show Route"
+        android:textSize="18dp"
+        android:width="150dp" />
+    // zur Route zurück kehren
+
+    <Button
+        android:id="@+id/but_Campus5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/but_Routing5"
+        android:layout_toRightOf="@+id/but_Routing5"
+        android:layout_marginLeft="20dp"
+        android:text="Campus"
+        android:textSize="18dp"
+        android:width="150dp" />
+    // auf Campusansicht wechseln
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/but_floor_minus5"
+        android:layout_alignRight="@+id/but_floor_plus5"
+        android:layout_below="@+id/but_floor_minus5"
+        android:layout_marginTop="20dp"
+        android:textColor="@android:color/black"
+        android:background="@android:color/white" />
+    // verbale Ausgabe des Routenteils
+
+    <Button
+        android:id="@+id/but_Check5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/but_Campus5"
+        android:layout_alignBottom="@+id/but_Campus5"
+        android:layout_alignLeft="@+id/textView5"
+        android:layout_alignRight="@+id/textView5"
+        android:textSize="18dp"
+        android:text="Check" />
+    // Check Button um zum nächsten Routenteil zu gelangen
+
+    <TextView
+        android:id="@+id/house_floor5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:textColor="@android:color/black"
+        android:background="@android:color/white"
+        android:textSize="18dp" />
+    // Anzeige oben links welches Gebäude und welche Etage angezeigt werden
+    
+
+</RelativeLayout>

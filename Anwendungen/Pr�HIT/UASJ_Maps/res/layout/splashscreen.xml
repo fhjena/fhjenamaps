@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+	// Dieses xml legt die Anordnung der darzustellenden Elemente des SplashScreens fest
+	
+	/*
+	This file is part of UASJ-Maps.
+	
+	UASJ-Maps is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	UASJ-Maps is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with UASJ-Maps. If not, see http://www.gnu.org/licenses/
+	*/
+    
+    <ImageView
+        android:id="@+id/image0"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:src="@drawable/splashscreen_image" />
+    // zeigt Logo von UASJ_Maps an
+
+    <LinearLayout
+        android:id="@+id/linearLayout0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/image0"
+        android:layout_marginBottom="80dp"
+        android:layout_centerHorizontal="true" >
+	// das LinearLayout soll die ProgressBar und den TextView nebeneinander anzeigen
+    // wird unterhalb des ImageViews angezeigt
+        <ProgressBar
+            android:id="@+id/progressBar0"
+            android:layout_width="40dp"
+            android:layout_height="40dp" />
+        // rotierender Kreis, der dem Benutzer das Anlegen der Datenbank signalisieren soll
+
+        <TextView
+            android:id="@+id/textView0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:layout_marginLeft="20dp"
+            android:text="Creating DataBase ..."
+            android:textSize="24dp" />
+        // Textausgabe
+
+    </LinearLayout>
+
+</RelativeLayout>
