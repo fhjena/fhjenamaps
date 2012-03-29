@@ -542,9 +542,16 @@ public class GUI extends Activity {
             // OnClickListener für Routing
             public void onClick(View v) {
                 short merk = output.set_floor(3); // Anzeige auf aktuelle Route; Rückgabewert merken
-                setInitZoom();	//Initialzoom setzen
+                setInitZoom(); //Initialzoom setzen
                 output.invalidate(); // redraw
-                if (!updateHouseFloor(house_floor)) { // Anzeige oben links aktualisieren; Wird Campus angezeigt?
+                if (updateHouseFloor(house_floor)) { // Anzeige oben links aktualisieren; Wird Campus angezeigt?
+                    fplus.setEnabled(false); // F+ disabeln
+                    fminus.setEnabled(false); // F- disabeln
+					campus.setEnabled(false); // Campus Button disabeln
+                    output.set_zoom(((float) (metrics.heightPixels))/((float) (850)), 0, (metrics.heightPixels*2)/3); // kompletten Campus anzeigen
+                    cl.setEnabled(false); // Compass deaktivieren
+                    output.set_position(250, -130); // kompletten Campus anzeigen
+				} else {
                     // Buttons zunächst einblenden
                     fminus.setEnabled(true); // F- Button anzeigen
                     fplus.setEnabled(true); // F+ Button anzeigen
@@ -558,7 +565,7 @@ public class GUI extends Activity {
                 }
             }
         });
-
+        
         campus.setOnClickListener(new OnClickListener() {
             // OnClickListener für Campus
             public void onClick(View v) {
@@ -575,12 +582,13 @@ public class GUI extends Activity {
                 output.invalidate(); // redraw
             }
         });
-
-        check.setOnClickListener(new OnClickListener() {
+		
+		check.setOnClickListener(new OnClickListener() {
             // OnClickListener für Check
             public void onClick(View v) {
-                fminus.setEnabled(true); // F- Button ausgrauen
-                fplus.setEnabled(true); // F+ Button ausgrauen
+                fminus.setEnabled(true); // F- Button anzeigen
+                fplus.setEnabled(true); // F+ Button anzeigen
+				campus.setEnabled(true); // Campus Button anzeigen
                 if (0 == output.set_check()) // Click auf Check an output weiter geben
                     check.setEnabled(false); // disable Check-Button
                 
@@ -591,6 +599,9 @@ public class GUI extends Activity {
                     fminus.setEnabled(false); // F- disabeln
                 
                 if (output.get_HouseNumber(true) == "Campus") { // Wird Campus angezeigt?
+                    fplus.setEnabled(false); // F+ disabeln
+                    fminus.setEnabled(false); // F- disabeln
+					campus.setEnabled(false); // Campus Button disabeln
                     output.set_zoom(((float) (metrics.heightPixels))/((float) (850)), 0, (metrics.heightPixels*2)/3); // kompletten Campus anzeigen
                     cl.setEnabled(false); // Compass deaktivieren
                     output.set_position(250, -130); // kompletten Campus anzeigen
