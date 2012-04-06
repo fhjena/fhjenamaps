@@ -1,0 +1,10 @@
+Fortführung:
+Canvasbisinsunendlicheverschiebisierung (und evtl. Skalierung) verhindern, auch wenn Canvas gedreht wird
+Haus 4
+Haus 3 Ebene 0
+besseres Grafikdesign
+Kartenausrichtung über Kompass verbessern
+weitere Optionen
+Ordner auf Smartphone für Benutzerhandbuch und die Lizensvereinbarungen - Lizens vorhanden
+Offset in hübsch mit irgendwie drücken wenns richtig steht
+Imagebuttons

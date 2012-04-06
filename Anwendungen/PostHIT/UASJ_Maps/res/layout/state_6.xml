@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+	// Dieses xml legt die Anordnung der darzustellenden Elemente des Options Menü fest
+	
+	/*
+	This file is part of UASJ-Maps.
+	
+	UASJ-Maps is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	UASJ-Maps is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with UASJ-Maps. If not, see http://www.gnu.org/licenses/
+	*/
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="29dp"
+        android:text="Options"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+    // Textausgabe Options
+
+    <CheckBox
+        android:id="@+id/checkCompass6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView6"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:text="automatic map alignment" />
+    // CheckBox zum aktivieren/deaktivieren des Kompass
+
+    <Button
+        android:id="@+id/but_refreshDB6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/checkCompass6"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="Refresh DataBase" />
+    // Button, der die Datenbank neu schreibt
+    
+    <Spinner
+        android:id="@+id/spinner6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/but_refreshDB6"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        android:prompt="@string/Degree" />
+    // Spinner für Offsetkorrektur
+
+</RelativeLayout>
